@@ -444,3 +444,12 @@ img {
     padding: 16px 20px !important;
   }
 }
+
+/* ── Boka intro: bekräftelsetext tonar in efter lyckat inskick ── */
+.bi-fade-in {
+  animation: bi-fade-in 400ms ease forwards;
+}
+@keyframes bi-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

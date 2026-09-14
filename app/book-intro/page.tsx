@@ -2,7 +2,20 @@
 
 import Navbar from "@/components/Navbar";
 import { useLanguage } from "@/lib/LanguageContext";
-import { useState, FormEvent } from "react";
+import { useEffect, useRef, useState, FormEvent } from "react";
+
+const CheckIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M5 13l4 4L19 7" />
+  </svg>
+);
+
+// Bekräftelsesekvensen: pill -> cirkel (håller ~700ms) -> hela blocket
+// tonar bort -> bekräftelsetext tonar in. Ingen sidledes rörelse: knappen
+// ligger i en flex-centrerad wrapper så krympningen sker symmetriskt.
+const MORPH_MS = 320;
+const HOLD_MS = 700;
+const FADE_MS = 400;
 
 const inputStyle: React.CSSProperties = {
   borderRadius: "100px",
@@ -75,9 +88,14 @@ function BookIntroForm() {
     message: "",
   });
   const [errors, setErrors] = useState<Errors>({});
-  const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  // vila: vanligt formulär. cirkel: knappen har morphat till en grön cirkel.
+  // hiding: hela blocket tonar bort. confirmed: bekräftelsetexten visas.
+  const [phase, setPhase] = useState<"vila" | "cirkel" | "hiding" | "confirmed">("vila");
+  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  useEffect(() => () => timers.current.forEach(clearTimeout), []);
 
   function set(key: keyof Fields, value: string) {
     setFields((f) => ({ ...f, [key]: value }));
@@ -117,7 +135,11 @@ function BookIntroForm() {
         throw new Error(data?.error || t.submitErrorMessage);
       }
 
-      setSubmitted(true);
+      setPhase("cirkel");
+      timers.current.push(
+        setTimeout(() => setPhase("hiding"), MORPH_MS + HOLD_MS),
+        setTimeout(() => setPhase("confirmed"), MORPH_MS + HOLD_MS + FADE_MS)
+      );
     } catch (err) {
       setSubmitError(err instanceof Error ? err.message : t.submitErrorMessage);
     } finally {
@@ -125,36 +147,70 @@ function BookIntroForm() {
     }
   }
 
+  if (phase === "confirmed") {
+    return (
+      <div
+        className="bi-fade-in"
+        style={{ maxWidth: "600px", width: "100%" }}
+      >
+        <h1
+          className="book-intro-h1"
+          style={{
+            fontWeight: 700,
+            fontSize: "36px",
+            letterSpacing: "-0.01em",
+            marginBottom: "8px",
+            marginTop: 0,
+          }}
+        >
+          {t.confirmHeadline}
+        </h1>
+        <p
+          style={{
+            fontSize: "16px",
+            color: "#6B6B6B",
+            marginTop: 0,
+            marginBottom: 0,
+          }}
+        >
+          {t.confirmSubline}
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div style={{ maxWidth: "600px", width: "100%" }}>
-      <h1
-        className="book-intro-h1"
+      <div
         style={{
-          fontWeight: 700,
-          fontSize: "36px",
-          letterSpacing: "-0.01em",
-          marginBottom: "8px",
-          marginTop: 0,
+          opacity: phase === "hiding" ? 0 : 1,
+          transition: `opacity ${FADE_MS}ms ease`,
+          pointerEvents: phase === "vila" ? "auto" : "none",
         }}
       >
-        {t.pageHeadline}
-      </h1>
-      <p
-        style={{
-          fontSize: "16px",
-          color: "#6B6B6B",
-          marginBottom: "48px",
-          marginTop: 0,
-        }}
-      >
-        {t.pageSubline}
-      </p>
-
-      {submitted ? (
-        <p style={{ fontSize: "18px", color: "#0A0A0A" }}>
-          {t.submittedMessage}
+        <h1
+          className="book-intro-h1"
+          style={{
+            fontWeight: 700,
+            fontSize: "36px",
+            letterSpacing: "-0.01em",
+            marginBottom: "8px",
+            marginTop: 0,
+          }}
+        >
+          {t.pageHeadline}
+        </h1>
+        <p
+          style={{
+            fontSize: "16px",
+            color: "#6B6B6B",
+            marginBottom: "48px",
+            marginTop: 0,
+          }}
+        >
+          {t.pageSubline}
         </p>
-      ) : (
+
         <form onSubmit={handleSubmit} noValidate>
           {/* Work email */}
           <div style={fieldStyle}>
@@ -314,27 +370,61 @@ function BookIntroForm() {
             />
           </div>
 
-          {/* Submit */}
-          <button
-            type="submit"
-            disabled={submitting}
-            style={{
-              width: "100%",
-              background: "#0A0A0A",
-              color: "#fff",
-              fontWeight: 600,
-              fontSize: "16px",
-              padding: "16px",
-              borderRadius: "100px",
-              border: "none",
-              cursor: submitting ? "default" : "pointer",
-              opacity: submitting ? 0.6 : 1,
-              fontFamily: "inherit",
-              marginTop: "8px",
-            }}
-          >
-            {submitting ? t.submitButtonLoading : t.submitButton}
-          </button>
+          {/* Submit: pill -> cirkel vid lyckat inskick. Knappen ligger i en
+              flex-centrerad wrapper så krympningen sker symmetriskt kring
+              sin egen mittpunkt, ingen sidledes rörelse. */}
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <button
+              type="submit"
+              disabled={submitting || phase !== "vila"}
+              style={{
+                position: "relative",
+                overflow: "hidden",
+                boxSizing: "border-box",
+                width: phase === "vila" ? "100%" : "52px",
+                height: "52px",
+                background: phase === "vila" ? "#0A0A0A" : "#0f6e56",
+                color: "#fff",
+                fontWeight: 600,
+                fontSize: "16px",
+                borderRadius: phase === "vila" ? "100px" : "50%",
+                border: "none",
+                cursor: submitting || phase !== "vila" ? "default" : "pointer",
+                opacity: submitting && phase === "vila" ? 0.6 : 1,
+                fontFamily: "inherit",
+                marginTop: "8px",
+                transition: `width ${MORPH_MS}ms ease-out, border-radius ${MORPH_MS}ms ease-out, background-color ${MORPH_MS}ms ease-out`,
+              }}
+            >
+              <span
+                style={{
+                  display: "block",
+                  opacity: phase === "vila" ? 1 : 0,
+                  transition: "opacity 120ms linear",
+                }}
+              >
+                {submitting ? t.submitButtonLoading : t.submitButton}
+              </span>
+              <span
+                aria-hidden="true"
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  opacity: phase === "vila" ? 0 : 1,
+                  transition:
+                    phase === "vila"
+                      ? "opacity 160ms linear"
+                      : "opacity 160ms linear 180ms",
+                  pointerEvents: "none",
+                }}
+              >
+                <CheckIcon />
+              </span>
+            </button>
+          </div>
 
           {submitError && (
             <p style={{ ...errorStyle, marginTop: "16px", textAlign: "center" }}>
@@ -342,7 +432,7 @@ function BookIntroForm() {
             </p>
           )}
         </form>
-      )}
+      </div>
     </div>
   );
 }

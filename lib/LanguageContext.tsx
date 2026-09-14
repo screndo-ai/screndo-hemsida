@@ -36,8 +36,9 @@ const translations = {
     submitButton: 'Skicka förfrågan',
     submitButtonLoading: 'Skickar...',
     validationError: 'Fyll i det här obligatoriska fältet.',
-    submittedMessage: 'Tack! Vi hör av oss snart.',
     submitErrorMessage: 'Något gick fel. Försök igen om en stund.',
+    confirmHeadline: 'Tack för att du hörde av dig.',
+    confirmSubline: 'Vi återkommer inom 24 timmar.',
     // Navbar
     login: 'Logga in',
     bookIntro: 'Boka intro',
@@ -160,8 +161,9 @@ const translations = {
     submitButton: 'Send request',
     submitButtonLoading: 'Sending...',
     validationError: 'Please complete this required field.',
-    submittedMessage: 'Thanks! We will be in touch soon.',
     submitErrorMessage: 'Something went wrong. Please try again shortly.',
+    confirmHeadline: 'Thanks for reaching out.',
+    confirmSubline: 'We will be in touch within 24 hours.',
     // Navbar
     login: 'Log in',
     bookIntro: 'Book an intro',
