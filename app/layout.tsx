@@ -11,16 +11,16 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Screndo",
+  title: "Screndo | AI-driven pulsmätning för medarbetarengagemang",
   description:
-    "Screndo samlar in och analyserar medarbetardata för att ge HR och ledning kontinuerlig insikt i organisationen.",
+    "Screndo är ett AI-bolag som bygger framtidens medarbetarfeedback, från insikt till konkret åtgärd. Utvecklat och designat i Halmstad, Sverige.",
   icons: { icon: "/nyfavicon.png" },
   robots: { googleBot: { noimageindex: true } },
   verification: { google: "mjIBIF1f28mY21N6YttL9-o8HC1i2-qgGnmNgpQjRio" },
   openGraph: {
-    title: "Screndo",
+    title: "Screndo | AI-driven pulsmätning för medarbetarengagemang",
     description:
-      "Screndo samlar in och analyserar medarbetardata för att ge HR och ledning kontinuerlig insikt i organisationen.",
+      "Screndo är ett AI-bolag som bygger framtidens medarbetarfeedback, från insikt till konkret åtgärd. Utvecklat och designat i Halmstad, Sverige.",
     url: "https://screndo.com",
   },
 };
