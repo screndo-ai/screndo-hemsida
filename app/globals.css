@@ -349,7 +349,7 @@ img {
 
   /* Hero: rubrik */
   .hero-h1 {
-    white-space: nowrap !important;
+    white-space: normal !important;
     text-align: center !important;
   }
 
