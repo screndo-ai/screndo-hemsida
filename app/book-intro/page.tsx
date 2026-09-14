@@ -76,6 +76,8 @@ function BookIntroForm() {
   });
   const [errors, setErrors] = useState<Errors>({});
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   function set(key: keyof Fields, value: string) {
     setFields((f) => ({ ...f, [key]: value }));
@@ -92,14 +94,35 @@ function BookIntroForm() {
     return e;
   }
 
-  function handleSubmit(ev: FormEvent) {
+  async function handleSubmit(ev: FormEvent) {
     ev.preventDefault();
     const e = validate();
     if (Object.keys(e).length > 0) {
       setErrors(e);
       return;
     }
-    setSubmitted(true);
+
+    setSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      const res = await fetch("/api/book-intro", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(fields),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        throw new Error(data?.error || t.submitErrorMessage);
+      }
+
+      setSubmitted(true);
+    } catch (err) {
+      setSubmitError(err instanceof Error ? err.message : t.submitErrorMessage);
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -294,6 +317,7 @@ function BookIntroForm() {
           {/* Submit */}
           <button
             type="submit"
+            disabled={submitting}
             style={{
               width: "100%",
               background: "#0A0A0A",
@@ -303,13 +327,20 @@ function BookIntroForm() {
               padding: "16px",
               borderRadius: "100px",
               border: "none",
-              cursor: "pointer",
+              cursor: submitting ? "default" : "pointer",
+              opacity: submitting ? 0.6 : 1,
               fontFamily: "inherit",
               marginTop: "8px",
             }}
           >
-            {t.submitButton}
+            {submitting ? t.submitButtonLoading : t.submitButton}
           </button>
+
+          {submitError && (
+            <p style={{ ...errorStyle, marginTop: "16px", textAlign: "center" }}>
+              {submitError}
+            </p>
+          )}
         </form>
       )}
     </div>

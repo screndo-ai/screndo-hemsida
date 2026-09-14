@@ -34,8 +34,10 @@ const translations = {
     size5: '500+',
     textareaLabel: 'Något du vill att vi vet innan vi ses?',
     submitButton: 'Skicka förfrågan',
+    submitButtonLoading: 'Skickar...',
     validationError: 'Fyll i det här obligatoriska fältet.',
     submittedMessage: 'Tack! Vi hör av oss snart.',
+    submitErrorMessage: 'Något gick fel. Försök igen om en stund.',
     // Navbar
     login: 'Logga in',
     bookIntro: 'Boka intro',
@@ -156,8 +158,10 @@ const translations = {
     size5: '500+',
     textareaLabel: 'Anything you want us to know before we meet?',
     submitButton: 'Send request',
+    submitButtonLoading: 'Sending...',
     validationError: 'Please complete this required field.',
     submittedMessage: 'Thanks! We will be in touch soon.',
+    submitErrorMessage: 'Something went wrong. Please try again shortly.',
     // Navbar
     login: 'Log in',
     bookIntro: 'Book an intro',
