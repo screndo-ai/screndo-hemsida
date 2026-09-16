@@ -247,16 +247,22 @@ export default function Hero() {
         </Reveal>
       </section>
 
-      {/* Standalone product screenshot */}
-      <div className="product-shot-wrap" style={{ display: 'flex', justifyContent: 'center', padding: '24px 24px 80px' }}>
-        <Reveal variant="scale" style={{ width: '100%', maxWidth: '1500px' }}>
+      {/* Standalone product screenshot: MacBook på böcker, foto i fullbredd
+          utan marginaler, beskuret i underkant (uppmätt mot macscrendo43.jpg,
+          3258x4093) så datorn dominerar och bara en liten bit bord syns kvar. */}
+      <div className="product-shot-wrap" style={{ paddingTop: '40px' }}>
+        <Reveal variant="scale" style={{ width: '100%', lineHeight: 0 }}>
           <img
-            src="/screndomacv3.png"
+            src="/macscrendo43.jpg"
             alt="Screndo"
+            className="product-shot-img"
             style={{
               display: 'block',
               width: '100%',
               height: 'auto',
+              aspectRatio: '0.894',
+              objectFit: 'cover',
+              objectPosition: 'center top',
             }}
           />
         </Reveal>

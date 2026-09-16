@@ -238,9 +238,9 @@ html.lenis.lenis-scrolling iframe {
     padding: 64px 20px !important;
   }
 
-  /* Standalone product screenshot */
+  /* Standalone product screenshot: fortfarande fullbredd på mobil */
   .product-shot-wrap {
-    padding: 20px 20px 48px !important;
+    padding: 24px 0 0 !important;
   }
 
   /* Founded section */
@@ -411,14 +411,14 @@ html.lenis.lenis-scrolling iframe {
     box-sizing: border-box !important;
   }
 
-  /* Employee view: bilden beskärs (höger-ankrad, object-fit: cover) i ett
-     smalare/högre format så telefonskärmen får fler faktiska pixlar att
-     jobba med — annars får bubblornas text (särskilt de långa) inte plats
-     ens vid minsta läsbara fontstorlek. Bubblornas procentvärden räknas om
-     mot just den här beskärningen (se python-uträkningen i commit-historiken
-     för hur talen togs fram). */
+  /* Employee view: bilden beskärs och zoomas (object-fit: cover) i ett
+     smalare/högre format, centrerat på telefonskärmen istället för
+     höger-ankrat, så skärmen upptar mer av ytan och texten blir läsbar.
+     Handen är fortfarande synlig på båda sidor om telefonen. Bubblornas
+     procentvärden räknas om mot just den här beskärningen (uppmätt mot
+     foto3iphone.png, 1536x1024, samma metod som skrivbordsvärdena). */
   .ev-image-container {
-    aspect-ratio: 0.63 !important;
+    aspect-ratio: 0.52 !important;
     overflow: hidden !important;
   }
   .ev-image-container > img {
@@ -427,13 +427,20 @@ html.lenis.lenis-scrolling iframe {
     width: 100% !important;
     height: 100% !important;
     object-fit: cover !important;
-    object-position: right center !important;
+    object-position: 74.7% center !important;
   }
   .ev-bubbles-overlay {
-    --ev-screen-left: 0%;
+    --ev-screen-left: 21%;
     --ev-screen-top: 11.5%;
-    --ev-screen-width: 43%;
+    --ev-screen-width: 58%;
     --ev-screen-height: 66.6%;
+  }
+  /* Fontstorleken ligger fast på sitt minimum (7.5px) genom hela mobilspannet
+     (375–430px), så en egen em-multiplikator sätts här istället för att ärva
+     skrivbordets — annars blir uppåtförskjutningen fel proportionerad mot
+     skärmytans höjd på mobil. */
+  .ev-msg-col {
+    transform: translateY(-6.7em) !important;
   }
   .why-matters-stat {
     margin-left: 0 !important;

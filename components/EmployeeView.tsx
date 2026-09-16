@@ -123,17 +123,21 @@ export default function EmployeeView() {
             </div>
 
             {/* Bubblorna centreras vertikalt i utrymmet som blir kvar under
-                headern, som stannar överst. En liten uppåtförskjutning
-                (em-baserad, skalar med samma bas som resten av skärmytan)
-                lagd ovanpå centreringen. */}
-            <div style={{
+                headern, som stannar överst. En uppåtförskjutning (em-baserad,
+                skalar med samma bas som resten av skärmytan) lagd ovanpå
+                centreringen, ger en lätt övervikt uppåt. Mobilens värde sätts
+                om i CSS (se @media 768px) eftersom fontstorleken där ligger
+                fast på sitt minimum och en gemensam em-multiplikator annars
+                ger en betydligt kraftigare förskjutning på skrivbord (där
+                fontstorleken är större) än vad som var avsett. */}
+            <div className="ev-msg-col" style={{
               flex: 1,
               minHeight: 0,
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'center',
               gap: '0.9em',
-              transform: 'translateY(-3em)',
+              transform: 'translateY(-4.5em)',
             }}>
               <IncomingBubble delay={0}>{t.employeeMsg1}</IncomingBubble>
               <OutgoingBubble delay={400}>{t.employeeMsg2}</OutgoingBubble>

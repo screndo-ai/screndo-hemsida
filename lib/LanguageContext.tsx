@@ -77,10 +77,10 @@ const translations = {
     autoFinal: 'Konkret åtgärd, redo att agera på.',
     // Employee view section
     employeeViewHeadline: 'Så ser det ut för medarbetaren',
-    employeeMsg1: 'Hej! Snabb anonym fredagsfråga. Fördelas helger och obekväma pass rimligt i ditt team? Svara 1-10.',
-    employeeMsg2: '7',
+    employeeMsg1: 'Hej! Snabb anonym fråga. Känner du att du får nog med feedback från din närmaste chef? Svara 1-10.',
+    employeeMsg2: '4',
     employeeMsg3: 'Tack för ditt svar, din feedback betyder mycket. Vill du förklara varför du känner så?',
-    employeeMsg4: 'Helgpassen hamnar ofta på samma två personer',
+    employeeMsg4: 'Vi hinner sällan prata om annat än det som brådskar',
     employeeViewBody: 'Ett SMS, en siffra, valfritt en mening. Ingen app, ingen inloggning. Svaren är anonyma och visas aldrig för grupper under fem personer. Medarbetarna fortsätter svara av ett enda skäl: de ser att förra svaret ledde någonstans.',
     employeeViewContactName: 'Screndo',
     // Final CTA section
@@ -227,10 +227,10 @@ const translations = {
     autoFinal: 'Concrete action, ready to act on.',
     // Employee view section
     employeeViewHeadline: "This is what it looks like for the employee",
-    employeeMsg1: 'Hi! Quick anonymous Friday question. Are weekends and inconvenient shifts distributed fairly in your team? Answer 1-10.',
-    employeeMsg2: '7',
+    employeeMsg1: 'Hi! Quick anonymous question. Do you feel you get enough feedback from your direct manager? Answer 1-10.',
+    employeeMsg2: '4',
     employeeMsg3: 'Thanks for your answer, your feedback matters. Want to explain why you feel that way?',
-    employeeMsg4: 'Weekend shifts often land on the same two people',
+    employeeMsg4: "We rarely get to talk about anything beyond what's urgent",
     employeeViewBody: 'One text, one number, optionally a sentence. No app, no login. Answers are anonymous and never shown for groups under five people. Employees keep answering for one reason: they see that the last answer led somewhere.',
     employeeViewContactName: 'Screndo',
     // Final CTA section
