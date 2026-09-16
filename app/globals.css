@@ -33,6 +33,27 @@ img {
   max-width: 100%;
 }
 
+/* ── Lenis smooth scroll ──
+   Lenis driver native window-scroll (ingen transform-baserad wrapper), så
+   IntersectionObserver-baserade reveal-animationer och scroll-listeners
+   fortsätter fungera oförändrat. Native scroll-behavior stängs av medan
+   Lenis är aktivt så de inte konkurrerar om samma scroll-animation. */
+html.lenis, html.lenis body {
+  min-height: auto;
+}
+html.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+html.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+html.lenis.lenis-stopped {
+  overflow: hidden;
+}
+html.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
 /* ── Navbar ── */
 .navbar {
   padding: 0 32px;
@@ -46,7 +67,7 @@ img {
 .hero-h1 {
   font-size: clamp(18px, 6vw, 58px);
   font-weight: 700;
-  white-space: nowrap;
+  white-space: normal;
   letter-spacing: -0.01em;
   line-height: 1.05;
   margin: 0 0 12px 0;
@@ -68,11 +89,32 @@ img {
   transform: scale(1.05);
 }
 
-.hero-overlay {
+/* ── Employee view: text överlagrad på bilden på skrivbord, normalt
+   flöde ovanför bilden på mobil (se media query nedan). ── */
+.ev-text-overlay {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  padding: 48px;
+  left: 9%;
+  top: 30%;
+  transform: translateY(-50%);
+  width: 40%;
+  max-width: 480px;
+  z-index: 1;
+}
+
+/* Bubblornas position i procent av bildens EGNA box (satt via CSS-variabler
+   så mobil kan omdefiniera dem utan att duplicera hela regeln). På
+   skrivbord visas foto3iphone.png i sin fulla, oskalade komposition, och
+   skärmytan ligger då på 56.1–76.2% x / 11.5–78.1% y av bilden. */
+.ev-bubbles-overlay {
+  --ev-screen-left: 56.1%;
+  --ev-screen-top: 11.5%;
+  --ev-screen-width: 20.1%;
+  --ev-screen-height: 66.6%;
+  position: absolute;
+  left: var(--ev-screen-left);
+  top: var(--ev-screen-top);
+  width: var(--ev-screen-width);
+  height: var(--ev-screen-height);
 }
 
 /* ── Section padding ── */
@@ -140,10 +182,10 @@ img {
   }
   .hero-h1 {
     line-height: 1.1 !important;
-    white-space: nowrap !important;
+    white-space: normal !important;
   }
   .hero-subline {
-    font-size: 16px !important;
+    font-size: 14px !important;
     max-width: 100% !important;
   }
   .hero-buttons {
@@ -190,9 +232,10 @@ img {
     padding: 72px 24px !important;
   }
 
-  /* Quote banner */
-  .quote-banner-section {
+  /* Why it matters */
+  .why-matters-section {
     margin-top: 56px !important;
+    padding: 64px 20px !important;
   }
 
   /* Standalone product screenshot */
@@ -205,9 +248,21 @@ img {
     padding: 64px 20px !important;
   }
 
+  /* Employee view section: bara vertikal padding, bilden ska nå ända ut
+     till kanten utan glapp. Textens sidmarginal sätts på .ev-text-overlay
+     istället (se 768px-brytpunkten). */
+  .employee-view-section {
+    padding: 64px 0 0 !important;
+  }
+
   /* AI-native CTA section */
   .ai-cta-section {
     padding: 64px 20px 32px !important;
+  }
+
+  /* Final CTA */
+  .final-cta-section {
+    padding: 48px 20px 72px !important;
   }
 
   /* CTA */
@@ -332,6 +387,57 @@ img {
     flex: none !important;
     width: 100% !important;
   }
+
+  /* Why it matters: bild överst, siffrorna staplade utan sidledes offset */
+  .why-matters-row {
+    flex-direction: column !important;
+    gap: 40px !important;
+  }
+  .why-matters-row > * {
+    flex: none !important;
+    width: 100% !important;
+    margin-left: 0 !important;
+  }
+
+  /* Employee view: text i vanligt flöde ovanför bilden istället för
+     överlagrad, eftersom överlagrad text inte fungerar på smala skärmar. */
+  .ev-text-overlay {
+    position: static !important;
+    transform: none !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin-bottom: 32px !important;
+    padding: 0 20px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Employee view: bilden beskärs (höger-ankrad, object-fit: cover) i ett
+     smalare/högre format så telefonskärmen får fler faktiska pixlar att
+     jobba med — annars får bubblornas text (särskilt de långa) inte plats
+     ens vid minsta läsbara fontstorlek. Bubblornas procentvärden räknas om
+     mot just den här beskärningen (se python-uträkningen i commit-historiken
+     för hur talen togs fram). */
+  .ev-image-container {
+    aspect-ratio: 0.63 !important;
+    overflow: hidden !important;
+  }
+  .ev-image-container > img {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: right center !important;
+  }
+  .ev-bubbles-overlay {
+    --ev-screen-left: 0%;
+    --ev-screen-top: 11.5%;
+    --ev-screen-width: 43%;
+    --ev-screen-height: 66.6%;
+  }
+  .why-matters-stat {
+    margin-left: 0 !important;
+  }
 }
 
 /* ── Responsive: 768px (mobile) ── */
@@ -356,7 +462,7 @@ img {
   /* Hero: underrubrik */
   .hero-subline {
     text-align: center !important;
-    font-size: 16px !important;
+    font-size: 14px !important;
   }
 
   /* Hero: knappar staplas vertikalt */
@@ -371,13 +477,6 @@ img {
     max-width: 280px !important;
     text-align: center !important;
     box-sizing: border-box !important;
-  }
-
-  /* Hero-bild: full bredd minus margin, skalas proportionellt */
-  .hero-image-wrap {
-    width: calc(100% - 40px) !important;
-    margin: 0 auto !important;
-    border-radius: 16px !important;
   }
 
   /* CTA "Se mer om produkten" */

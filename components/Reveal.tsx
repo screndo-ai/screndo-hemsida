@@ -26,10 +26,12 @@ export default function Reveal({
 }) {
   const ref = useRef<HTMLDivElement>(null)
   const [visible, setVisible] = useState(false)
+  const [reducedMotion, setReducedMotion] = useState(false)
 
   useEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (reduced) {
+      setReducedMotion(true)
       setVisible(true)
       return
     }
@@ -56,7 +58,9 @@ export default function Reveal({
         ...style,
         opacity: visible ? 1 : 0,
         transform: visible ? 'none' : OFFSETS[variant],
-        transition: `opacity 0.7s ease-out ${delay}ms, transform 0.7s ease-out ${delay}ms`,
+        transition: reducedMotion
+          ? 'none'
+          : `opacity 0.7s ease-out ${delay}ms, transform 0.7s ease-out ${delay}ms`,
       }}
     >
       {children}

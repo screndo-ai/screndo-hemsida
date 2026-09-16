@@ -33,28 +33,41 @@ const translations = {
     size4: '300-499',
     size5: '500+',
     textareaLabel: 'Något du vill att vi vet innan vi ses?',
+    januaryNotice: 'Vi tar in nya kunder från januari 2027. Boka en intro nu så får du en plats i kön.',
     submitButton: 'Skicka förfrågan',
     submitButtonLoading: 'Skickar...',
     validationError: 'Fyll i det här obligatoriska fältet.',
     submitErrorMessage: 'Något gick fel. Försök igen om en stund.',
     confirmHeadline: 'Tack för att du hörde av dig.',
-    confirmSubline: 'Vi återkommer inom 24 timmar.',
+    confirmSubline: 'Du har nu din plats i kön inför januari 2027.',
     // Navbar
     login: 'Logga in',
     bookIntro: 'Boka intro',
     produkterDropdown: 'Produkter',
+    menuLabel: 'Meny',
     // Hero
-    headline: 'Medarbetarförståelse, på riktigt.',
-    subline: 'Vad dina anställda tänker, varför, och vad du kan göra åt det.',
-    getStarted: 'Testa gratis',
+    headline: 'Medarbetarförståelse som sköter sig själv',
+    subline: 'Screndo frågar dina medarbetare, förstår svaren och ger dig ett konkret förslag på vad som är värt att göra. Ingen enkät att administrera, ingen data att tolka.',
     seeHow: 'Se hur det fungerar',
     videoHeadline: 'Se hur Screndo fungerar',
+    // Why it matters section
+    whyMattersHeadline: 'Varför det spelar roll',
+    whyMattersStat1Value: '51%',
+    whyMattersStat1Label: 'fler uppgifter än vad som är rimligt, enligt chefer själva',
+    whyMattersStat2Value: '75%',
+    whyMattersStat2Label: 'av chefer känner sig överväldigade av sin roll',
+    whyMattersStat3Value: '5x',
+    whyMattersStat3Label: 'mer effektivt att göra chefsrollen hanterbar än att träna chefen mer',
+    whyMattersBridge: 'Screndo lägger inte till en uppgift. Det tar bort administrationen kring något chefen redan ansvarar för, och fångar upp problem medan de fortfarande är små.',
+    whyMattersSource: 'Källa: Gartner',
     // AI-native CTA section
-    aiNativeHeadline: 'En AI-native plattform där användarvänligheten är i fokus',
+    aiNativeHeadline: 'Du får inte en dashboard. Du får ett förslag.',
+    aiNativeSubline: 'Varje rapport avslutas med en konkret åtgärd, grundad i vad dina medarbetare faktiskt svarat, och en kort motivering till varför.',
     watchDemo: 'Se demofilm',
     // Founded section
     foundedHeadline: 'Grundad där forskningen faktiskt görs.',
-    foundedBody: 'Screndo är antagen till HighFive Innovationsarena vid Högskolan i Halmstad, och har därigenom tillgång till forskningsresurser och rådgivning som säkerställer att produkten håller vetenskaplig grund och högsta kvalitet.',
+    foundedBody: 'Screndo är antaget till HighFive Innovationsarena vid Högskolan i Halmstad, med tillgång till forskning och rådgivning inom organisationspsykologi.',
+    foundedImageAlt: 'Högskolan i Halmstad',
     // Auto section
     autoHeadline: 'Lägg tiden där det faktiskt gör skillnad.',
     autoParagraph: 'Screndo sköter pulsmätningarna autonomt och levererar färdiga åtgärder. Ingen app, ingen inloggning, ingenting för dina medarbetare att installera.',
@@ -62,6 +75,17 @@ const translations = {
     autoItem2: 'Samla in och analysera svaren',
     autoItem3: 'Omsätta till konkret åtgärd',
     autoFinal: 'Konkret åtgärd, redo att agera på.',
+    // Employee view section
+    employeeViewHeadline: 'Så ser det ut för medarbetaren',
+    employeeMsg1: 'Hej! Snabb anonym fredagsfråga. Fördelas helger och obekväma pass rimligt i ditt team? Svara 1-10.',
+    employeeMsg2: '7',
+    employeeMsg3: 'Tack för ditt svar, din feedback betyder mycket. Vill du förklara varför du känner så?',
+    employeeMsg4: 'Helgpassen hamnar ofta på samma två personer',
+    employeeViewBody: 'Ett SMS, en siffra, valfritt en mening. Ingen app, ingen inloggning. Svaren är anonyma och visas aldrig för grupper under fem personer. Medarbetarna fortsätter svara av ett enda skäl: de ser att förra svaret ledde någonstans.',
+    employeeViewContactName: 'Screndo',
+    // Final CTA section
+    finalCtaHeadline: 'Vill du se hur det skulle se ut hos er?',
+    finalCtaSubline: 'Trettio minuter, inga förberedelser. Vi tittar på hur ni jobbar med medarbetarfeedback idag och visar hur Screndo skulle fungera hos er.',
     // Hero two-column section
     heroFeatureHeadline: 'Få reda på vad som stör dina medarbetare innan det blir ett problem.',
     heroFeatureParagraph: 'Screndo förbereder kontinuerligt korta, anonyma pulsfrågor åt dina medarbetare, du väljer själv hur ofta de ska gå ut. Frågorna väljs ur ett forskningsbaserat bibliotek inom organisationspsykologi och anpassas efter vad som faktiskt behöver undersökas i just din organisation, du godkänner varje fråga innan den skickas. Svaren analyseras direkt, du behöver aldrig själv tolka rådata eller läsa hundratals fritextsvar. Istället får du konkreta åtgärder att agera på, grundade i vad medarbetarna faktiskt säger, innan det blir ett problem som är svårt att vända. Chatta direkt med Screndo för att diskutera hur du enkelt kan applicera insikterna i praktiken.',
@@ -86,6 +110,7 @@ const translations = {
     // Product search
     productSearchQuestion: 'Vilka signaler missar vi just nu?',
     productSearchAnswer: 'Ljudnivån har nämnts tre veckor i rad. Trivseln på plan 3 ligger under snittet. Vill du att jag föreslår en åtgärd?',
+    sendLabel: 'Skicka',
     // More card (product page)
     moreCardTitle: '+ många fler',
     moreCardSubline: 'Hela biblioteket täcker allt från mening och samarbete till förändringsvilja och fokusro.',
@@ -158,28 +183,41 @@ const translations = {
     size4: '300-499',
     size5: '500+',
     textareaLabel: 'Anything you want us to know before we meet?',
+    januaryNotice: "We're onboarding new customers starting January 2027. Book an intro now to secure your place in the queue.",
     submitButton: 'Send request',
     submitButtonLoading: 'Sending...',
     validationError: 'Please complete this required field.',
     submitErrorMessage: 'Something went wrong. Please try again shortly.',
     confirmHeadline: 'Thanks for reaching out.',
-    confirmSubline: 'We will be in touch within 24 hours.',
+    confirmSubline: "You've secured your place in the queue for January 2027.",
     // Navbar
     login: 'Log in',
     bookIntro: 'Book an intro',
     produkterDropdown: 'Products',
+    menuLabel: 'Menu',
     // Hero
-    headline: 'Employee understanding, for real.',
-    subline: 'What your employees think, why, and what you can do about it.',
-    getStarted: 'Try for free',
+    headline: 'Employee understanding that runs itself',
+    subline: "Screndo asks your employees, understands the answers, and gives you one concrete suggestion worth acting on. No survey to administer, no data to interpret.",
     seeHow: 'See how it works',
     videoHeadline: 'See how Screndo works',
+    // Why it matters section
+    whyMattersHeadline: 'Why it matters',
+    whyMattersStat1Value: '51%',
+    whyMattersStat1Label: 'more tasks than is reasonable, according to managers themselves',
+    whyMattersStat2Value: '75%',
+    whyMattersStat2Label: 'of managers feel overwhelmed by their role',
+    whyMattersStat3Value: '5x',
+    whyMattersStat3Label: 'more effective to make the manager role manageable than to train the manager more',
+    whyMattersBridge: "Screndo doesn't add another task. It removes the administration around something the manager already owns, and catches problems while they're still small.",
+    whyMattersSource: 'Source: Gartner',
     // AI-native CTA section
-    aiNativeHeadline: 'An AI-native platform built around ease of use',
+    aiNativeHeadline: "You don't get a dashboard. You get a recommendation.",
+    aiNativeSubline: 'Every report ends with a concrete action, grounded in what your employees actually said, and a short explanation of why.',
     watchDemo: 'Watch demo',
     // Founded section
     foundedHeadline: 'Founded where the research actually happens.',
-    foundedBody: 'Screndo has been admitted to HighFive Innovation Arena at Halmstad University, giving it access to research resources and advisory support that ensure the product rests on scientific grounding and the highest quality.',
+    foundedBody: 'Screndo has been admitted to HighFive Innovation Arena at Halmstad University, with access to research and advisory support in organizational psychology.',
+    foundedImageAlt: 'Halmstad University',
     // Auto section
     autoHeadline: 'Spend your time where it actually makes a difference.',
     autoParagraph: 'Screndo handles pulse measurements autonomously and delivers ready-made actions. No app, no login, nothing for your employees to install.',
@@ -187,6 +225,17 @@ const translations = {
     autoItem2: 'Collect and analyze responses',
     autoItem3: 'Turn into concrete action',
     autoFinal: 'Concrete action, ready to act on.',
+    // Employee view section
+    employeeViewHeadline: "This is what it looks like for the employee",
+    employeeMsg1: 'Hi! Quick anonymous Friday question. Are weekends and inconvenient shifts distributed fairly in your team? Answer 1-10.',
+    employeeMsg2: '7',
+    employeeMsg3: 'Thanks for your answer, your feedback matters. Want to explain why you feel that way?',
+    employeeMsg4: 'Weekend shifts often land on the same two people',
+    employeeViewBody: 'One text, one number, optionally a sentence. No app, no login. Answers are anonymous and never shown for groups under five people. Employees keep answering for one reason: they see that the last answer led somewhere.',
+    employeeViewContactName: 'Screndo',
+    // Final CTA section
+    finalCtaHeadline: 'Want to see what it would look like for you?',
+    finalCtaSubline: "Thirty minutes, no prep. We'll look at how you handle employee feedback today and show you how Screndo would work for you.",
     // Hero two-column section
     heroFeatureHeadline: 'Find out what is bothering your employees before it becomes a problem.',
     heroFeatureParagraph: 'Screndo continuously prepares short, anonymous pulse questions for your employees — you decide how often they go out. Questions are selected from a research-based library in organizational psychology and tailored to what actually needs to be explored in your organization; you approve each question before it is sent. Answers are analyzed instantly — you never have to interpret raw data or read through hundreds of free-text responses. Instead, you get concrete actions to take, grounded in what employees are actually saying, before it becomes a problem that is hard to reverse. Chat directly with Screndo to discuss how you can easily put the insights into practice.',
@@ -211,6 +260,7 @@ const translations = {
     // Product search
     productSearchQuestion: 'What signals are we missing right now?',
     productSearchAnswer: 'The noise level has been mentioned three weeks in a row. Wellbeing on floor 3 is below average. Would you like me to suggest an action?',
+    sendLabel: 'Send',
     // More card (product page)
     moreCardTitle: '+ many more',
     moreCardSubline: 'The full library covers everything from meaning and collaboration to change readiness and focus time.',
@@ -276,6 +326,10 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     const saved = localStorage.getItem('screndo-lang') as Lang | null
     if (saved === 'sv' || saved === 'en') setLang(saved)
   }, [])
+
+  useEffect(() => {
+    document.documentElement.lang = lang
+  }, [lang])
 
   function setLanguage(l: Lang) {
     setLang(l)

@@ -89,7 +89,7 @@ export default function Navbar() {
         <button
           className="nav-hamburger"
           onClick={() => setMenuOpen(prev => !prev)}
-          aria-label="Meny"
+          aria-label={t.menuLabel}
           style={{
             background: "none",
             border: "none",

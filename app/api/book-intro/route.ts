@@ -20,15 +20,74 @@ const requiredFields: (keyof BookIntroPayload)[] = [
   "companySize",
 ];
 
+const MAX_LENGTHS: Record<keyof BookIntroPayload, number> = {
+  email: 254,
+  firstName: 100,
+  lastName: 100,
+  company: 150,
+  jobTitle: 150,
+  companySize: 50,
+  message: 2000,
+};
+
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 function isValidPayload(body: unknown): body is BookIntroPayload {
   if (typeof body !== "object" || body === null) return false;
   const record = body as Record<string, unknown>;
-  return requiredFields.every(
-    (field) => typeof record[field] === "string" && record[field].trim().length > 0
+
+  const allFieldsWellFormed = (Object.keys(MAX_LENGTHS) as (keyof BookIntroPayload)[]).every(
+    (field) => record[field] === undefined || typeof record[field] === "string"
   );
+  if (!allFieldsWellFormed) return false;
+
+  const requiredFieldsPresent = requiredFields.every((field) => {
+    const value = record[field];
+    return typeof value === "string" && value.trim().length > 0 && value.length <= MAX_LENGTHS[field];
+  });
+  if (!requiredFieldsPresent) return false;
+
+  const message = record.message;
+  if (typeof message === "string" && message.length > MAX_LENGTHS.message) return false;
+
+  return EMAIL_PATTERN.test((record.email as string).trim());
+}
+
+// Enkel per-IP rate limiting i minnet. Fungerar per serverinstans, så på en
+// serverless-plattform med flera samtidiga instanser (eller efter en
+// cold start) ger den inget hårt tak — men stoppar de billigaste
+// spam-/script-bomberna utan att kräva extra infrastruktur.
+const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
+const RATE_LIMIT_MAX_REQUESTS = 5;
+const requestLog = new Map<string, number[]>();
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const timestamps = (requestLog.get(ip) ?? []).filter(
+    (t) => now - t < RATE_LIMIT_WINDOW_MS
+  );
+  timestamps.push(now);
+  requestLog.set(ip, timestamps);
+  return timestamps.length > RATE_LIMIT_MAX_REQUESTS;
+}
+
+function stripControlChars(value: string): string {
+  return value.replace(/[\r\n\t\0]/g, " ").trim();
 }
 
 export async function POST(request: NextRequest) {
+  const ip =
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    request.headers.get("x-real-ip") ||
+    "unknown";
+
+  if (isRateLimited(ip)) {
+    return NextResponse.json(
+      { error: "För många förfrågningar. Försök igen om en stund." },
+      { status: 429 }
+    );
+  }
+
   let body: unknown;
   try {
     body = await request.json();
@@ -64,12 +123,14 @@ export async function POST(request: NextRequest) {
     },
   });
 
+  const safeCompany = stripControlChars(company);
+
   const bodyLines = [
-    `Namn: ${firstName} ${lastName}`,
-    `Jobbmejl: ${email}`,
-    `Företag: ${company}`,
-    `Titel: ${jobTitle}`,
-    `Företagsstorlek: ${companySize}`,
+    `Namn: ${stripControlChars(firstName)} ${stripControlChars(lastName)}`,
+    `Jobbmejl: ${email.trim()}`,
+    `Företag: ${safeCompany}`,
+    `Titel: ${stripControlChars(jobTitle)}`,
+    `Företagsstorlek: ${stripControlChars(companySize)}`,
     `Meddelande: ${message.trim() ? message : "(inget)"}`,
   ];
 
@@ -77,8 +138,8 @@ export async function POST(request: NextRequest) {
     await transporter.sendMail({
       from: gmailUser,
       to: "benjamin@screndo.com",
-      replyTo: email,
-      subject: `Demo-förfrågan: ${company}`,
+      replyTo: email.trim(),
+      subject: `Demo-förfrågan: ${safeCompany}`,
       text: bodyLines.join("\n"),
     });
   } catch (error) {

@@ -108,7 +108,7 @@ export default function ProductSearch() {
             </span>
 
             <button
-              aria-label="Skicka"
+              aria-label={t.sendLabel}
               style={{
                 width: 38,
                 height: 38,

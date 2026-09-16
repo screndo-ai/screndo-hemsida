@@ -2,6 +2,7 @@
 
 import { useLanguage } from '@/lib/LanguageContext'
 import AutoSection from '@/components/AutoSection'
+import EmployeeView from '@/components/EmployeeView'
 import Reveal from '@/components/Reveal'
 
 export default function Hero() {
@@ -22,19 +23,23 @@ export default function Hero() {
           paddingRight: '24px',
         }}
       >
-        <div style={{ maxWidth: '860px', width: '100%' }}>
-          <h1 className="hero-h1">
-            {t.headline}
-          </h1>
+        {/* Rubriken får en egen, bredare container så den ryms på en rad
+            på skrivbordsbredd (naturlig bredd ~1186px vid 58px). Underrubrik
+            och knappar behåller sin smalare 860px-kolumn för läsbarheten. */}
+        <h1 className="hero-h1" style={{ maxWidth: '1220px', width: '100%' }}>
+          {t.headline}
+        </h1>
 
+        <div style={{ maxWidth: '860px', width: '100%' }}>
           <p
             className="hero-subline"
             style={{
               color: '#3D3D3D',
-              fontSize: '18px',
+              fontSize: '15px',
               fontWeight: 300,
-              margin: '0 0 40px 0',
-              lineHeight: 1.5,
+              margin: '0 auto 40px',
+              lineHeight: 1.6,
+              maxWidth: '600px',
             }}
           >
             {t.subline}
@@ -55,7 +60,7 @@ export default function Hero() {
                 display: 'inline-block',
               }}
             >
-              {t.getStarted}
+              {t.bookIntro}
             </a>
             <a
               href="#video-demo"
@@ -88,63 +93,112 @@ export default function Hero() {
 
       <AutoSection />
 
-      {/* Full-bleed quote banner */}
-      <section
-        className="quote-banner-section"
-        style={{
-          position: 'relative',
-          width: '100%',
-          height: 'clamp(260px, 32vw, 420px)',
-          overflow: 'hidden',
-          marginTop: '100px',
-        }}
-      >
-        <img
-          src="/grass-screndo.JPG"
-          alt=""
-          style={{
-            position: 'absolute',
-            inset: 0,
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            objectPosition: 'center 25%',
-          }}
-        />
-        <div style={{
-          position: 'absolute',
-          inset: 0,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '0 24px',
-        }}>
+      <EmployeeView />
+
+      {/* Svagt grå bakgrund från och med bildens underkant i EmployeeView
+          (som saknar egen bottenpadding nu) genom hela why-matters-section,
+          fram till ai-cta-section som är vit igen. Ingen marginal mellan
+          delarna så färgen blir sammanhängande, ingen hård kant mot bilden. */}
+      <div style={{ background: '#FAFAF9', paddingTop: '80px' }}>
+      {/* Why it matters: rubrik + tre siffror, asymmetrisk komposition
+          (samma bild-plus-text-mönster som founded-section nedan), inte
+          ett symmetriskt kortrutnät. */}
+      <section className="why-matters-section" style={{ padding: '120px 24px', overflow: 'hidden' }}>
+        <div style={{ maxWidth: '1160px', margin: '0 auto' }}>
           <Reveal variant="up">
-            <blockquote style={{ margin: 0, textAlign: 'center', maxWidth: '760px' }}>
-              <p style={{
-                fontSize: 'clamp(17px, 2.3vw, 27px)',
-                fontWeight: 600,
-                letterSpacing: '-0.01em',
-                lineHeight: 1.45,
-                color: '#0A0A0A',
-                margin: '0 0 16px 0',
-              }}>
-                &ldquo;Clients do not come first. Employees come first. If you take care of your employees, they will take care of the clients.&rdquo;
-              </p>
-              <cite style={{
-                fontStyle: 'normal',
-                fontSize: '14px',
-                fontWeight: 500,
-                letterSpacing: '0.02em',
-                color: '#0A0A0A',
-                opacity: 0.7,
-              }}>
-                — Richard Branson
-              </cite>
-            </blockquote>
+            <h2 style={{
+              fontSize: 'clamp(28px, 4.5vw, 48px)',
+              fontWeight: 700,
+              letterSpacing: '-0.01em',
+              lineHeight: 1.05,
+              margin: '0 0 64px 0',
+              color: '#0A0A0A',
+              textAlign: 'left',
+            }}>
+              {t.whyMattersHeadline}
+            </h2>
           </Reveal>
+
+          <div className="why-matters-row" style={{ display: 'flex', gap: '6%', alignItems: 'flex-start' }}>
+            <Reveal variant="left" style={{ flex: '0 0 32%' }}>
+              <img
+                src="/grass-screndo.JPG"
+                alt=""
+                style={{
+                  display: 'block',
+                  width: '100%',
+                  height: 'auto',
+                  aspectRatio: '4 / 5',
+                  objectFit: 'cover',
+                  objectPosition: 'center 25%',
+                  borderRadius: '22px',
+                }}
+              />
+            </Reveal>
+
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <Reveal variant="up" style={{ marginBottom: '56px' }}>
+                <div style={{
+                  fontSize: 'clamp(52px, 7vw, 88px)',
+                  fontWeight: 700,
+                  letterSpacing: '-0.02em',
+                  lineHeight: 1,
+                  color: '#0A0A0A',
+                  marginBottom: '14px',
+                }}>
+                  {t.whyMattersStat1Value}
+                </div>
+                <p style={{ fontSize: '16px', color: '#3D3D3D', lineHeight: 1.6, maxWidth: '380px', margin: 0 }}>
+                  {t.whyMattersStat1Label}
+                </p>
+              </Reveal>
+
+              <Reveal variant="up" delay={100} className="why-matters-stat" style={{ marginBottom: '56px', marginLeft: '10%' }}>
+                <div style={{
+                  fontSize: 'clamp(44px, 5.6vw, 72px)',
+                  fontWeight: 700,
+                  letterSpacing: '-0.02em',
+                  lineHeight: 1,
+                  color: '#0A0A0A',
+                  marginBottom: '14px',
+                }}>
+                  {t.whyMattersStat2Value}
+                </div>
+                <p style={{ fontSize: '16px', color: '#3D3D3D', lineHeight: 1.6, maxWidth: '380px', margin: 0 }}>
+                  {t.whyMattersStat2Label}
+                </p>
+              </Reveal>
+
+              <Reveal variant="up" delay={200} className="why-matters-stat" style={{ marginLeft: '4%' }}>
+                <div style={{
+                  fontSize: 'clamp(40px, 5vw, 64px)',
+                  fontWeight: 700,
+                  letterSpacing: '-0.02em',
+                  lineHeight: 1,
+                  color: '#0A0A0A',
+                  marginBottom: '14px',
+                }}>
+                  {t.whyMattersStat3Value}
+                </div>
+                <p style={{ fontSize: '16px', color: '#3D3D3D', lineHeight: 1.6, maxWidth: '380px', margin: 0 }}>
+                  {t.whyMattersStat3Label}
+                </p>
+              </Reveal>
+
+              <Reveal variant="up" delay={300} style={{ marginTop: '40px' }}>
+                <p style={{ fontSize: '17px', color: '#3D3D3D', fontWeight: 400, lineHeight: 1.65, maxWidth: '460px', margin: 0 }}>
+                  {t.whyMattersBridge}
+                </p>
+              </Reveal>
+
+              <p style={{ fontSize: '13px', color: '#6B6B6B', marginTop: '24px', marginBottom: 0 }}>
+                {t.whyMattersSource}
+              </p>
+            </div>
+          </div>
         </div>
       </section>
+      </div>
 
       {/* AI-native CTA section */}
       <section className="ai-cta-section" style={{ background: '#fff', padding: '120px 24px 40px', textAlign: 'center' }}>
@@ -160,6 +214,18 @@ export default function Hero() {
           }}>
             {t.aiNativeHeadline}
           </h2>
+        </Reveal>
+        <Reveal variant="up" delay={80}>
+          <p style={{
+            fontSize: 'clamp(15px, 2vw, 18px)',
+            fontWeight: 400,
+            lineHeight: 1.6,
+            color: '#3D3D3D',
+            margin: '0 auto 36px',
+            maxWidth: '620px',
+          }}>
+            {t.aiNativeSubline}
+          </p>
         </Reveal>
         <Reveal variant="up" delay={150} style={{ display: 'inline-block' }}>
           <a
@@ -229,7 +295,7 @@ export default function Hero() {
           <Reveal variant="right" style={{ flex: 1 }}>
             <img
               src="/hskolan.jpg"
-              alt="Högskolan i Halmstad"
+              alt={t.foundedImageAlt}
               style={{
                 display: 'block',
                 width: '100%',

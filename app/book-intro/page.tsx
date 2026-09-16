@@ -131,8 +131,7 @@ function BookIntroForm() {
       });
 
       if (!res.ok) {
-        const data = await res.json().catch(() => null);
-        throw new Error(data?.error || t.submitErrorMessage);
+        throw new Error(t.submitErrorMessage);
       }
 
       setPhase("cirkel");
@@ -369,6 +368,17 @@ function BookIntroForm() {
               style={textareaStyle}
             />
           </div>
+
+          <p
+            style={{
+              fontSize: "14px",
+              color: "#6B6B6B",
+              textAlign: "center",
+              margin: "0 0 20px 0",
+            }}
+          >
+            {t.januaryNotice}
+          </p>
 
           {/* Submit: pill -> cirkel vid lyckat inskick. Knappen ligger i en
               flex-centrerad wrapper så krympningen sker symmetriskt kring
