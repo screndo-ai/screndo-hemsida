@@ -78,7 +78,6 @@ const translations = {
     svarQuestion: 'Känner du att du får tillräckligt med uppskattning för det arbete du gör?',
     svarNeverLabel: 'Inte alls',
     svarAlwaysLabel: 'Absolut',
-    svarFollowUpAnswer: 'Man märker sällan att chefen sett vad man gjort.',
     svarDisclaimer: 'Ditt svar är anonymt. Resultat visas aldrig för grupper under fem.',
     // Final CTA section
     finalCtaHeadline: 'Vill du se hur det skulle se ut hos er?',
@@ -225,7 +224,6 @@ const translations = {
     svarQuestion: 'Do you feel you get enough appreciation for the work you do?',
     svarNeverLabel: 'Not at all',
     svarAlwaysLabel: 'Absolutely',
-    svarFollowUpAnswer: "You rarely feel like your manager noticed what you did.",
     svarDisclaimer: 'Your answer is anonymous. Results are never shown for groups under five.',
     // Final CTA section
     finalCtaHeadline: 'Want to see what it would look like for you?',

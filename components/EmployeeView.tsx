@@ -112,31 +112,14 @@ export default function EmployeeView() {
                 </div>
               </Reveal>
 
-              {/* Ett lågt svar (4) följt av en konkret, ifylld fritextförklaring
-                  — visar att formuläret fångar upp något som faktiskt kräver
-                  eftertanke från chefen, inte bara en siffra. */}
               <Reveal variant="up" delay={300} style={{ marginTop: '1.2em' }}>
-                <div style={{
-                  fontSize: '0.78em',
-                  color: '#3D3D3D',
-                  lineHeight: 1.5,
-                  textAlign: 'left',
-                  background: '#F8F7F4',
-                  borderRadius: '0.5em',
-                  padding: '0.65em 0.8em',
-                }}>
-                  {t.svarFollowUpAnswer}
-                </div>
-              </Reveal>
-
-              <Reveal variant="up" delay={400} style={{ marginTop: '1.2em' }}>
                 <p style={{ fontSize: '0.72em', color: '#B0B0B0', lineHeight: 1.5, textAlign: 'left', margin: 0 }}>
                   {t.svarDisclaimer}
                 </p>
               </Reveal>
             </div>
 
-            <Reveal variant="up" delay={500} style={{ display: 'flex', justifyContent: 'center', flexShrink: 0 }}>
+            <Reveal variant="up" delay={400} style={{ display: 'flex', justifyContent: 'center', flexShrink: 0 }}>
               <img src="/logo2.png" alt="Screndo" style={{ height: '2.3em', width: 'auto', display: 'block' }} />
             </Reveal>
           </div>
