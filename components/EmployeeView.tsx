@@ -3,44 +3,8 @@
 import { useLanguage } from '@/lib/LanguageContext'
 import Reveal from '@/components/Reveal'
 
-function IncomingBubble({ children, delay }: { children: React.ReactNode; delay: number }) {
-  return (
-    <Reveal variant="up" delay={delay} style={{ display: 'flex' }}>
-      <div style={{
-        alignSelf: 'flex-start',
-        background: '#F8F7F4',
-        color: '#0A0A0A',
-        borderRadius: '1.3em',
-        borderBottomLeftRadius: '0.3em',
-        padding: '0.7em 0.9em',
-        fontSize: '1em',
-        lineHeight: 1.4,
-        maxWidth: '88%',
-      }}>
-        {children}
-      </div>
-    </Reveal>
-  )
-}
-
-function OutgoingBubble({ children, delay }: { children: React.ReactNode; delay: number }) {
-  return (
-    <Reveal variant="up" delay={delay} style={{ display: 'flex', justifyContent: 'flex-end' }}>
-      <div style={{
-        background: '#2563EB',
-        color: '#fff',
-        borderRadius: '1.3em',
-        borderBottomRightRadius: '0.3em',
-        padding: '0.7em 0.9em',
-        fontSize: '1em',
-        lineHeight: 1.4,
-        maxWidth: '75%',
-      }}>
-        {children}
-      </div>
-    </Reveal>
-  )
-}
+const SCALE_VALUES = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+const SELECTED_VALUE = 4
 
 export default function EmployeeView() {
   const { t } = useLanguage()
@@ -94,56 +58,87 @@ export default function EmployeeView() {
               boxSizing: 'border-box',
               display: 'flex',
               flexDirection: 'column',
-              justifyContent: 'flex-start',
-              padding: '4em 0.55em 0',
+              alignItems: 'center',
+              padding: '0 0.7em 1.4em',
               fontSize: 'clamp(7.5px, 1.05vw, 12.5px)',
             }}
           >
-            {/* Kontakt-header: Screndo-symbolen i en cirkel plus namnet,
-                som en kontaktrubrik i en SMS-app. Inget påhittat
-                avsändarnummer, bara vem det är. Egen fontSize här skalar
-                upp logotyp och text tillsammans (samma inbördes proportion,
-                2.6em/0.85em) utan att påverka bubblornas storlek. */}
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '0.3em',
-              marginBottom: '0.2em',
-              fontSize: '1.5em',
-            }}>
-              <img
-                src="/nyfavicon.png"
-                alt=""
-                style={{ width: '2.6em', height: '2.6em', borderRadius: '50%', display: 'block' }}
-              />
-              <span style={{ fontSize: '0.85em', color: '#1A1A1A', fontWeight: 400 }}>
-                {t.employeeViewContactName}
-              </span>
+            {/* Svarssidan (/svar): återger plattformens faktiska svarsformulär
+                istället för en påhittad SMS-konversation. Innehållet
+                (företagsnamn, fråga, 1–10-skala, anonymitetsrad) centreras
+                som grupp i utrymmet ovanför logotypen — både horisontellt
+                (symmetrisk sidopadding) och vertikalt (flex:1 + center på
+                den egna wrappern). Screndos logotyp (samma fil som
+                navbaren) står för sig, centrerad och fast längst ner. */}
+            <div style={{ flex: 1, minHeight: 0, width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+              <Reveal variant="up" delay={0}>
+                <div style={{ fontSize: '0.85em', color: '#9A9A9A', textAlign: 'left' }}>
+                  {t.svarCompanyName}
+                </div>
+              </Reveal>
+
+              <Reveal variant="up" delay={100} style={{ marginTop: '1.6em' }}>
+                <div style={{ fontSize: '1.15em', fontWeight: 600, color: '#0A0A0A', textAlign: 'left', lineHeight: 1.35 }}>
+                  {t.svarQuestion}
+                </div>
+              </Reveal>
+
+              <Reveal variant="up" delay={200} style={{ marginTop: '2em' }}>
+                <div style={{ display: 'flex', gap: '0.22em' }}>
+                  {SCALE_VALUES.map((n) => (
+                    <div
+                      key={n}
+                      style={{
+                        flex: 1,
+                        aspectRatio: '1 / 1',
+                        boxSizing: 'border-box',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '0.8em',
+                        fontWeight: 600,
+                        color: '#0A0A0A',
+                        borderRadius: '0.35em',
+                        border: n === SELECTED_VALUE ? '1.5px solid #0A0A0A' : '1px solid #E4E3DF',
+                      }}
+                    >
+                      {n}
+                    </div>
+                  ))}
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.6em', fontSize: '0.65em', color: '#9A9A9A' }}>
+                  <span>{t.svarNeverLabel}</span>
+                  <span>{t.svarAlwaysLabel}</span>
+                </div>
+              </Reveal>
+
+              {/* Ett lågt svar (4) följt av en konkret, ifylld fritextförklaring
+                  — visar att formuläret fångar upp något som faktiskt kräver
+                  eftertanke från chefen, inte bara en siffra. */}
+              <Reveal variant="up" delay={300} style={{ marginTop: '1.2em' }}>
+                <div style={{
+                  fontSize: '0.78em',
+                  color: '#3D3D3D',
+                  lineHeight: 1.5,
+                  textAlign: 'left',
+                  background: '#F8F7F4',
+                  borderRadius: '0.5em',
+                  padding: '0.65em 0.8em',
+                }}>
+                  {t.svarFollowUpAnswer}
+                </div>
+              </Reveal>
+
+              <Reveal variant="up" delay={400} style={{ marginTop: '1.2em' }}>
+                <p style={{ fontSize: '0.72em', color: '#B0B0B0', lineHeight: 1.5, textAlign: 'left', margin: 0 }}>
+                  {t.svarDisclaimer}
+                </p>
+              </Reveal>
             </div>
 
-            {/* Bubblorna centreras vertikalt i utrymmet som blir kvar under
-                headern, som stannar överst. En uppåtförskjutning (em-baserad,
-                skalar med samma bas som resten av skärmytan) lagd ovanpå
-                centreringen, ger en lätt övervikt uppåt. Mobilens värde sätts
-                om i CSS (se @media 768px) eftersom fontstorleken där ligger
-                fast på sitt minimum och en gemensam em-multiplikator annars
-                ger en betydligt kraftigare förskjutning på skrivbord (där
-                fontstorleken är större) än vad som var avsett. */}
-            <div className="ev-msg-col" style={{
-              flex: 1,
-              minHeight: 0,
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              gap: '0.9em',
-              transform: 'translateY(-4.5em)',
-            }}>
-              <IncomingBubble delay={0}>{t.employeeMsg1}</IncomingBubble>
-              <OutgoingBubble delay={400}>{t.employeeMsg2}</OutgoingBubble>
-              <IncomingBubble delay={800}>{t.employeeMsg3}</IncomingBubble>
-              <OutgoingBubble delay={1200}>{t.employeeMsg4}</OutgoingBubble>
-            </div>
+            <Reveal variant="up" delay={500} style={{ display: 'flex', justifyContent: 'center', flexShrink: 0 }}>
+              <img src="/logo2.png" alt="Screndo" style={{ height: '2.3em', width: 'auto', display: 'block' }} />
+            </Reveal>
           </div>
         </div>
       </div>

@@ -393,7 +393,7 @@ function BookIntroForm() {
                 boxSizing: "border-box",
                 width: phase === "vila" ? "100%" : "52px",
                 height: "52px",
-                background: phase === "vila" ? "#0A0A0A" : "#0f6e56",
+                background: phase === "vila" ? "#0A0A0A" : "#2563EB",
                 color: "#fff",
                 fontWeight: 600,
                 fontSize: "16px",

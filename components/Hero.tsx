@@ -17,18 +17,26 @@ export default function Hero() {
           flexDirection: 'column',
           alignItems: 'center',
           textAlign: 'center',
-          paddingTop: '96px',
+          paddingTop: 0,
           paddingBottom: '64px',
           paddingLeft: '24px',
           paddingRight: '24px',
+          background: '#FAFAF9',
         }}
       >
-        {/* Rubriken får en egen, bredare container så den ryms på en rad
-            på skrivbordsbredd (naturlig bredd ~1186px vid 58px). Underrubrik
-            och knappar behåller sin smalare 860px-kolumn för läsbarheten. */}
-        <h1 className="hero-h1" style={{ maxWidth: '1220px', width: '100%' }}>
-          {t.headline}
-        </h1>
+        {/* Rubriken står i en egen "slot" med fast höjd (se .hero-h1-slot i
+            globals.css) och centreras vertikalt i den, så avståndet ovanför
+            och under rubriken blir lika stort utan att underrubriken under
+            flyttar sig. De två delarna ligger i varsin white-space:nowrap-
+            span: de får plats på en rad tillsammans från och med 1024px
+            (fontstorleken är beräknad för det), och när de inte får plats
+            bryter det mellan spannen — aldrig mitt i "på autopilot". */}
+        <div className="hero-h1-slot">
+          <h1 className="hero-h1" style={{ maxWidth: '1220px', width: '100%' }}>
+            <span style={{ whiteSpace: 'nowrap' }}>{t.headline1}</span>{' '}
+            <span style={{ whiteSpace: 'nowrap' }}>{t.headline2}</span>
+          </h1>
+        </div>
 
         <div style={{ maxWidth: '860px', width: '100%' }}>
           <p
@@ -119,7 +127,7 @@ export default function Hero() {
             </h2>
           </Reveal>
 
-          <div className="why-matters-row" style={{ display: 'flex', gap: '6%', alignItems: 'flex-start' }}>
+          <div className="why-matters-row" style={{ display: 'flex', gap: '6%', alignItems: 'stretch' }}>
             <Reveal variant="left" style={{ flex: '0 0 32%' }}>
               <img
                 src="/grass-screndo.JPG"
@@ -127,8 +135,7 @@ export default function Hero() {
                 style={{
                   display: 'block',
                   width: '100%',
-                  height: 'auto',
-                  aspectRatio: '4 / 5',
+                  height: '100%',
                   objectFit: 'cover',
                   objectPosition: 'center 25%',
                   borderRadius: '22px',
@@ -136,64 +143,39 @@ export default function Hero() {
               />
             </Reveal>
 
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <Reveal variant="up" style={{ marginBottom: '56px' }}>
-                <div style={{
-                  fontSize: 'clamp(52px, 7vw, 88px)',
-                  fontWeight: 700,
-                  letterSpacing: '-0.02em',
-                  lineHeight: 1,
-                  color: '#0A0A0A',
-                  marginBottom: '14px',
-                }}>
-                  {t.whyMattersStat1Value}
-                </div>
-                <p style={{ fontSize: '16px', color: '#3D3D3D', lineHeight: 1.6, maxWidth: '380px', margin: 0 }}>
-                  {t.whyMattersStat1Label}
+            {/* Kortet: samma hörnradie och höjd som bilden bredvid (höjden
+                styrs av kortets innehåll — bilden har ingen egen fast
+                bildkvot längre utan sträcker sig (align-items: stretch) för
+                att alltid matcha kortets höjd, så de två alltid bildar ett
+                par oavsett textmängd. */}
+            <div style={{
+              flex: 1,
+              minWidth: 0,
+              background: '#FFFFFF',
+              borderRadius: '22px',
+              padding: '44px',
+              boxSizing: 'border-box',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+            }}>
+              <Reveal variant="up" style={{ marginBottom: '24px' }}>
+                <p style={{ fontSize: '15px', fontWeight: 400, lineHeight: 1.75, color: '#3D3D3D', maxWidth: '460px', margin: 0 }}>
+                  {t.whyMattersPara1}
                 </p>
               </Reveal>
 
-              <Reveal variant="up" delay={100} className="why-matters-stat" style={{ marginBottom: '56px', marginLeft: '10%' }}>
-                <div style={{
-                  fontSize: 'clamp(44px, 5.6vw, 72px)',
-                  fontWeight: 700,
-                  letterSpacing: '-0.02em',
-                  lineHeight: 1,
-                  color: '#0A0A0A',
-                  marginBottom: '14px',
-                }}>
-                  {t.whyMattersStat2Value}
-                </div>
-                <p style={{ fontSize: '16px', color: '#3D3D3D', lineHeight: 1.6, maxWidth: '380px', margin: 0 }}>
-                  {t.whyMattersStat2Label}
+              <Reveal variant="up" delay={100} style={{ marginBottom: '24px' }}>
+                <p style={{ fontSize: '15px', fontWeight: 400, lineHeight: 1.75, color: '#3D3D3D', maxWidth: '460px', margin: 0 }}>
+                  {t.whyMattersPara2}
                 </p>
               </Reveal>
 
-              <Reveal variant="up" delay={200} className="why-matters-stat" style={{ marginLeft: '4%' }}>
-                <div style={{
-                  fontSize: 'clamp(40px, 5vw, 64px)',
-                  fontWeight: 700,
-                  letterSpacing: '-0.02em',
-                  lineHeight: 1,
-                  color: '#0A0A0A',
-                  marginBottom: '14px',
-                }}>
-                  {t.whyMattersStat3Value}
-                </div>
-                <p style={{ fontSize: '16px', color: '#3D3D3D', lineHeight: 1.6, maxWidth: '380px', margin: 0 }}>
-                  {t.whyMattersStat3Label}
+              <Reveal variant="up" delay={200}>
+                <p style={{ fontSize: '15px', fontWeight: 400, lineHeight: 1.75, color: '#3D3D3D', maxWidth: '460px', margin: 0 }}>
+                  {t.whyMattersPara3}
                 </p>
               </Reveal>
-
-              <Reveal variant="up" delay={300} style={{ marginTop: '40px' }}>
-                <p style={{ fontSize: '17px', color: '#3D3D3D', fontWeight: 400, lineHeight: 1.65, maxWidth: '460px', margin: 0 }}>
-                  {t.whyMattersBridge}
-                </p>
-              </Reveal>
-
-              <p style={{ fontSize: '13px', color: '#6B6B6B', marginTop: '24px', marginBottom: 0 }}>
-                {t.whyMattersSource}
-              </p>
             </div>
           </div>
         </div>
@@ -312,15 +294,6 @@ export default function Hero() {
           </Reveal>
         </div>
       </section>
-
-      {/* Brand photo section — full-bleed, static */}
-      <div style={{ width: '100%', lineHeight: 0 }}>
-        <img
-          src="/macscrendo2.jpg"
-          alt="Screndo"
-          style={{ display: 'block', width: '100%', height: 'auto' }}
-        />
-      </div>
     </>
   )
 }

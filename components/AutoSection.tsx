@@ -131,7 +131,7 @@ export default function AutoSection() {
                   key={i}
                   style={{
                     display: 'flex',
-                    alignItems: 'center',
+                    alignItems: 'flex-start',
                     gap: '14px',
                     marginBottom: '26px',
                     opacity: shown[i] ? 1 : 0,
@@ -198,8 +198,8 @@ export default function AutoSection() {
                   width: 22,
                   height: 22,
                   borderRadius: '50%',
-                  background: '#04D8B5',
-                  border: '2px solid #04D8B5',
+                  background: '#2563EB',
+                  border: '2px solid #2563EB',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',

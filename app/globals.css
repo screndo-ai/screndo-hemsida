@@ -64,13 +64,38 @@ html.lenis.lenis-scrolling iframe {
 }
 
 /* ── Hero ── */
+/* Max (68px) är den största storlek där BÅDA språkens rubrik ryms på en rad
+   inom slottens bredd (1232px) vid 1280px viewport, den nu smalaste bredd
+   som testas för enradskravet (engelskan är längre och sätter taket: 69px
+   ↔ 1234px överskrider, 68.5px ↔ 1225px är gränsen, 68px ↔ 1216px ger
+   marginal). 5.4vw når taket redan vid ~1259px, så 1280px och uppåt får
+   alla exakt samma, maximala storlek. */
 .hero-h1 {
-  font-size: clamp(18px, 6vw, 58px);
+  font-size: clamp(24px, 5.4vw, 68px);
   font-weight: 700;
   white-space: normal;
+  overflow-wrap: break-word;
   letter-spacing: -0.01em;
   line-height: 1.05;
-  margin: 0 0 12px 0;
+  margin: 0;
+}
+
+/* Rubrikens "slot": fast höjd som matchar det gamla utrymmet mellan
+   navbarens underkant och underrubrikens överkant (96px padding + 61px
+   gammal rubrikhöjd + 12px marginal = 169px på skrivbord, 64+51+12=127px
+   på mobil), så underrubriken inte flyttar sig när rubriken blir större.
+   En padding-top (24px) äter av slottens övre del innan resten centreras,
+   vilket flyttar rubriken nedåt: mer luft ovanför, mindre under, med en
+   konstant skillnad (24px) oavsett rubrikens faktiska höjd. Linjär
+   interpolation mellan de uppmätta punkterna (390px→127px, ≥967px→169px). */
+.hero-h1-slot {
+  min-height: clamp(127px, 98.6px + 7.3vw, 169px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  box-sizing: border-box;
+  padding-top: 24px;
 }
 
 .hero-buttons {
@@ -175,7 +200,7 @@ html.lenis.lenis-scrolling iframe {
 
   /* Hero */
   .hero-section {
-    padding-top: 64px !important;
+    padding-top: 0 !important;
     padding-bottom: 48px !important;
     padding-left: 24px !important;
     padding-right: 24px !important;
@@ -434,16 +459,6 @@ html.lenis.lenis-scrolling iframe {
     --ev-screen-top: 11.5%;
     --ev-screen-width: 58%;
     --ev-screen-height: 66.6%;
-  }
-  /* Fontstorleken ligger fast på sitt minimum (7.5px) genom hela mobilspannet
-     (375–430px), så en egen em-multiplikator sätts här istället för att ärva
-     skrivbordets — annars blir uppåtförskjutningen fel proportionerad mot
-     skärmytans höjd på mobil. */
-  .ev-msg-col {
-    transform: translateY(-6.7em) !important;
-  }
-  .why-matters-stat {
-    margin-left: 0 !important;
   }
 }
 
