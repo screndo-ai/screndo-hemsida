@@ -13,11 +13,8 @@ export default function EmployeeView() {
         {/* Text: överlagrad på bildens tomma vänstra del på skrivbord,
             normalt flöde ovanför bilden på mobil (se .ev-text-overlay). */}
         <div className="ev-text-overlay">
-          <h2 style={{
+          <h2 className="font-heading" style={{
             fontSize: 'clamp(22px, 3.5vw, 42px)',
-            fontWeight: 700,
-            letterSpacing: '-0.01em',
-            lineHeight: 1.1,
             margin: '0 0 24px 0',
             color: '#0A0A0A',
             textAlign: 'left',

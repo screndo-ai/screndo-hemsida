@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Inter_Tight } from "next/font/google";
 import { LanguageProvider } from "@/lib/LanguageContext";
 import CookieConsent from "@/components/CookieConsent";
 import SmoothScroll from "@/components/SmoothScroll";
@@ -11,15 +11,25 @@ const inter = Inter({
   display: "swap",
 });
 
+// Rubriktypsnitt för hela sidan (brödtext förblir Inter ovan). Smalare
+// bokstäver än Inter vid samma vikt, vilket är varför det används här
+// i stället — se .font-heading i globals.css för vikt/spårning/radhöjd.
+const interTight = Inter_Tight({
+  subsets: ["latin"],
+  variable: "--font-inter-tight",
+  weight: ["500", "600"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
-  title: "Screndo | Organisatorisk intelligens genom medarbetarfeedback",
+  title: "Screndo | Organisatorisk intelligens",
   description:
     "Från spridda insikter till samlad intelligens. Screndo använder AI för att ställa korta, anonyma frågor till alla medarbetare och föreslå vad som är värt att göra, grundat i organisationspsykologi.",
   icons: { icon: "/nyfavicon.png" },
   robots: { googleBot: { noimageindex: true } },
   verification: { google: "mjIBIF1f28mY21N6YttL9-o8HC1i2-qgGnmNgpQjRio" },
   openGraph: {
-    title: "Screndo | Organisatorisk intelligens genom medarbetarfeedback",
+    title: "Screndo | Organisatorisk intelligens",
     description:
       "Från spridda insikter till samlad intelligens. Screndo använder AI för att ställa korta, anonyma frågor till alla medarbetare och föreslå vad som är värt att göra, grundat i organisationspsykologi.",
     url: "https://screndo.com",
@@ -33,7 +43,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="sv" className="dark">
-      <body className={`${inter.variable} ${inter.className}`} style={{ background: "#fff", color: "#000", margin: 0 }}>
+      <body className={`${inter.variable} ${interTight.variable} ${inter.className}`} style={{ background: "#fff", color: "#000", margin: 0 }}>
         <SmoothScroll />
         <LanguageProvider>
           {children}

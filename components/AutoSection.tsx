@@ -92,11 +92,8 @@ export default function AutoSection() {
         >
           {/* Left: heading + body */}
           <div style={{ flex: '0 0 44%', paddingLeft: '6%' }}>
-            <h2 style={{
+            <h2 className="font-heading" style={{
               fontSize: 'clamp(20px, 3.5vw, 42px)',
-              fontWeight: 700,
-              letterSpacing: '-0.01em',
-              lineHeight: 1.05,
               margin: '0 0 20px 0',
               color: '#0A0A0A',
             }}>

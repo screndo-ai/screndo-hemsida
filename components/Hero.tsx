@@ -27,13 +27,13 @@ export default function Hero() {
         {/* Rubriken står i en egen "slot" med fast höjd (se .hero-h1-slot i
             globals.css) och centreras vertikalt i den, så avståndet ovanför
             och under rubriken blir lika stort utan att underrubriken under
-            flyttar sig. Rubriken är en enda mening som ska få plats på EN
-            rad på skrivbord. Fontstorleken är en flytande clamp (se
-            .hero-h1 i globals.css) som krymper med fönsterbredden i stället
-            för att radbryta. På mobil (≤900px) tillåts den brytas naturligt
-            mellan ord, aldrig mitt i ett ord. */}
+            flyttar sig. Kort rubrik (två-tre ord), Sana-stil: stor, tät
+            (Inter Tight, se .font-heading), flytande storlek som skalar
+            med fönstret upp mot ett högt tak i stället för en fast
+            storlek. En rad på skrivbord, bryter naturligt på mobil
+            (≤900px), aldrig mitt i ett ord. */}
         <div className="hero-h1-slot">
-          <h1 className="hero-h1" style={{ maxWidth: '1220px', width: '100%' }}>
+          <h1 className="hero-h1 font-heading" style={{ maxWidth: '1500px', width: '100%' }}>
             {t.headline1}
           </h1>
         </div>
@@ -42,21 +42,12 @@ export default function Hero() {
           <p
             className="hero-subline"
             style={{
-              color: '#3D3D3D',
-              fontSize: '15px',
-              fontWeight: 300,
+              color: '#6B6B6B',
+              fontWeight: 400,
               margin: '0 auto 40px',
-              lineHeight: 1.6,
-              // Bas (<1280px): tre rader för båda språken. Två rader
-              // från 1280px styrs av @media-regeln för .hero-subline i
-              // globals.css (!important, så den vinner över detta).
-              maxWidth: '700px',
             }}
           >
-            {/* Första meningen i en mörkare ton än resten, så den läses som
-                svaret på rubriken. */}
-            <span style={{ color: '#1A1A1A' }}>{t.sublineLead}</span>
-            {t.sublineRest}
+            {t.subline}
           </p>
 
           <div className="hero-buttons">
@@ -120,11 +111,8 @@ export default function Hero() {
       <section className="why-matters-section" style={{ padding: '120px 24px', overflow: 'hidden' }}>
         <div style={{ maxWidth: '1160px', margin: '0 auto' }}>
           <Reveal variant="up">
-            <h2 style={{
+            <h2 className="font-heading" style={{
               fontSize: 'clamp(28px, 4.5vw, 48px)',
-              fontWeight: 700,
-              letterSpacing: '-0.01em',
-              lineHeight: 1.05,
               margin: '0 0 64px 0',
               color: '#0A0A0A',
               textAlign: 'left',
@@ -197,11 +185,8 @@ export default function Hero() {
       {/* AI-native CTA section */}
       <section className="ai-cta-section" style={{ background: '#fff', padding: '120px 24px 40px', textAlign: 'center' }}>
         <Reveal variant="up">
-          <h2 style={{
+          <h2 className="font-heading" style={{
             fontSize: 'clamp(28px, 5vw, 52px)',
-            fontWeight: 700,
-            letterSpacing: '-0.01em',
-            lineHeight: 1.1,
             margin: '0 auto 36px',
             maxWidth: '820px',
             color: '#0A0A0A',
@@ -263,11 +248,8 @@ export default function Hero() {
           style={{ display: 'flex', gap: '6%', alignItems: 'center', maxWidth: '1160px', margin: '0 auto' }}
         >
           <Reveal variant="left" style={{ flex: '0 0 42%' }}>
-            <h2 style={{
+            <h2 className="font-heading" style={{
               fontSize: 'clamp(22px, 3.5vw, 42px)',
-              fontWeight: 700,
-              letterSpacing: '-0.01em',
-              lineHeight: 1.05,
               margin: '0 0 20px 0',
               color: '#0A0A0A',
               textAlign: 'left',

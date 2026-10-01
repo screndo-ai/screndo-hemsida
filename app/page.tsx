@@ -29,11 +29,8 @@ export default function Home() {
         }}
       >
         <div style={{ maxWidth: '1160px', margin: '0 auto' }}>
-          <h2 style={{
+          <h2 className="font-heading" style={{
             fontSize: 'clamp(16px, 3.5vw, 40px)',
-            fontWeight: 700,
-            letterSpacing: '-0.01em',
-            lineHeight: 1.05,
             color: '#0A0A0A',
             margin: '0 0 48px 0',
           }}>
@@ -77,11 +74,8 @@ export default function Home() {
         }}
       >
         <Reveal variant="up">
-          <h2 style={{
+          <h2 className="font-heading" style={{
             fontSize: 'clamp(24px, 4vw, 40px)',
-            fontWeight: 700,
-            letterSpacing: '-0.01em',
-            lineHeight: 1.1,
             margin: '0 auto 12px',
             maxWidth: '720px',
             color: '#0A0A0A',

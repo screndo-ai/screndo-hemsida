@@ -33,6 +33,20 @@ img {
   max-width: 100%;
 }
 
+/* ── Rubriktypsnitt ──
+   Inter Tight i stället för Inter på alla rubriker (h1/h2) på sidan, så
+   de läses tätare och smalare, i Sana-stil. Vikt 600 (inte 500): vid
+   600 läser bokstäverna som en sammanhållen, tät rad utan att några
+   former kolliderar vid -0.035em spårning; vid 500 kändes raden för
+   lätt för den höga tätheten, bokstäverna "flöt" isär mer. Brödtext
+   (<p>) är opåverkad, kvar på Inter via body. */
+.font-heading {
+  font-family: var(--font-inter-tight), -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1.0;
+}
+
 /* ── Lenis smooth scroll ──
    Lenis driver native window-scroll (ingen transform-baserad wrapper), så
    IntersectionObserver-baserade reveal-animationer och scroll-listeners
@@ -64,50 +78,29 @@ html.lenis.lenis-scrolling iframe {
 }
 
 /* ── Hero ── */
-/* Rubriken är nu en enda, längre mening som ska rymmas på EN rad på
-   skrivbord (≥901px, innan .hero-h1 bryts om till normal radbrytning i
-   900px- och 768px-brytpunkterna nedan). white-space: nowrap tvingar den
-   att inte radbryta här; i stället krymper fontstorleken med en flytande
-   clamp tills den får plats, ingen fast brytpunkt mellan ord.
+/* Kort rubrik (två-tre ord, Sana-stil): flytande storlek (clamp) som
+   skalar med fönstret, utan fast storlek. white-space: nowrap så den
+   aldrig radbryter på skrivbord (≥901px). overflow-wrap/word-break:
+   normal säkerställer att det ALDRIG blir en brytning mitt i ett ord,
+   varken här eller när .hero-h1 tillåts radbryta på mobil (se
+   900px-brytpunkten nedan).
 
-   Taket (39px) är den STÖRSTA storlek där engelskan (den längre texten,
-   och den som sätter gränsen) fortfarande ryms på en rad vid den
-   smalaste bredd kravet gäller från: 1100px viewport ger 1052px
-   tillgänglig bredd (hero-sektionens 24px padding på var sida), och
-   engelskan tar ~1032px vid 39px, en marginal på ~20px. En enda px till
-   (39,5px) lämnar bara ~6px marginal — för nära för att vara säkert
-   mot typsnittsavvikelser mellan webbläsare. Taket kan alltså inte
-   höjas särskilt mycket mer utan att riskera radbrytning vid 1100px.
-
-   3.6vw är satt så att formeln redan NÅTT taket vid 1100px (3.6vw ⋅
-   1100 ≈ 39,6, över taket) — kurvan planar alltså ut senast vid 1100px
-   och ligger kvar där hela vägen uppåt, så andelen av sidans
-   innehållsbredd (1160px, samma breddmått som övriga sektioner) blir
-   jämn (~89 %) genom hela intervallet 1100–1920px och uppåt, i stället
-   för att plana ut först vid ~1290px som tidigare. overflow-wrap/
-   word-break: normal, aldrig en brytning mitt i ett ord, varken här
-   eller när .hero-h1 tillåts radbryta på mobil. */
+   7.6vw/132px är avvägda mot sanalabs.com som referens: deras rubrik
+   tar ~75–96% av fönsterbredden för en ungefär lika lång text. Vår
+   engelska (den längre texten) landar på 75–83% genom 1280–1920px,
+   utan att någonsin gå över en rad. Golvet (40px) gäller bara smala
+   skrivbordsbredder strax ovanför mobilbrytpunkten (901px), inte något
+   av de kontrollerade måtten. */
 .hero-h1 {
-  font-size: clamp(22px, 3.6vw, 39px);
-  font-weight: 700;
+  font-size: clamp(40px, 7.6vw, 132px);
   white-space: nowrap;
   overflow-wrap: normal;
   word-break: normal;
-  letter-spacing: -0.01em;
-  line-height: 1.05;
   margin: 0;
 }
 
-/* Rubrikens "slot": fast höjd som matchar det gamla utrymmet mellan
-   navbarens underkant och underrubrikens överkant (96px padding + 61px
-   gammal rubrikhöjd + 12px marginal = 169px på skrivbord, 64+51+12=127px
-   på mobil), så underrubriken inte flyttar sig när rubriken blir större.
-   En padding-top (24px) äter av slottens övre del innan resten centreras,
-   vilket flyttar rubriken nedåt: mer luft ovanför, mindre under, med en
-   konstant skillnad (24px) oavsett rubrikens faktiska höjd. Linjär
-   interpolation mellan de uppmätta punkterna (390px→127px, ≥967px→169px). */
 .hero-h1-slot {
-  min-height: clamp(127px, 98.6px + 7.3vw, 169px);
+  min-height: clamp(127px, 70px + 10vw, 220px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -116,18 +109,16 @@ html.lenis.lenis-scrolling iframe {
   padding-top: 24px;
 }
 
-/* Underrubriken: två rader från och med 1280px (uppmätt så att båda
-   språken, som har olika radbrytningspunkt, landar på exakt två rader —
-   engelskan, den bredare texten, kräver minst 890px för att gå från tre
-   till två rader, svenskan redan vid 860px; 900px ger marginal åt
-   båda). Under 1280px används i stället basbredden satt inline i
-   Hero.tsx (700px), som ger tre rader för båda språken (båda ryms
-   mellan ~620/580px, där de går från fyra till tre rader, och sin egen
-   tvåradsgräns ovan). Ingen ändring av textstorlek, bara bredd. */
-@media (min-width: 1280px) {
-  .hero-subline {
-    max-width: 900px !important;
-  }
+/* Underrubriken: en enda kort mening (ersätter den gamla, längre
+   underrubriken med två rader text). En rad på skrivbord via
+   white-space: nowrap, med gott om marginal vid alla uppmätta
+   bredder (1280–1920px). Normal radbrytning på mobil, se
+   900px-brytpunkten. */
+.hero-subline {
+  font-size: clamp(16px, 1.3vw, 20px);
+  line-height: 1.5;
+  max-width: 640px;
+  white-space: nowrap;
 }
 
 .hero-buttons {
@@ -244,6 +235,7 @@ html.lenis.lenis-scrolling iframe {
   .hero-subline {
     font-size: 14px !important;
     max-width: 100% !important;
+    white-space: normal !important;
   }
   .hero-buttons {
     flex-direction: column !important;

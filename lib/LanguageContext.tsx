@@ -46,9 +46,8 @@ const translations = {
     produkterDropdown: 'Produkter',
     menuLabel: 'Meny',
     // Hero
-    headline1: 'Organisatorisk intelligens genom medarbetarfeedback',
-    sublineLead: 'Från spridda insikter till samlad intelligens.',
-    sublineRest: ' Screndo använder AI för att ställa korta, anonyma frågor till alla, förstå svaren och föreslå vad som är värt att göra, grundat i organisationspsykologi. Med eller utan en befintlig medarbetarundersökning.',
+    headline1: 'Organisatorisk intelligens',
+    subline: 'AI-driven medarbetarfeedback, grundad i organisationspsykologi.',
     seeHow: 'Se hur det fungerar',
     videoHeadline: 'Se hur Screndo fungerar',
     // Why it matters section
@@ -210,9 +209,8 @@ const translations = {
     produkterDropdown: 'Products',
     menuLabel: 'Menu',
     // Hero
-    headline1: 'Organisational intelligence through employee feedback',
-    sublineLead: 'From scattered insights to collective intelligence.',
-    sublineRest: " Screndo uses AI to ask everyone short, anonymous questions, understand the answers and suggest what's worth doing, grounded in organisational psychology. With or without an existing employee survey.",
+    headline1: 'Organisational intelligence',
+    subline: 'AI-powered employee feedback, grounded in organisational psychology.',
     seeHow: 'See how it works',
     videoHeadline: 'See how Screndo works',
     // Why it matters section
