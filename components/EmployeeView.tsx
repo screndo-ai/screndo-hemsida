@@ -8,7 +8,7 @@ export default function EmployeeView() {
   const { t } = useLanguage()
 
   return (
-    <section className="employee-view-section" style={{ background: '#fff', padding: '80px 0 0' }}>
+    <section id="employee-view" className="employee-view-section" style={{ background: '#fff', padding: '80px 0 0' }}>
       <div className="ev-wrap" style={{ position: 'relative', maxWidth: '1800px', margin: '0 auto' }}>
         {/* Text: överlagrad på bildens tomma vänstra del på skrivbord,
             normalt flöde ovanför bilden på mobil (se .ev-text-overlay). */}

@@ -74,7 +74,7 @@ export default function Hero() {
               {t.bookIntro}
             </a>
             <a
-              href="#video-demo"
+              href="#employee-view"
               className="hero-btn-secondary"
               style={{
                 background: '#fff',
@@ -229,24 +229,6 @@ export default function Hero() {
           }}>
             {t.aiNativeExtra}
           </p>
-        </Reveal>
-        <Reveal variant="up" delay={150} style={{ display: 'inline-block' }}>
-          <a
-            href="#video-demo"
-            className="hero-btn-primary"
-            style={{
-              background: '#2563EB',
-              color: '#fff',
-              textDecoration: 'none',
-              fontSize: '15px',
-              fontWeight: 600,
-              borderRadius: '100px',
-              padding: '14px 28px',
-              display: 'inline-block',
-            }}
-          >
-            {t.watchDemo}
-          </a>
         </Reveal>
       </section>
 

@@ -61,7 +61,6 @@ const translations = {
     aiNativeHeadline: 'Du får inte en dashboard. Du får ett förslag.',
     aiNativeSubline: 'Varje rapport avslutas med en konkret åtgärd, grundad i vad dina medarbetare faktiskt svarat, och en kort motivering till varför.',
     aiNativeExtra: 'Och undrar du något, fråga. "Vad bör jag ta upp på medarbetarsamtalen nästa vecka?"',
-    watchDemo: 'Se demofilm',
     // Founded section
     foundedHeadline: 'Byggt på forskning, inte på magkänsla.',
     foundedBody: 'Screndo utvecklas vid HighFive Innovationsarena, Högskolan i Halmstad. Förslagen bygger på etablerad forskning om arbetsmiljö och organisationspsykologi.',
@@ -226,7 +225,6 @@ const translations = {
     aiNativeHeadline: "You don't get a dashboard. You get a recommendation.",
     aiNativeSubline: 'Every report ends with a concrete action, grounded in what your employees actually said, and a short explanation of why.',
     aiNativeExtra: 'And if you wonder about something, just ask. "What should I bring up in next week\'s one-on-ones?"',
-    watchDemo: 'Watch demo',
     // Founded section
     foundedHeadline: 'Built on research, not gut feeling.',
     foundedBody: 'Screndo is developed at HighFive Innovation Arena, Halmstad University. The suggestions are based on established research in work environment and organisational psychology.',

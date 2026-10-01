@@ -6,6 +6,12 @@ import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
 import { useLanguage } from "@/lib/LanguageContext";
 
+// Filmen visar det gamla SMS-svarsflödet, inte hur appen faktiskt
+// fungerar idag. Sektionen döljs tills det finns en ny film, men koden
+// står kvar oförändrad så den bara är att slå på igen (SHOW_DEMO_VIDEO
+// = true) den dagen. Inget på sidan länkar till #video-demo längre.
+const SHOW_DEMO_VIDEO = false
+
 export default function Home() {
   const { t } = useLanguage()
   return (
@@ -14,7 +20,7 @@ export default function Home() {
       <Hero />
 
       {/* Video section */}
-      <section
+      {SHOW_DEMO_VIDEO && <section
         id="video-demo"
         style={{
           background: '#fff',
@@ -59,7 +65,7 @@ export default function Home() {
             />
           </div>
         </div>
-      </section>
+      </section>}
 
       {/* Final CTA */}
       <section
