@@ -97,9 +97,14 @@ export default function EmployeeView() {
                         justifyContent: 'center',
                         fontSize: '0.8em',
                         fontWeight: 600,
-                        color: '#0A0A0A',
+                        // Valt tal fylls med samma blå som appens Kör-knapp
+                        // (#2563EB) och får vit siffra. Kanten får samma blå
+                        // i stället för att tas bort — utan kant krymper
+                        // rutan och hela raden flyttar sig.
+                        color: n === SELECTED_VALUE ? '#FFFFFF' : '#0A0A0A',
+                        background: n === SELECTED_VALUE ? '#2563EB' : 'transparent',
                         borderRadius: '0.35em',
-                        border: n === SELECTED_VALUE ? '1.5px solid #0A0A0A' : '1px solid #E4E3DF',
+                        border: n === SELECTED_VALUE ? '1px solid #2563EB' : '1px solid #E4E3DF',
                       }}
                     >
                       {n}
@@ -112,8 +117,19 @@ export default function EmployeeView() {
                 </div>
               </Reveal>
 
+              {/* Samma rad som i appen: hänglås till vänster, centrerad
+                  under skalan, grått i samma ton som skaletiketterna. */}
               <Reveal variant="up" delay={300} style={{ marginTop: '1.2em' }}>
-                <p style={{ fontSize: '0.72em', color: '#B0B0B0', lineHeight: 1.5, textAlign: 'left', margin: 0 }}>
+                <p style={{
+                  display: 'flex', alignItems: 'flex-start', justifyContent: 'center', gap: '0.5em',
+                  fontSize: '0.72em', color: '#9A9A9A', lineHeight: 1.5, margin: 0,
+                }}>
+                  <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"
+                    style={{ flex: '0 0 auto', marginTop: '0.2em' }}>
+                    <rect x="4" y="10.5" width="16" height="11" rx="2.5" />
+                    <path d="M8 10.5V7a4 4 0 0 1 8 0v3.5" />
+                  </svg>
                   {t.svarDisclaimer}
                 </p>
               </Reveal>

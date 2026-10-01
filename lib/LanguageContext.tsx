@@ -78,7 +78,7 @@ const translations = {
     svarQuestion: 'Känner du att du får tillräckligt med uppskattning för det arbete du gör?',
     svarNeverLabel: 'Inte alls',
     svarAlwaysLabel: 'Absolut',
-    svarDisclaimer: 'Ditt svar är anonymt. Resultat visas aldrig för grupper under fem.',
+    svarDisclaimer: 'Ditt svar är anonymt och citeras aldrig ordagrant.',
     // Final CTA section
     finalCtaHeadline: 'Vill du se hur det skulle se ut hos er?',
     finalCtaSubline: 'Trettio minuter, inga förberedelser. Vi tittar på hur ni jobbar med medarbetarfeedback idag och visar hur Screndo skulle fungera hos er.',
@@ -224,7 +224,7 @@ const translations = {
     svarQuestion: 'Do you feel you get enough appreciation for the work you do?',
     svarNeverLabel: 'Not at all',
     svarAlwaysLabel: 'Absolutely',
-    svarDisclaimer: 'Your answer is anonymous. Results are never shown for groups under five.',
+    svarDisclaimer: 'Your answer is anonymous and never quoted word for word.',
     // Final CTA section
     finalCtaHeadline: 'Want to see what it would look like for you?',
     finalCtaSubline: "Thirty minutes, no prep. We'll look at how you handle employee feedback today and show you how Screndo would work for you.",
