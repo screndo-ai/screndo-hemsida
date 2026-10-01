@@ -27,14 +27,14 @@ export default function Hero() {
         {/* Rubriken står i en egen "slot" med fast höjd (se .hero-h1-slot i
             globals.css) och centreras vertikalt i den, så avståndet ovanför
             och under rubriken blir lika stort utan att underrubriken under
-            flyttar sig. De två delarna ligger i varsin white-space:nowrap-
-            span: de får plats på en rad tillsammans från och med 1024px
-            (fontstorleken är beräknad för det), och när de inte får plats
-            bryter det mellan spannen — aldrig mitt i "på autopilot". */}
+            flyttar sig. Rubriken är en enda mening som ska få plats på EN
+            rad på skrivbord. Fontstorleken är en flytande clamp (se
+            .hero-h1 i globals.css) som krymper med fönsterbredden i stället
+            för att radbryta. På mobil (≤900px) tillåts den brytas naturligt
+            mellan ord, aldrig mitt i ett ord. */}
         <div className="hero-h1-slot">
           <h1 className="hero-h1" style={{ maxWidth: '1220px', width: '100%' }}>
-            <span style={{ whiteSpace: 'nowrap' }}>{t.headline1}</span>{' '}
-            <span style={{ whiteSpace: 'nowrap' }}>{t.headline2}</span>
+            {t.headline1}
           </h1>
         </div>
 
@@ -50,7 +50,10 @@ export default function Hero() {
               maxWidth: '600px',
             }}
           >
-            {t.subline}
+            {/* Första meningen i en mörkare ton än resten, så den läses som
+                svaret på rubriken. */}
+            <span style={{ color: '#1A1A1A' }}>{t.sublineLead}</span>
+            {t.sublineRest}
           </p>
 
           <div className="hero-buttons">
@@ -171,9 +174,15 @@ export default function Hero() {
                 </p>
               </Reveal>
 
-              <Reveal variant="up" delay={200}>
+              <Reveal variant="up" delay={200} style={{ marginBottom: '24px' }}>
                 <p style={{ fontSize: '15px', fontWeight: 400, lineHeight: 1.75, color: '#3D3D3D', maxWidth: '460px', margin: 0 }}>
                   {t.whyMattersPara3}
+                </p>
+              </Reveal>
+
+              <Reveal variant="up" delay={300}>
+                <p style={{ fontSize: '15px', fontWeight: 400, lineHeight: 1.75, color: '#3D3D3D', maxWidth: '460px', margin: 0 }}>
+                  {t.whyMattersPara4}
                 </p>
               </Reveal>
             </div>
@@ -203,10 +212,22 @@ export default function Hero() {
             fontWeight: 400,
             lineHeight: 1.6,
             color: '#3D3D3D',
-            margin: '0 auto 36px',
+            margin: '0 auto 16px',
             maxWidth: '620px',
           }}>
             {t.aiNativeSubline}
+          </p>
+        </Reveal>
+        <Reveal variant="up" delay={120}>
+          <p style={{
+            fontSize: 'clamp(15px, 2vw, 18px)',
+            fontWeight: 400,
+            lineHeight: 1.6,
+            color: '#3D3D3D',
+            margin: '0 auto 36px',
+            maxWidth: '620px',
+          }}>
+            {t.aiNativeExtra}
           </p>
         </Reveal>
         <Reveal variant="up" delay={150} style={{ display: 'inline-block' }}>

@@ -12,16 +12,16 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Screndo | AI-driven pulsmätning för medarbetarengagemang",
+  title: "Screndo | Organisatorisk intelligens genom medarbetarfeedback",
   description:
-    "Medarbetarförståelse på autopilot: Screndo frågar dina medarbetare, förstår svaren och ger dig ett konkret förslag på vad som är värt att göra. Utvecklat och designat i Halmstad, Sverige.",
+    "Från spridda insikter till samlad intelligens. Screndo använder AI för att ställa korta, anonyma frågor till alla medarbetare och föreslå vad som är värt att göra, grundat i organisationspsykologi.",
   icons: { icon: "/nyfavicon.png" },
   robots: { googleBot: { noimageindex: true } },
   verification: { google: "mjIBIF1f28mY21N6YttL9-o8HC1i2-qgGnmNgpQjRio" },
   openGraph: {
-    title: "Screndo | AI-driven pulsmätning för medarbetarengagemang",
+    title: "Screndo | Organisatorisk intelligens genom medarbetarfeedback",
     description:
-      "Medarbetarförståelse på autopilot: Screndo frågar dina medarbetare, förstår svaren och ger dig ett konkret förslag på vad som är värt att göra. Utvecklat och designat i Halmstad, Sverige.",
+      "Från spridda insikter till samlad intelligens. Screndo använder AI för att ställa korta, anonyma frågor till alla medarbetare och föreslå vad som är värt att göra, grundat i organisationspsykologi.",
     url: "https://screndo.com",
   },
 };

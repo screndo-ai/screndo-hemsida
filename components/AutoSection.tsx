@@ -6,8 +6,8 @@ import { useLanguage } from '@/lib/LanguageContext'
 export default function AutoSection() {
   const { t } = useLanguage()
   const ref = useRef<HTMLElement>(null)
-  const [shown, setShown] = useState([false, false, false])
-  const [struck, setStruck] = useState([false, false, false])
+  const [shown, setShown] = useState([false, false, false, false])
+  const [struck, setStruck] = useState([false, false, false, false])
   const [finalVisible, setFinalVisible] = useState(false)
   const [cardVisible, setCardVisible] = useState(false)
 
@@ -17,8 +17,8 @@ export default function AutoSection() {
 
     function startSequence() {
       if (reduced) {
-        setShown([true, true, true])
-        setStruck([true, true, true])
+        setShown([true, true, true, true])
+        setStruck([true, true, true, true])
         setFinalVisible(true)
         return
       }
@@ -34,7 +34,9 @@ export default function AutoSection() {
       strike(1, 1500)
       show(2, 1900)
       strike(2, 2450)
-      setTimeout(() => setFinalVisible(true), 2950)
+      show(3, 2850)
+      strike(3, 3400)
+      setTimeout(() => setFinalVisible(true), 3900)
     }
 
     const observer = new IntersectionObserver(
@@ -60,7 +62,7 @@ export default function AutoSection() {
     return () => observer.disconnect()
   }, [])
 
-  const items = [t.autoItem1, t.autoItem2, t.autoItem3]
+  const items = [t.autoItem1, t.autoItem2, t.autoItem3, t.autoItem4]
 
   return (
     <>
