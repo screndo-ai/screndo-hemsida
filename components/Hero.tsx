@@ -38,7 +38,7 @@ export default function Hero() {
           </h1>
         </div>
 
-        <div style={{ maxWidth: '860px', width: '100%' }}>
+        <div style={{ maxWidth: '920px', width: '100%' }}>
           <p
             className="hero-subline"
             style={{
@@ -47,7 +47,10 @@ export default function Hero() {
               fontWeight: 300,
               margin: '0 auto 40px',
               lineHeight: 1.6,
-              maxWidth: '600px',
+              // Bas (<1280px): tre rader för båda språken. Två rader
+              // från 1280px styrs av @media-regeln för .hero-subline i
+              // globals.css (!important, så den vinner över detta).
+              maxWidth: '700px',
             }}
           >
             {/* Första meningen i en mörkare ton än resten, så den läses som

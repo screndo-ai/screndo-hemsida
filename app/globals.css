@@ -68,13 +68,27 @@ html.lenis.lenis-scrolling iframe {
    skrivbord (≥901px, innan .hero-h1 bryts om till normal radbrytning i
    900px- och 768px-brytpunkterna nedan). white-space: nowrap tvingar den
    att inte radbryta här; i stället krymper fontstorleken med en flytande
-   clamp tills den får plats, ingen fast brytpunkt mellan ord. Max (40px)
-   är den största storlek där BÅDA språkens rubrik ryms på en rad inom
-   slottens bredd (1220px) vid 1280px viewport (engelskan är längre och
-   sätter taket). overflow-wrap/word-break: normal, aldrig en brytning
-   mitt i ett ord, varken här eller när .hero-h1 tillåts radbryta på mobil. */
+   clamp tills den får plats, ingen fast brytpunkt mellan ord.
+
+   Taket (39px) är den STÖRSTA storlek där engelskan (den längre texten,
+   och den som sätter gränsen) fortfarande ryms på en rad vid den
+   smalaste bredd kravet gäller från: 1100px viewport ger 1052px
+   tillgänglig bredd (hero-sektionens 24px padding på var sida), och
+   engelskan tar ~1032px vid 39px, en marginal på ~20px. En enda px till
+   (39,5px) lämnar bara ~6px marginal — för nära för att vara säkert
+   mot typsnittsavvikelser mellan webbläsare. Taket kan alltså inte
+   höjas särskilt mycket mer utan att riskera radbrytning vid 1100px.
+
+   3.6vw är satt så att formeln redan NÅTT taket vid 1100px (3.6vw ⋅
+   1100 ≈ 39,6, över taket) — kurvan planar alltså ut senast vid 1100px
+   och ligger kvar där hela vägen uppåt, så andelen av sidans
+   innehållsbredd (1160px, samma breddmått som övriga sektioner) blir
+   jämn (~89 %) genom hela intervallet 1100–1920px och uppåt, i stället
+   för att plana ut först vid ~1290px som tidigare. overflow-wrap/
+   word-break: normal, aldrig en brytning mitt i ett ord, varken här
+   eller när .hero-h1 tillåts radbryta på mobil. */
 .hero-h1 {
-  font-size: clamp(22px, 3.1vw, 40px);
+  font-size: clamp(22px, 3.6vw, 39px);
   font-weight: 700;
   white-space: nowrap;
   overflow-wrap: normal;
@@ -100,6 +114,20 @@ html.lenis.lenis-scrolling iframe {
   width: 100%;
   box-sizing: border-box;
   padding-top: 24px;
+}
+
+/* Underrubriken: två rader från och med 1280px (uppmätt så att båda
+   språken, som har olika radbrytningspunkt, landar på exakt två rader —
+   engelskan, den bredare texten, kräver minst 890px för att gå från tre
+   till två rader, svenskan redan vid 860px; 900px ger marginal åt
+   båda). Under 1280px används i stället basbredden satt inline i
+   Hero.tsx (700px), som ger tre rader för båda språken (båda ryms
+   mellan ~620/580px, där de går från fyra till tre rader, och sin egen
+   tvåradsgräns ovan). Ingen ändring av textstorlek, bara bredd. */
+@media (min-width: 1280px) {
+  .hero-subline {
+    max-width: 900px !important;
+  }
 }
 
 .hero-buttons {
