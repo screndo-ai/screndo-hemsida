@@ -22,16 +22,16 @@ const interTight = Inter_Tight({
 });
 
 export const metadata: Metadata = {
-  title: "Screndo | Organisatorisk intelligens",
+  title: "Screndo | Intelligent medarbetarfeedback och pulsmätning",
   description:
-    "Från spridda insikter till samlad intelligens. Screndo använder AI för att ställa korta, anonyma frågor till alla medarbetare och föreslå vad som är värt att göra, grundat i organisationspsykologi.",
+    "Löpande pulsmätning grundad i organisationspsykologi. Screndo visar läget, föreslår åtgärder och följer upp att de fungerar.",
   icons: { icon: "/nyfavicon.png" },
   robots: { googleBot: { noimageindex: true } },
   verification: { google: "mjIBIF1f28mY21N6YttL9-o8HC1i2-qgGnmNgpQjRio" },
   openGraph: {
-    title: "Screndo | Organisatorisk intelligens",
+    title: "Screndo | Intelligent medarbetarfeedback och pulsmätning",
     description:
-      "Från spridda insikter till samlad intelligens. Screndo använder AI för att ställa korta, anonyma frågor till alla medarbetare och föreslå vad som är värt att göra, grundat i organisationspsykologi.",
+      "Löpande pulsmätning grundad i organisationspsykologi. Screndo visar läget, föreslår åtgärder och följer upp att de fungerar.",
     url: "https://screndo.com",
   },
 };

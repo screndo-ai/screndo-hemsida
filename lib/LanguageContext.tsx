@@ -46,8 +46,10 @@ const translations = {
     produkterDropdown: 'Produkter',
     menuLabel: 'Meny',
     // Hero
-    headline1: 'Organisatorisk intelligens',
-    subline: 'AI-driven medarbetarfeedback, grundad i organisationspsykologi.',
+    headline1: 'Intelligent medarbetarfeedback',
+    metaTitle: 'Screndo | Intelligent medarbetarfeedback och pulsmätning',
+    metaDescription: 'Löpande pulsmätning grundad i organisationspsykologi. Screndo visar läget, föreslår åtgärder och följer upp att de fungerar.',
+    subline: 'Löpande pulsmätning grundad i organisationspsykologi. Screndo visar läget, föreslår åtgärder och följer upp att de fungerar.',
     seeHow: 'Se hur det fungerar',
     videoHeadline: 'Se hur Screndo fungerar',
     // Why it matters section
@@ -209,8 +211,10 @@ const translations = {
     produkterDropdown: 'Products',
     menuLabel: 'Menu',
     // Hero
-    headline1: 'Organisational intelligence',
-    subline: 'AI-powered employee feedback, grounded in organisational psychology.',
+    headline1: 'Intelligent employee feedback',
+    subline: 'Continuous pulse surveys grounded in organisational psychology. Screndo shows where you stand, suggests actions and follows up that they work.',
+    metaTitle: 'Screndo | Intelligent employee feedback and pulse surveys',
+    metaDescription: 'Continuous pulse surveys grounded in organisational psychology. Screndo shows where you stand, suggests actions and follows up that they work.',
     seeHow: 'See how it works',
     videoHeadline: 'See how Screndo works',
     // Why it matters section
@@ -355,6 +359,12 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     document.documentElement.lang = lang
+    // Titel och description följer språkvalet. Den statiska metadatan i
+    // layout.tsx är svenska (det som crawlers och delningskort ser).
+    document.title = translations[lang].metaTitle
+    document
+      .querySelector('meta[name="description"]')
+      ?.setAttribute('content', translations[lang].metaDescription)
   }, [lang])
 
   function setLanguage(l: Lang) {

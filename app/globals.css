@@ -85,14 +85,13 @@ html.lenis.lenis-scrolling iframe {
    varken här eller när .hero-h1 tillåts radbryta på mobil (se
    900px-brytpunkten nedan).
 
-   7.6vw/132px är avvägda mot sanalabs.com som referens: deras rubrik
-   tar ~75–96% av fönsterbredden för en ungefär lika lång text. Vår
-   engelska (den längre texten) landar på 75–83% genom 1280–1920px,
-   utan att någonsin gå över en rad. Golvet (40px) gäller bara smala
+   6.4vw/120px: den svenska rubriken (13,1 × fontstorleken i bredd, den
+   bredare av de två) tar ~87% av tillgänglig bredd vid 1280–1440px och
+   ryms på en rad från 901px och uppåt. Golvet (40px) gäller bara smala
    skrivbordsbredder strax ovanför mobilbrytpunkten (901px), inte något
    av de kontrollerade måtten. */
 .hero-h1 {
-  font-size: clamp(40px, 7.6vw, 132px);
+  font-size: clamp(40px, 6.4vw, 120px);
   white-space: nowrap;
   overflow-wrap: normal;
   word-break: normal;
@@ -109,16 +108,13 @@ html.lenis.lenis-scrolling iframe {
   padding-top: 24px;
 }
 
-/* Underrubriken: en enda kort mening (ersätter den gamla, längre
-   underrubriken med två rader text). En rad på skrivbord via
-   white-space: nowrap, med gott om marginal vid alla uppmätta
-   bredder (1280–1920px). Normal radbrytning på mobil, se
-   900px-brytpunkten. */
+/* Underrubriken: två rader på skrivbord (max-width 760px ger två rader
+   för båda språken vid 1280px och uppåt), normal radbrytning på mobil,
+   se 900px-brytpunkten. */
 .hero-subline {
   font-size: clamp(16px, 1.3vw, 20px);
   line-height: 1.5;
-  max-width: 640px;
-  white-space: nowrap;
+  max-width: 760px;
 }
 
 .hero-buttons {
@@ -229,6 +225,9 @@ html.lenis.lenis-scrolling iframe {
     padding-right: 24px !important;
   }
   .hero-h1 {
+    /* Längsta ordet ("medarbetarfeedback") får inte kapas: 9vw ger
+       ~300px ord vid 375px (327px tillgängligt), ~256px vid 320px. */
+    font-size: clamp(26px, 9vw, 40px) !important;
     line-height: 1.1 !important;
     white-space: normal !important;
   }
