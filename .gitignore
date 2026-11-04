@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# källfiler till laptopbilden (bara public/laptop_realistic.jpg används)
+/public/laptop-realistic/
+laptop-realistic.zip

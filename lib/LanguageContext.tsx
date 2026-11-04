@@ -1,6 +1,7 @@
 'use client'
 
 import { createContext, useContext, useEffect, useState } from 'react'
+import { usePathname } from 'next/navigation'
 
 type Lang = 'sv' | 'en'
 
@@ -48,6 +49,8 @@ const translations = {
     // Hero
     headline1: 'Feedback som drivkraft',
     metaTitle: 'Screndo · Feedback som drivkraft',
+    privacyMetaTitle: 'Screndo · Integritet',
+    bookIntroMetaTitle: 'Screndo · Boka intro',
     metaDescription: 'Screndo fångar upp feedback från era medarbetare autonomt och ger en aktuell överblick över er organisation.',
     subline: 'Fånga upp feedback autonomt och få en aktuell överblick över er organisation.',
     seeHow: 'Se hur det fungerar',
@@ -61,7 +64,7 @@ const translations = {
     homeCostHeadline2: 'Omotiverade anställda är dyrare.',
     homeStat1Value: '45\u00a0%',
     homeStat1Text: 'Anställda som fick erkännande av hög kvalitet var 45 procent mindre benägna att ha slutat två år senare.',
-    homeStat1Source: 'Gallup och Workhuman, 2024',
+    homeStat1Source: 'Gallup, 2024',
     homeStat2Value: '85\u00a0%',
     homeStat2Text: '85 procent hade någon gång känt att de inte kunde ta upp en fråga de tyckte var viktig.',
     homeStat2Source: 'Milliken, Morrison och Hewlin, 2003',
@@ -255,6 +258,8 @@ const translations = {
     headline1: 'Feedback as a driving force',
     subline: 'Capture feedback autonomously and get an up-to-date overview of your organisation.',
     metaTitle: 'Screndo · Feedback as a driving force',
+    privacyMetaTitle: 'Screndo · Privacy',
+    bookIntroMetaTitle: 'Screndo · Book an intro',
     metaDescription: 'Screndo captures feedback from your employees autonomously and gives an up-to-date overview of your organisation.',
     seeHow: 'See how it works',
     videoHeadline: 'See how Screndo works',
@@ -267,7 +272,7 @@ const translations = {
     homeCostHeadline2: 'Unmotivated employees cost more.',
     homeStat1Value: '45%',
     homeStat1Text: 'Employees who received high-quality recognition were 45 percent less likely to have left two years later.',
-    homeStat1Source: 'Gallup and Workhuman, 2024',
+    homeStat1Source: 'Gallup, 2024',
     homeStat2Value: '85%',
     homeStat2Text: '85 percent had at some point felt unable to raise an issue they considered important.',
     homeStat2Source: 'Milliken, Morrison and Hewlin, 2003',
@@ -433,6 +438,7 @@ const LanguageContext = createContext<{
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [lang, setLang] = useState<Lang>('sv')
+  const pathname = usePathname()
 
   useEffect(() => {
     const saved = localStorage.getItem('screndo-lang') as Lang | null
@@ -445,7 +451,14 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     // (layout.tsx, page.tsx) är svenska (det som crawlers och delningskort
     // ser). Next kan skriva in sin <title> efter den här effekten, så en
     // observatör på <head> lägger tillbaka rätt titel om den skrivs över.
-    const { metaTitle, metaDescription } = translations[lang]
+    // Egna titlar för /privacy och /book-intro (samma som i deras
+    // layout.tsx på svenska), annars startsidans.
+    const tr = translations[lang]
+    const metaTitle =
+      pathname === '/privacy' ? tr.privacyMetaTitle
+      : pathname === '/book-intro' ? tr.bookIntroMetaTitle
+      : tr.metaTitle
+    const metaDescription = tr.metaDescription
     const apply = () => {
       if (document.title !== metaTitle) document.title = metaTitle
       const desc = document.querySelector('meta[name="description"]')
@@ -455,7 +468,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     const observer = new MutationObserver(apply)
     observer.observe(document.head, { childList: true, subtree: true, characterData: true, attributes: true })
     return () => observer.disconnect()
-  }, [lang])
+  }, [lang, pathname])
 
   function setLanguage(l: Lang) {
     setLang(l)

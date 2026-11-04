@@ -13,8 +13,7 @@ import Reveal from '@/components/Reveal'
 // in i bild); rubriken först, brödtexten strax efter.
 
 const STAT_SOURCES = {
-  recognition:
-    'https://www.businesswire.com/news/home/20240918942631/en/New-Workhuman-and-Gallup-Research-Finds-Recognition-in-the-Workplace-Could-Prevent-45-of-Voluntary-Turnover',
+  recognition: 'https://www.gallup.com/workplace/650174/employee-recognition-quality-drives-retention.aspx',
   silence: 'https://explore.psychsafety.com/n/milliken-morrison-hewlin-2003/',
 }
 
