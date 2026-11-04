@@ -78,58 +78,188 @@ html.lenis.lenis-scrolling iframe {
 }
 
 /* ── Hero ── */
-/* Kort rubrik (två-tre ord, Sana-stil): flytande storlek (clamp) som
-   skalar med fönstret, utan fast storlek. white-space: nowrap så den
-   aldrig radbryter på skrivbord (≥901px). overflow-wrap/word-break:
-   normal säkerställer att det ALDRIG blir en brytning mitt i ett ord,
-   varken här eller när .hero-h1 tillåts radbryta på mobil (se
-   900px-brytpunkten nedan).
+/* Text centrerad i en egen spalt med sidmarginal; bildraden under går
+   kant i kant (ingen sidpadding på sektionen) och börjar vid sidans
+   vänsterkant. Avstånden skalar med fönstret så att hela kortraden,
+   inklusive textrutan längst ner, ryms ovanför vecket vid 1440x900 och
+   1920x1080. */
+.hero-section {
+  background: #fff;
+  padding: clamp(48px, 5vw, 96px) 0 0;
+  overflow: hidden;
+}
 
-   6.4vw/120px: den svenska rubriken (13,1 × fontstorleken i bredd, den
-   bredare av de två) tar ~87% av tillgänglig bredd vid 1280–1440px och
-   ryms på en rad från 901px och uppåt. Golvet (40px) gäller bara smala
-   skrivbordsbredder strax ovanför mobilbrytpunkten (901px), inte något
-   av de kontrollerade måtten. */
+.hero-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0 24px;
+  margin-bottom: clamp(48px, 4.6vw, 88px);
+}
+
+/* Rubriken: Inter Tight, bara här (resten av sidan har Inter). Vikt 700
+   för den kraftiga Sana-känslan, spårning -0.03em: tätt men inget
+   kolliderar. En rad på skrivbord, bryter mellan ord på mobil. */
 .hero-h1 {
-  font-size: clamp(40px, 6.4vw, 120px);
+  font-family: var(--font-inter-tight), -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  font-size: clamp(40px, 5.9vw, 120px);
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: #0A0A0A;
   white-space: nowrap;
-  overflow-wrap: normal;
-  word-break: normal;
   margin: 0;
 }
 
-.hero-h1-slot {
-  min-height: clamp(127px, 70px + 10vw, 220px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  box-sizing: border-box;
-  padding-top: 24px;
-}
-
-/* Underrubriken: två rader på skrivbord (max-width 760px ger två rader
-   för båda språken vid 1280px och uppåt), normal radbrytning på mobil,
-   se 900px-brytpunkten. */
 .hero-subline {
-  font-size: clamp(16px, 1.3vw, 20px);
+  font-size: clamp(16px, 1.25vw, 20px);
+  font-weight: 400;
   line-height: 1.5;
+  color: #4D4D4D;
   max-width: 760px;
+  margin: clamp(14px, 1.3vw, 22px) 0 clamp(28px, 2.4vw, 40px);
 }
 
-.hero-buttons {
+.hero-cta {
+  display: inline-block;
+  box-sizing: border-box;
+  min-width: 248px;
+  padding: 14px 32px;
+  border-radius: 100px;
+  background: #2563EB;
+  color: #fff;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 600;
+  text-align: center;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+.hero-cta:hover {
+  transform: scale(1.03);
+  background: #1D4ED8;
+}
+.hero-cta:focus-visible {
+  outline: 2px solid #2563EB;
+  outline-offset: 3px;
+}
+
+/* ── Hero: bildraden ── */
+/* 4 kort + en bit av det femte på skrivbord, 2,5 på surfplatta, ~1,5 på
+   mobil. Kortbredden räknas från radens egen bredd, så sidans
+   vertikala scrollbar inte förskjuter något. */
+.hero-cards-track {
+  --cards-gap: 12px;
+  --cards-visible: 4.25;
+  position: relative;
   display: flex;
-  gap: 12px;
-  justify-content: center;
-  flex-wrap: wrap;
+  gap: var(--cards-gap);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+}
+.hero-cards-track::-webkit-scrollbar {
+  display: none;
 }
 
-.hero-btn-primary,
-.hero-btn-secondary {
+.hero-card {
+  position: relative;
+  flex: 0 0 calc((100% - 4 * var(--cards-gap)) / var(--cards-visible));
+  aspect-ratio: 1105 / 1423;
+  margin: 0;
+  border-radius: 22px;
+  overflow: hidden;
+  scroll-snap-align: start;
+  background: #F1F1EF;
+  outline: none;
+}
+.hero-card:focus-visible {
+  box-shadow: inset 0 0 0 3px #2563EB;
+}
+
+.hero-card-img {
+  object-fit: cover;
+  opacity: 0.55;
+  transition: opacity 0.5s ease;
+}
+.hero-card.is-lit .hero-card-img {
+  opacity: 1;
+}
+
+.hero-card-caption {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: #0A0A0A;
+  color: #fff;
+  font-size: 14px;
+  line-height: 1.4;
+  text-align: left;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  pointer-events: none;
+}
+.hero-card-caption strong {
+  font-weight: 600;
+  font-size: 15px;
+}
+.hero-card.is-lit .hero-card-caption {
+  opacity: 1;
+  transform: none;
+}
+
+@media (max-width: 1024px) {
+  .hero-cards-track {
+    --cards-visible: 2.5;
+  }
+  .hero-card {
+    flex-basis: calc((100% - 2 * var(--cards-gap)) / var(--cards-visible));
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-cards-track {
+    --cards-gap: 10px;
+    --cards-visible: 1.5;
+  }
+  .hero-card {
+    flex-basis: calc((100% - var(--cards-gap)) / var(--cards-visible));
+    border-radius: 18px;
+  }
+  .hero-card-caption {
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    padding: 12px 14px;
+    font-size: 13px;
+  }
+  .hero-card-caption strong {
+    font-size: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-card-img,
+  .hero-card-caption,
+  .hero-cta {
+    transition: none;
+  }
+}
+
+.hero-btn-primary {
   transition: transform 0.2s ease;
 }
-.hero-btn-primary:hover,
-.hero-btn-secondary:hover {
+.hero-btn-primary:hover {
   transform: scale(1.05);
 }
 
@@ -219,31 +349,18 @@ html.lenis.lenis-scrolling iframe {
 
   /* Hero */
   .hero-section {
-    padding-top: 0 !important;
-    padding-bottom: 48px !important;
-    padding-left: 24px !important;
-    padding-right: 24px !important;
+    padding-top: 40px;
+  }
+  .hero-text {
+    margin-bottom: 40px;
   }
   .hero-h1 {
-    /* Längsta ordet ("medarbetarfeedback") får inte kapas: 9vw ger
-       ~300px ord vid 375px (327px tillgängligt), ~256px vid 320px. */
-    font-size: clamp(26px, 9vw, 40px) !important;
-    line-height: 1.1 !important;
-    white-space: normal !important;
+    font-size: clamp(36px, 11vw, 56px);
+    line-height: 1.05;
+    white-space: normal;
   }
   .hero-subline {
-    font-size: 14px !important;
-    max-width: 100% !important;
-    white-space: normal !important;
-  }
-  .hero-buttons {
-    flex-direction: column !important;
-    gap: 12px !important;
-    align-items: stretch !important;
-  }
-  .hero-buttons a {
-    text-align: center !important;
-    box-sizing: border-box !important;
+    font-size: 15px;
   }
 
   /* Hero image — flex: 1 handles height inside sticky unit, no min-height needed */
@@ -498,30 +615,11 @@ html.lenis.lenis-scrolling iframe {
     box-sizing: border-box !important;
   }
 
-  /* Hero: rubrik */
-  .hero-h1 {
-    white-space: normal !important;
-    text-align: center !important;
-  }
-
-  /* Hero: underrubrik */
-  .hero-subline {
-    text-align: center !important;
-    font-size: 14px !important;
-  }
-
-  /* Hero: knappar staplas vertikalt */
-  .hero-buttons {
-    flex-direction: column !important;
-    align-items: center !important;
-    gap: 12px !important;
-  }
-  .hero-buttons a {
-    display: block !important;
-    width: 80% !important;
-    max-width: 280px !important;
-    text-align: center !important;
-    box-sizing: border-box !important;
+  /* Hero: knappen, samma bredd som övriga mobilknappar */
+  .hero-cta {
+    width: 80%;
+    max-width: 280px;
+    min-width: 0;
   }
 
   /* CTA "Se mer om produkten" */

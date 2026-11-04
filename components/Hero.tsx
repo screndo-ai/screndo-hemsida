@@ -2,6 +2,7 @@
 
 import { useLanguage } from '@/lib/LanguageContext'
 import AutoSection from '@/components/AutoSection'
+import HeroCarousel from '@/components/HeroCarousel'
 import EmployeeView from '@/components/EmployeeView'
 import Reveal from '@/components/Reveal'
 
@@ -10,91 +11,20 @@ export default function Hero() {
 
   return (
     <>
-      <section
-        className="hero-section"
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          textAlign: 'center',
-          paddingTop: 0,
-          paddingBottom: '64px',
-          paddingLeft: '24px',
-          paddingRight: '24px',
-          background: '#FAFAF9',
-        }}
-      >
-        {/* Rubriken står i en egen "slot" med fast höjd (se .hero-h1-slot i
-            globals.css) och centreras vertikalt i den, så avståndet ovanför
-            och under rubriken blir lika stort utan att underrubriken under
-            flyttar sig. Kort rubrik (två-tre ord), Sana-stil: stor, tät
-            (Inter Tight, se .font-heading), flytande storlek som skalar
-            med fönstret upp mot ett högt tak i stället för en fast
-            storlek. En rad på skrivbord, bryter naturligt på mobil
-            (≤900px), aldrig mitt i ett ord. */}
-        <div className="hero-h1-slot">
-          <h1 className="hero-h1 font-heading" style={{ maxWidth: '1500px', width: '100%' }}>
-            {t.headline1}
-          </h1>
+      {/* Hero: kort rubrik i Inter Tight (bara här, se .hero-h1 i
+          globals.css), en rad undertext, en knapp, och under det den
+          ändlösa bildraden som går ut till sidans vänsterkant. */}
+      <section className="hero-section">
+        <div className="hero-text">
+          <h1 className="hero-h1">{t.headline1}</h1>
+          <p className="hero-subline">{t.subline}</p>
+          <a href="/book-intro" className="hero-cta">
+            {t.bookIntro}
+          </a>
         </div>
 
-        <div style={{ maxWidth: '920px', width: '100%' }}>
-          <p
-            className="hero-subline"
-            style={{
-              color: '#6B6B6B',
-              fontWeight: 400,
-              margin: '0 auto 40px',
-            }}
-          >
-            {t.subline}
-          </p>
-
-          <div className="hero-buttons">
-            <a
-              href="/book-intro"
-              className="hero-btn-primary"
-              style={{
-                background: '#2563EB',
-                color: '#fff',
-                textDecoration: 'none',
-                fontSize: '15px',
-                fontWeight: 600,
-                borderRadius: '100px',
-                padding: '14px 28px',
-                display: 'inline-block',
-              }}
-            >
-              {t.bookIntro}
-            </a>
-            <a
-              href="#employee-view"
-              className="hero-btn-secondary"
-              style={{
-                background: '#fff',
-                color: '#000',
-                textDecoration: 'none',
-                fontSize: '15px',
-                fontWeight: 500,
-                borderRadius: '100px',
-                padding: '14px 28px',
-                border: '1.5px solid #000',
-                display: 'inline-block',
-              }}
-            >
-              {t.seeHow}
-            </a>
-          </div>
-        </div>
+        <HeroCarousel />
       </section>
-
-      <div style={{ width: '100%', lineHeight: 0 }}>
-        <img
-          src="/screndohero1.jpg"
-          alt=""
-          style={{ display: 'block', width: '100%', height: 'auto' }}
-        />
-      </div>
 
       <AutoSection />
 
