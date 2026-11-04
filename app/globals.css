@@ -363,17 +363,16 @@ html.lenis.lenis-scrolling iframe {
 .home-cost .home-big span {
   color: var(--home-navy);
 }
+/* Två spalter utan streck; avståndet mellan dem ligger kvar */
 .home-stats {
   display: grid;
   grid-template-columns: 1fr 1fr;
   margin-top: clamp(48px, 6vw, 80px);
-  border-top: 1px solid var(--home-line);
 }
 .home-stat {
   padding: 28px 0 0;
 }
 .home-stat + .home-stat {
-  border-left: 1px solid var(--home-line);
   padding-left: clamp(20px, 4vw, 56px);
 }
 .home-stat-n {
@@ -698,9 +697,7 @@ html.lenis.lenis-scrolling iframe {
     grid-template-columns: 1fr;
   }
   .home-stat + .home-stat {
-    border-left: 0;
     padding-left: 0;
-    border-top: 1px solid var(--home-line);
     margin-top: 28px;
   }
   .home-facts li {
