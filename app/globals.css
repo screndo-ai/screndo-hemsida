@@ -417,37 +417,42 @@ html.lenis.lenis-scrolling iframe {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   aspect-ratio: 16 / 11;
   padding: clamp(18px, 3vw, 36px);
   box-sizing: border-box;
+  container-type: size;
 }
-/* laptop_realistic.jpg är 8000x8000; själva laptopen ligger i rutan
-   x 533–7466, y 1993–6006 (6934x4014). Rutan nedan har laptopens
-   proportioner och bilden förskjuts så att bara laptopen syns. */
+/* macci1.png är 1536x1024; själva laptopen ligger i rutan x 208–1332,
+   y 140–898 (1125x759). Rutan nedan har laptopens proportioner, fyller
+   samma yta som tidigare (så stor som får plats i .home-shot, på bredden
+   eller höjden), och bilden förskjuts så att bara laptopen syns. */
 .home-laptop {
   position: relative;
-  width: 100%;
-  aspect-ratio: 6934 / 4014;
+  width: min(100cqw, calc(100cqh * 1125 / 759));
+  aspect-ratio: 1125 / 759;
   overflow: hidden;
 }
 .home-laptop-img {
   position: absolute;
-  left: -7.6868%;
-  top: -49.6512%;
-  width: 115.3735%;
+  left: -18.4889%;
+  top: -18.4453%;
+  width: 136.5333%;
   max-width: none;
   height: auto;
 }
-/* Skärmytan i bilden: x 1347–6653, y 2260–5566, i procent av laptopen.
-   Innehållet skalas med skärmens bredd (container query, 1u = 1/600 av
-   skärmbredden), så att det behåller samma proportioner i alla bredder. */
+/* Skärmytans omslutande ruta i bilden (x 319.5–1217.9, y 159–718), i
+   procent av laptopen. Skärmen är en lätt trapets (bredare nedtill); den
+   exakta perspektivtransformen (matrix3d) räknas ut i LaptopScreen och
+   drar in de övre hörnen 0,625 % respektive 0,718 %. Innehållet skalas
+   med skärmens bredd (1u = 1/600 av bredden, container query). */
 .home-screen {
   position: absolute;
-  left: 11.7392%;
-  top: 6.6517%;
-  width: 76.5359%;
-  height: 82.3866%;
-  overflow: hidden;
+  left: 9.9073%;
+  top: 2.5033%;
+  width: 79.8657%;
+  height: 73.6495%;
+  transform-origin: 0 0;
   container-type: inline-size;
 }
 .home-ui {
@@ -456,8 +461,10 @@ html.lenis.lenis-scrolling iframe {
   inset: 0;
   display: flex;
   flex-direction: column;
-  padding: calc(var(--u) * 30) calc(var(--u) * 34) calc(var(--u) * 26);
-  background: #fff;
+  /* Kamerahacket är 12u högt mitt på överkanten; innehållet börjar 44u
+     ner och har 36u marginal mot sidorna och 32u mot nederkanten. */
+  padding: calc(var(--u) * 44) calc(var(--u) * 36) calc(var(--u) * 32);
+  overflow: hidden;
   font-size: calc(var(--u) * 13);
   line-height: 1.6;
 }
@@ -502,25 +509,27 @@ html.lenis.lenis-scrolling iframe {
   justify-content: space-between;
   align-items: center;
   margin-top: auto;
-  padding: calc(var(--u) * 12) calc(var(--u) * 12) calc(var(--u) * 12) calc(var(--u) * 18);
-  border: max(1px, var(--u)) solid var(--home-line);
+  padding: calc(var(--u) * 6) calc(var(--u) * 6) calc(var(--u) * 6) calc(var(--u) * 16);
+  border: max(1px, calc(var(--u) * 1.2)) solid rgba(11, 15, 25, 0.12);
   border-radius: 999px;
-  font-size: calc(var(--u) * 13);
+  font-size: calc(var(--u) * 11.5);
+  line-height: 1.4;
   color: var(--home-muted);
+  white-space: nowrap;
 }
 .home-ui-send {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: calc(var(--u) * 26);
-  height: calc(var(--u) * 26);
+  width: calc(var(--u) * 22);
+  height: calc(var(--u) * 22);
   border-radius: 50%;
   background: var(--home-ink);
 }
 .home-ui-send svg {
-  width: calc(var(--u) * 12);
-  height: calc(var(--u) * 12);
+  width: calc(var(--u) * 10);
+  height: calc(var(--u) * 10);
 }
 
 /* 4. Värmekartan: bara färger, ingen siffra */

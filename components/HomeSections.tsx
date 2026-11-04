@@ -73,6 +73,54 @@ function CountUp({ value }: { value: string }) {
   return <span ref={ref} key={value}>{value}</span>
 }
 
+// Skärmen i macci1.png är en lätt trapets: bredare nedtill. Hörnen,
+// uppmätta i bilden, som andel av .home-screen (skärmens omslutande ruta):
+// övre vänster, övre höger, nedre höger, nedre vänster.
+const SCREEN_QUAD: [number, number][] = [
+  [0.00625, 0],
+  [0.99282, 0],
+  [1, 1],
+  [0, 1],
+]
+
+// Perspektivtransform (homografi) som lägger en rektangel w x h på
+// fyrhörningen ovan. matrix3d är i pixlar och beror därför på storleken;
+// den räknas om när skärmen ändrar storlek.
+function quadMatrix3d(w: number, h: number) {
+  const [[x0, y0], [x1, y1], [x2, y2], [x3, y3]] = SCREEN_QUAD.map(([u, v]) => [u * w, v * h])
+  const dx1 = x1 - x2, dx2 = x3 - x2, dx3 = x0 - x1 + x2 - x3
+  const dy1 = y1 - y2, dy2 = y3 - y2, dy3 = y0 - y1 + y2 - y3
+  const den = dx1 * dy2 - dx2 * dy1
+  const g = (dx3 * dy2 - dx2 * dy3) / den
+  const k = (dx1 * dy3 - dx3 * dy1) / den
+  const a = x1 - x0 + g * x1, b = x3 - x0 + k * x3, c = x0
+  const d = y1 - y0 + g * y1, e = y3 - y0 + k * y3, f = y0
+  // Från enhetskvadrat till pixlar i elementet: dela kolumnerna med w och h.
+  const m = [a / w, d / w, 0, g / w, b / h, e / h, 0, k / h, 0, 0, 1, 0, c, f, 0, 1]
+  return `matrix3d(${m.map((n) => +n.toFixed(8)).join(',')})`
+}
+
+function LaptopScreen({ children }: { children: React.ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const apply = () => {
+      const w = el.offsetWidth, h = el.offsetHeight
+      if (w && h) el.style.transform = quadMatrix3d(w, h)
+    }
+    apply()
+    const ro = new ResizeObserver(apply)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
+  return (
+    <div className="home-screen" ref={ref}>
+      {children}
+    </div>
+  )
+}
+
 export default function HomeSections() {
   const { t, lang } = useLanguage()
 
@@ -157,18 +205,19 @@ export default function HomeSections() {
             </Reveal>
           </div>
           <Reveal className="home-shot" variant="right" duration={1100} delay={120} role="img" aria-label={t.homeMockLabel}>
-            {/* Laptopen, beskuren till sina egna pixlar, med Hem inlagt på
-                skärmytan (positionen uppmätt i bilden, se .home-screen). */}
+            {/* Laptopen, beskuren till sina egna pixlar, med Hem som HTML på
+                skärmytan (uppmätt i bilden, se .home-screen och SCREEN_QUAD).
+                Laptop och skärminnehåll glider in tillsammans. */}
             <div className="home-laptop">
               <Image
-                src="/laptop_realistic.jpg"
+                src="/macci1.png"
                 alt=""
-                width={8000}
-                height={8000}
-                sizes="(max-width: 900px) 110vw, 52vw"
+                width={1536}
+                height={1024}
+                sizes="(max-width: 900px) 140vw, 56vw"
                 className="home-laptop-img"
               />
-              <div className="home-screen">
+              <LaptopScreen>
                 <div className="home-ui" aria-hidden="true">
                   <h4>
                     {t.homeMockGreeting}
@@ -190,7 +239,7 @@ export default function HomeSections() {
                     </span>
                   </div>
                 </div>
-              </div>
+              </LaptopScreen>
             </div>
           </Reveal>
         </div>
