@@ -263,32 +263,355 @@ html.lenis.lenis-scrolling iframe {
   transform: scale(1.05);
 }
 
-/* ── Employee view: text överlagrad på bilden på skrivbord, normalt
-   flöde ovanför bilden på mobil (se media query nedan). ── */
-.ev-text-overlay {
-  position: absolute;
-  left: 9%;
-  top: 30%;
-  transform: translateY(-50%);
-  width: 40%;
-  max-width: 480px;
-  z-index: 1;
+/* ── Startsidan under heron ──
+   Enligt skissen Screndo_hemsida_skiss.html: samma färger, storlekar och
+   avstånd (värdena nedan är skissens). Rubriker i Inter Tight som heron,
+   brödtext i Inter via body. Skissens färger ligger som variabler på
+   .home så att de bara gäller här. */
+.home {
+  --home-ink: #0B0F19;
+  --home-muted: #5B6475;
+  --home-grey: #9AA3B2;
+  --home-line: rgba(11, 15, 25, 0.08);
+  --home-blue: #2563EB;
+  --home-navy: #13284B;
+  --home-sky: #B9D1EC;
+  --home-mist: #EEF3F9;
+  --home-gutter: clamp(16px, 5vw, 72px);
+  --home-display: var(--font-inter-tight), -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--home-ink);
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Bubblornas position i procent av bildens EGNA box (satt via CSS-variabler
-   så mobil kan omdefiniera dem utan att duplicera hela regeln). På
-   skrivbord visas foto3iphone.png i sin fulla, oskalade komposition, och
-   skärmytan ligger då på 56.1–76.2% x / 11.5–78.1% y av bilden. */
-.ev-bubbles-overlay {
-  --ev-screen-left: 56.1%;
-  --ev-screen-top: 11.5%;
-  --ev-screen-width: 20.1%;
-  --ev-screen-height: 66.6%;
+.home-wrap {
+  box-sizing: border-box;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 var(--home-gutter);
+}
+
+.home-section {
+  padding: clamp(96px, 13vw, 180px) 0;
+}
+
+/* Första sektionen: 1,5 gånger skissens luft ovanför och under. */
+.home-statement-section {
+  padding: clamp(144px, 19.5vw, 270px) 0;
+}
+
+.home-big {
+  font-family: var(--home-display);
+  font-weight: 600;
+  font-size: clamp(34px, 5.2vw, 72px);
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+
+.home-lede {
+  font-size: clamp(17px, 1.5vw, 20px);
+  color: var(--home-muted);
+  max-width: 620px;
+  margin: 0;
+}
+
+/* 1. Rubrik till vänster, två stycken till höger, nederkanterna i linje */
+.home-statement {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: clamp(32px, 6vw, 96px);
+  align-items: end;
+}
+.home-statement .home-lede + .home-lede {
+  margin-top: 18px;
+}
+
+/* 2. Kostnad: grå andra rad, två siffror med hårfina linjer */
+.home-cost .home-big span {
+  color: var(--home-grey);
+}
+.home-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-top: clamp(48px, 6vw, 80px);
+  border-top: 1px solid var(--home-line);
+}
+.home-stat {
+  padding: 28px 0 0;
+}
+.home-stat + .home-stat {
+  border-left: 1px solid var(--home-line);
+  padding-left: clamp(20px, 4vw, 56px);
+}
+.home-stat-n {
+  font-family: var(--home-display);
+  font-size: clamp(56px, 8vw, 112px);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--home-ink);
+}
+.home-stat p {
+  margin: 14px 0 0;
+  color: var(--home-muted);
+  max-width: 380px;
+}
+.home-source {
+  display: inline-block;
+  margin-top: 12px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--home-muted);
+  text-decoration: underline;
+  text-decoration-color: rgba(91, 100, 117, 0.35);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.2s ease;
+}
+.home-source:hover {
+  text-decoration-color: var(--home-muted);
+}
+
+/* 3. Text till vänster, skiss av Hem till höger */
+.home-split {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: clamp(32px, 6vw, 96px);
+  align-items: center;
+}
+.home-shot {
+  display: flex;
+  flex-direction: column;
+  aspect-ratio: 16 / 11;
+  padding: clamp(18px, 3vw, 36px);
+  border-radius: 28px;
+  background: linear-gradient(160deg, #F3F7FC, #E4EDF8);
+  box-sizing: border-box;
+}
+.home-ui {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: clamp(18px, 2.6vw, 32px);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 1px 0 var(--home-line);
+}
+.home-ui h4 {
+  font-family: var(--home-display);
+  font-weight: 600;
+  font-size: clamp(20px, 2.2vw, 30px);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin: 0;
+}
+.home-ui h4 span {
+  display: block;
+  color: var(--home-grey);
+}
+.home-ui-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 20px;
+}
+.home-ui-c {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 92px;
+  padding: 12px;
+  border-radius: 14px;
+  font-size: 11px;
+}
+.home-ui-c strong {
+  font-family: var(--home-display);
+  font-size: clamp(22px, 2.4vw, 32px);
+  font-weight: 500;
+}
+.home-ui-c1 { background: var(--home-ink); color: #fff; }
+.home-ui-c2 { background: var(--home-mist); }
+.home-ui-c3 { background: var(--home-blue); color: #fff; }
+.home-ui-ask {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding: 12px 18px;
+  border: 1px solid var(--home-line);
+  border-radius: 999px;
+  font-size: 13px;
+  color: var(--home-muted);
+}
+.home-ui-send {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--home-ink);
+}
+
+/* 4. Värmekartan: bara färger, ingen siffra */
+.home-map {
+  margin-top: clamp(40px, 5vw, 64px);
+  padding: clamp(24px, 4vw, 56px);
+  border-radius: 28px;
+  background: var(--home-navy);
+  color: #fff;
+  overflow: hidden;
+}
+.home-map-title {
+  display: block;
+  font-family: var(--home-display);
+  font-size: 22px;
+  font-weight: 600;
+}
+.home-scroll-x {
+  overflow-x: auto;
+}
+.home-heat {
+  display: grid;
+  grid-template-columns: 150px repeat(6, 1fr);
+  gap: 8px;
+  min-width: 640px;
+  margin-top: 32px;
+  font-size: 13px;
+}
+.home-heat-h {
+  padding-bottom: 6px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+}
+.home-heat-d {
+  align-self: center;
+  color: rgba(255, 255, 255, 0.85);
+}
+.home-heat-x {
+  height: 44px;
+  border-radius: 10px;
+}
+
+/* 5. Bild till vänster, text till höger */
+.home-research {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: clamp(32px, 6vw, 96px);
+  align-items: center;
+}
+.home-photo {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 28px;
+  overflow: hidden;
+  background: var(--home-sky);
+}
+
+/* 6. Integritet: fyra rader med hårfina linjer */
+.home-trust {
+  border-top: 1px solid var(--home-line);
+}
+.home-facts {
+  list-style: none;
+  margin: clamp(40px, 5vw, 64px) 0 0;
+  padding: 0;
+  border-top: 1px solid var(--home-line);
+}
+.home-facts li {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 24px;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--home-line);
+}
+.home-facts b {
+  font-weight: 600;
+}
+.home-facts span {
+  color: var(--home-muted);
+}
+
+/* 7. Avslutande uppmaning. Rubriken på en rad på dator (bredare än
+   skissens max 900px), bryts på mobil. Knappen är herons .hero-cta. */
+.home-cta {
+  text-align: center;
+}
+.home-cta .home-lede {
+  margin: 22px auto 0;
+}
+.home-cta .hero-cta {
+  margin-top: 36px;
+  line-height: 1.5; /* samma höjd som herons knapp (.home har 1.6) */
+}
+@media (min-width: 901px) {
+  .home-cta .home-big {
+    white-space: nowrap;
+  }
+}
+
+/* 8. Sidfot: loggan kant i kant inom sidmarginalen. logo2.png är
+   3000x1000 med logotypen i rutan x 126–2869, y 278–697; rutan nedan har
+   just den proportionen och bilden förskjuts så att bara logotypen syns. */
+.home-footer {
+  padding: clamp(40px, 6vw, 72px) 0 28px;
+}
+.home-wordmark {
+  position: relative;
+  aspect-ratio: 2744 / 420;
+  margin: 0 var(--home-gutter);
+  overflow: hidden;
+}
+.home-wordmark img {
   position: absolute;
-  left: var(--ev-screen-left);
-  top: var(--ev-screen-top);
-  width: var(--ev-screen-width);
-  height: var(--ev-screen-height);
+  left: -4.5918%;
+  top: -66.1905%;
+  width: 109.3294%;
+  max-width: none;
+  height: auto;
+}
+.home-footer-row {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 28px var(--home-gutter) 0;
+  font-size: 14px;
+  color: var(--home-muted);
+}
+.home-footer-row div {
+  display: flex;
+  gap: 22px;
+}
+.home-footer-row a {
+  color: inherit;
+  text-decoration: none;
+}
+
+@media (max-width: 900px) {
+  .home-statement,
+  .home-split,
+  .home-research {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .home-stats {
+    grid-template-columns: 1fr;
+  }
+  .home-stat + .home-stat {
+    border-left: 0;
+    padding-left: 0;
+    border-top: 1px solid var(--home-line);
+    margin-top: 28px;
+  }
+  .home-facts li {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
 }
 
 /* ── Section padding ── */
@@ -314,11 +637,6 @@ html.lenis.lenis-scrolling iframe {
   letter-spacing: -0.01em;
   line-height: 1.05;
   margin: 0 0 48px 0;
-}
-
-/* ── Auto section ── */
-.auto-section {
-  padding: 80px 64px;
 }
 
 /* ── Footer ── */
@@ -390,44 +708,6 @@ html.lenis.lenis-scrolling iframe {
   .garden-wrap img {
     min-height: 50vh !important;
     height: auto !important;
-  }
-
-  /* Auto section */
-  .auto-section {
-    padding: 72px 24px !important;
-  }
-
-  /* Why it matters */
-  .why-matters-section {
-    margin-top: 56px !important;
-    padding: 64px 20px !important;
-  }
-
-  /* Standalone product screenshot: fortfarande fullbredd på mobil */
-  .product-shot-wrap {
-    padding: 24px 0 0 !important;
-  }
-
-  /* Founded section */
-  .founded-section {
-    padding: 64px 20px !important;
-  }
-
-  /* Employee view section: bara vertikal padding, bilden ska nå ända ut
-     till kanten utan glapp. Textens sidmarginal sätts på .ev-text-overlay
-     istället (se 768px-brytpunkten). */
-  .employee-view-section {
-    padding: 64px 0 0 !important;
-  }
-
-  /* AI-native CTA section */
-  .ai-cta-section {
-    padding: 64px 20px 32px !important;
-  }
-
-  /* Final CTA */
-  .final-cta-section {
-    padding: 48px 20px 72px !important;
   }
 
   /* CTA */
@@ -540,66 +820,6 @@ html.lenis.lenis-scrolling iframe {
 
 /* ── Responsive: 640px ── */
 @media (max-width: 640px) {
-}
-
-/* ── Two-column hero section: stack on mobile ── */
-@media (max-width: 768px) {
-  .hero-two-col {
-    flex-direction: column !important;
-    gap: 40px !important;
-  }
-  .hero-two-col > div {
-    flex: none !important;
-    width: 100% !important;
-  }
-
-  /* Why it matters: bild överst, siffrorna staplade utan sidledes offset */
-  .why-matters-row {
-    flex-direction: column !important;
-    gap: 40px !important;
-  }
-  .why-matters-row > * {
-    flex: none !important;
-    width: 100% !important;
-    margin-left: 0 !important;
-  }
-
-  /* Employee view: text i vanligt flöde ovanför bilden istället för
-     överlagrad, eftersom överlagrad text inte fungerar på smala skärmar. */
-  .ev-text-overlay {
-    position: static !important;
-    transform: none !important;
-    width: 100% !important;
-    max-width: none !important;
-    margin-bottom: 32px !important;
-    padding: 0 20px !important;
-    box-sizing: border-box !important;
-  }
-
-  /* Employee view: bilden beskärs och zoomas (object-fit: cover) i ett
-     smalare/högre format, centrerat på telefonskärmen istället för
-     höger-ankrat, så skärmen upptar mer av ytan och texten blir läsbar.
-     Handen är fortfarande synlig på båda sidor om telefonen. Bubblornas
-     procentvärden räknas om mot just den här beskärningen (uppmätt mot
-     foto3iphone.png, 1536x1024, samma metod som skrivbordsvärdena). */
-  .ev-image-container {
-    aspect-ratio: 0.52 !important;
-    overflow: hidden !important;
-  }
-  .ev-image-container > img {
-    position: absolute !important;
-    inset: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover !important;
-    object-position: 74.7% center !important;
-  }
-  .ev-bubbles-overlay {
-    --ev-screen-left: 21%;
-    --ev-screen-top: 11.5%;
-    --ev-screen-width: 58%;
-    --ev-screen-height: 66.6%;
-  }
 }
 
 /* ── Responsive: 768px (mobile) ── */
