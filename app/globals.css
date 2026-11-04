@@ -404,32 +404,30 @@ html.lenis.lenis-scrolling iframe {
 }
 
 /* 3. Text till vänster, laptop med Hem på skärmen till höger */
+/* Textspalten har samma bredd som tidigare (0,9 av 2,0 delar); bild-
+   spalten tar resten och sträcker sig dessutom ut till sidans högerkant
+   minus den vanliga marginalen, även när sidan är bredare än 1440px. */
 .home-split {
+  --split-gap: clamp(32px, 6vw, 96px);
   display: grid;
-  grid-template-columns: 0.9fr 1.1fr;
-  gap: clamp(32px, 6vw, 96px);
+  grid-template-columns: calc((100% - var(--split-gap)) * 0.45) minmax(0, 1fr);
+  gap: var(--split-gap);
   align-items: center;
 }
-/* Samma yta som tidigare (16:11 med samma inre marginal), men utan den
-   ljusblå ramen. Laptopen fyller den inre bredden, där det vita kortet
-   låg, och centreras i höjdled. */
+.home-split > .home-shot {
+  margin-right: calc((min(100vw, 1440px) - 100vw) / 2);
+}
+/* Laptopen fyller hela bildspalten (på mobil hela bredden minus sidans
+   marginal). */
 .home-shot {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  aspect-ratio: 16 / 11;
-  padding: clamp(18px, 3vw, 36px);
-  box-sizing: border-box;
-  container-type: size;
+  display: block;
 }
 /* macci1.png är 1536x1024; själva laptopen ligger i rutan x 208–1332,
-   y 140–898 (1125x759). Rutan nedan har laptopens proportioner, fyller
-   samma yta som tidigare (så stor som får plats i .home-shot, på bredden
-   eller höjden), och bilden förskjuts så att bara laptopen syns. */
+   y 140–898 (1125x759). Rutan nedan har laptopens proportioner och fyller
+   bildspaltens bredd; bilden förskjuts så att bara laptopen syns. */
 .home-laptop {
   position: relative;
-  width: min(100cqw, calc(100cqh * 1125 / 759));
+  width: 100%;
   aspect-ratio: 1125 / 759;
   overflow: hidden;
 }

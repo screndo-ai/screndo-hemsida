@@ -214,7 +214,7 @@ export default function HomeSections() {
                 alt=""
                 width={1536}
                 height={1024}
-                sizes="(max-width: 900px) 140vw, 56vw"
+                sizes="(max-width: 900px) 140vw, 66vw"
                 className="home-laptop-img"
               />
               <LaptopScreen>
