@@ -119,7 +119,7 @@ export default function HomeSections() {
       </section>
 
       {/* 2. Rekrytering är dyrt */}
-      <section className="home-section home-cost" style={{ paddingTop: 0 }}>
+      <section className="home-section home-cost" style={{ background: 'var(--home-mist)' }}>
         <div className="home-wrap">
           <Reveal as="h2" className="home-big">
             {t.homeCostHeadline1}
@@ -147,8 +147,9 @@ export default function HomeSections() {
         </div>
       </section>
 
-      {/* 3. Mindre administration: texten tonar in, laptopen glider in från höger */}
-      <section className="home-section" style={{ background: 'var(--home-mist)' }}>
+      {/* 3. Mindre administration: texten tonar in, laptopen glider in från höger.
+          Vit bakgrund, så att laptopen inte ser urklippt ut. */}
+      <section className="home-section">
         <div className="home-wrap home-split">
           <div>
             <Reveal as="h2" className="home-big" variant="fade" duration={900}>{t.homeAdminHeadline}</Reveal>
@@ -243,7 +244,7 @@ export default function HomeSections() {
               alt={t.homeResearchImageAlt}
               fill
               sizes="(max-width: 900px) calc(100vw - 2 * clamp(16px, 5vw, 72px)), min(665px, 46vw)"
-              style={{ objectFit: 'cover' }}
+              style={{ objectFit: 'cover', objectPosition: '50% 50%' }}
             />
           </Reveal>
           <div>

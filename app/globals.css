@@ -311,11 +311,12 @@ html.lenis.lenis-scrolling iframe {
   padding: clamp(96px, 13vw, 180px) 0;
 }
 
-/* Första sektionen: en egen scen, med ungefär dubbelt så mycket luft
-   mot bildraden ovanför och mot "Rekrytering är dyrt" under (540px på
-   dator, mot 270px tidigare). */
+/* Första sektionen: samma avstånd mot bildraden ovanför och mot
+   "Rekrytering är dyrt" under som mellan "Byggt på forskning" och "Ett
+   litet bolag" (två sektionsmarginaler, 360px på dator). Nedåt delas det
+   med kostnadssektionens egen marginal, inne i dess ljusblå bakgrund. */
 .home-statement-section {
-  padding: clamp(200px, 37.5vw, 540px) 0;
+  padding: calc(2 * clamp(96px, 13vw, 180px)) 0 clamp(96px, 13vw, 180px);
 }
 
 .home-big {
@@ -357,8 +358,10 @@ html.lenis.lenis-scrolling iframe {
 }
 
 /* 2. Kostnad: grå andra rad, två siffror med hårfina linjer */
+/* Andra raden i sidans mörkblå, nära marinblått men skild från den
+   svarta första raden */
 .home-cost .home-big span {
-  color: var(--home-grey);
+  color: var(--home-navy);
 }
 .home-stats {
   display: grid;
@@ -590,9 +593,11 @@ html.lenis.lenis-scrolling iframe {
   gap: clamp(32px, 6vw, 96px);
   align-items: center;
 }
+/* Stående 4:5, så att hela tornet och marken under kommer med (källan
+   är kvadratisk; bara sidorna beskärs, tornet hålls i mitten). */
 .home-photo {
   position: relative;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 4 / 5;
   border-radius: 0;
   overflow: hidden;
   background: var(--home-sky);
