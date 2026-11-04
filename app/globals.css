@@ -98,12 +98,12 @@ html.lenis.lenis-scrolling iframe {
   margin-bottom: clamp(48px, 4.6vw, 88px);
 }
 
-/* Rubriken: Inter Tight, bara här (resten av sidan har Inter). Vikt 700
-   för den kraftiga Sana-känslan, spårning -0.03em: tätt men inget
+/* Rubriken: Inter Tight i vikt 600, samma typsnitt och tjocklek som
+   rubrikerna under heron (.home-big). Spårning -0.03em: tätt men inget
    kolliderar. En rad på skrivbord, bryter mellan ord på mobil. */
 .hero-h1 {
   font-family: var(--font-inter-tight), -apple-system, BlinkMacSystemFont, sans-serif;
-  font-weight: 700;
+  font-weight: 600;
   font-size: clamp(40px, 5.9vw, 120px);
   letter-spacing: -0.03em;
   line-height: 1.05;
@@ -170,7 +170,7 @@ html.lenis.lenis-scrolling iframe {
   flex: 0 0 calc((100% - 4 * var(--cards-gap)) / var(--cards-visible));
   aspect-ratio: 1105 / 1423;
   margin: 0;
-  border-radius: 22px;
+  border-radius: 0;
   overflow: hidden;
   scroll-snap-align: start;
   background: #F1F1EF;
@@ -198,7 +198,7 @@ html.lenis.lenis-scrolling iframe {
   flex-direction: column;
   gap: 4px;
   padding: 14px 16px;
-  border-radius: 12px;
+  border-radius: 0;
   background: #0A0A0A;
   color: #fff;
   font-size: 14px;
@@ -234,7 +234,6 @@ html.lenis.lenis-scrolling iframe {
   }
   .hero-card {
     flex-basis: calc((100% - var(--cards-gap)) / var(--cards-visible));
-    border-radius: 18px;
   }
   .hero-card-caption {
     left: 10px;
@@ -261,6 +260,18 @@ html.lenis.lenis-scrolling iframe {
 }
 .hero-btn-primary:hover {
   transform: scale(1.05);
+}
+
+/* ── Scrollanimationer (components/Reveal.tsx) ──
+   Med prefers-reduced-motion visas allt direkt, utan rörelse. Selektorn
+   ligger under .home: en ensam [data-reveal] på toppnivå rensades bort
+   av CSS-kedjan (Tailwind/Lightning CSS) och nådde aldrig webbläsaren. */
+@media (prefers-reduced-motion: reduce) {
+  .home [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
 }
 
 /* ── Startsidan under heron ──
@@ -385,7 +396,7 @@ html.lenis.lenis-scrolling iframe {
   flex-direction: column;
   aspect-ratio: 16 / 11;
   padding: clamp(18px, 3vw, 36px);
-  border-radius: 28px;
+  border-radius: 0;
   background: linear-gradient(160deg, #F3F7FC, #E4EDF8);
   box-sizing: border-box;
 }
@@ -394,7 +405,7 @@ html.lenis.lenis-scrolling iframe {
   flex-direction: column;
   flex: 1;
   padding: clamp(18px, 2.6vw, 32px);
-  border-radius: 18px;
+  border-radius: 0;
   background: #fff;
   box-shadow: 0 1px 0 var(--home-line);
 }
@@ -422,7 +433,7 @@ html.lenis.lenis-scrolling iframe {
   justify-content: space-between;
   min-height: 92px;
   padding: 12px;
-  border-radius: 14px;
+  border-radius: 0;
   font-size: 11px;
 }
 .home-ui-c strong {
@@ -459,7 +470,7 @@ html.lenis.lenis-scrolling iframe {
 .home-map {
   margin-top: clamp(40px, 5vw, 64px);
   padding: clamp(24px, 4vw, 56px);
-  border-radius: 28px;
+  border-radius: 0;
   background: var(--home-navy);
   color: #fff;
   overflow: hidden;
@@ -492,7 +503,29 @@ html.lenis.lenis-scrolling iframe {
 }
 .home-heat-x {
   height: 44px;
-  border-radius: 10px;
+  border-radius: 0;
+  background-color: var(--heat-start);
+  --heat-start: rgba(185, 209, 236, 0.06);
+}
+/* Vågen: när kartan kommer in i bild (is-in från Reveal) tänds rutorna
+   rad för rad nerifrån och upp (fördröjningen --heat-d sätts per ruta),
+   passerar en något ljusare nyans och landar i sin slutliga färg. */
+.home-map.is-in .home-heat-x {
+  background-color: var(--heat-final);
+  animation: home-heat-wave 750ms cubic-bezier(0.22, 1, 0.36, 1) var(--heat-d, 0ms) both;
+}
+@keyframes home-heat-wave {
+  from { background-color: var(--heat-start); }
+  55% { background-color: var(--heat-peak); }
+  to { background-color: var(--heat-final); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .home-heat-x {
+    background-color: var(--heat-final);
+  }
+  .home-map.is-in .home-heat-x {
+    animation: none;
+  }
 }
 
 /* 5. Bild till vänster, text till höger */
@@ -505,15 +538,13 @@ html.lenis.lenis-scrolling iframe {
 .home-photo {
   position: relative;
   aspect-ratio: 4 / 3;
-  border-radius: 28px;
+  border-radius: 0;
   overflow: hidden;
   background: var(--home-sky);
 }
 
-/* 6. Integritet: fyra rader med hårfina linjer */
-.home-trust {
-  border-top: 1px solid var(--home-line);
-}
+/* 6. Integritet: fyra rader med hårfina linjer (inget streck ovanför
+   sektionen, bara mellan raderna) */
 .home-facts {
   list-style: none;
   margin: clamp(40px, 5vw, 64px) 0 0;

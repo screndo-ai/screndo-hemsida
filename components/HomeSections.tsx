@@ -1,12 +1,16 @@
 'use client'
 
 import Image from 'next/image'
+import { useEffect, useRef } from 'react'
 import { useLanguage } from '@/lib/LanguageContext'
 import { heatmapAreas, heatmapDepartments } from '@/lib/homeHeatmap'
+import Reveal from '@/components/Reveal'
 
 // Startsidan under heron, enligt skissen Screndo_hemsida_skiss.html.
 // Mått, färger och avstånd ligger i globals.css under "Startsidan under
 // heron" (klasserna home-*). Texterna ligger i LanguageContext (home*).
+// Scrollanimationerna går via Reveal (en gång per element, när det kommer
+// in i bild); rubriken först, brödtexten strax efter.
 
 const STAT_SOURCES = {
   recognition:
@@ -21,9 +25,53 @@ const STAT_SOURCES = {
 const allValues = heatmapDepartments.flatMap((d) => d.values)
 const minValue = Math.min(...allValues)
 const maxValue = Math.max(...allValues)
-const cellColor = (v: number) => {
-  const t = (v - minValue) / (maxValue - minValue)
-  return `rgba(185, 209, 236, ${(0.1 + t * 0.9).toFixed(2)})`
+const cellAlpha = (v: number) => 0.1 + ((v - minValue) / (maxValue - minValue)) * 0.9
+const sky = (alpha: number) => `rgba(185, 209, 236, ${Math.min(1, alpha).toFixed(2)})`
+
+// Vågen genom rutnätet: nedersta raden först, sedan rad för rad uppåt,
+// med en liten förskjutning per kolumn. Varje ruta passerar en något
+// ljusare nyans och landar i sin slutliga färg. Hela vågen ~1,5 s.
+const WAVE_ROW_MS = 150
+const WAVE_COL_MS = 25
+
+// Räknar lugnt upp från 0 till värdet när siffran kommer in i bild.
+// "45 %" blir 0 % → 45 %; allt efter siffran (mellanslag, %) står kvar.
+// Servern renderar slutvärdet; uppräkningen skriver bara om texten.
+function CountUp({ value }: { value: string }) {
+  const ref = useRef<HTMLSpanElement>(null)
+
+  useEffect(() => {
+    const el = ref.current
+    const match = value.match(/^(\d+)(.*)$/)
+    if (!el || !match || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const target = Number(match[1])
+    const suffix = match[2]
+    let raf = 0
+    el.textContent = `0${suffix}`
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return
+        observer.disconnect()
+        const start = performance.now()
+        const DURATION = 1400
+        const frame = (now: number) => {
+          const t = Math.min(1, (now - start) / DURATION)
+          el.textContent = `${Math.round(target * (1 - Math.pow(1 - t, 3)))}${suffix}`
+          if (t < 1) raf = requestAnimationFrame(frame)
+        }
+        raf = requestAnimationFrame(frame)
+      },
+      { threshold: 0.4 },
+    )
+    observer.observe(el)
+    return () => {
+      observer.disconnect()
+      cancelAnimationFrame(raf)
+    }
+  }, [value])
+
+  // key: nytt span (och ny textnod) när värdet byts, t.ex. vid språkbyte.
+  return <span ref={ref} key={value}>{value}</span>
 }
 
 export default function HomeSections() {
@@ -35,16 +83,27 @@ export default function HomeSections() {
     [t.homeTrust3Title, t.homeTrust3Text],
     [t.homeTrust4Title, t.homeTrust4Text],
   ]
+  const rows = heatmapDepartments.length
 
   return (
     <div className="home">
+      {/* Utan JavaScript ska allt synas direkt. */}
+      <noscript>
+        <style
+          dangerouslySetInnerHTML={{
+            __html:
+              '[data-reveal]{opacity:1!important;transform:none!important}.home-heat-x{animation:none!important;background-color:var(--heat-final)!important}',
+          }}
+        />
+      </noscript>
+
       {/* 1. Viktig feedback går förlorad */}
       <section className="home-section home-statement-section">
         <div className="home-wrap home-statement">
-          <h2 className="home-big">{t.homeLossHeadline}</h2>
+          <Reveal as="h2" className="home-big">{t.homeLossHeadline}</Reveal>
           <div>
-            <p className="home-lede">{t.homeLossPara1}</p>
-            <p className="home-lede">{t.homeLossPara2}</p>
+            <Reveal as="p" className="home-lede" delay={140}>{t.homeLossPara1}</Reveal>
+            <Reveal as="p" className="home-lede" delay={220}>{t.homeLossPara2}</Reveal>
           </div>
         </div>
       </section>
@@ -52,38 +111,42 @@ export default function HomeSections() {
       {/* 2. Rekrytering är dyrt */}
       <section className="home-section home-cost" style={{ paddingTop: 0 }}>
         <div className="home-wrap">
-          <h2 className="home-big">
+          <Reveal as="h2" className="home-big">
             {t.homeCostHeadline1}
             <br />
             <span>{t.homeCostHeadline2}</span>
-          </h2>
+          </Reveal>
           <div className="home-stats">
-            <div className="home-stat">
-              <div className="home-stat-n">{t.homeStat1Value}</div>
-              <p>{t.homeStat1Text}</p>
-              <a className="home-source" href={STAT_SOURCES.recognition} target="_blank" rel="noopener noreferrer">
-                {t.homeStat1Source}
-              </a>
-            </div>
-            <div className="home-stat">
-              <div className="home-stat-n">{t.homeStat2Value}</div>
-              <p>{t.homeStat2Text}</p>
-              <a className="home-source" href={STAT_SOURCES.silence} target="_blank" rel="noopener noreferrer">
-                {t.homeStat2Source}
-              </a>
-            </div>
+            {[
+              { value: t.homeStat1Value, text: t.homeStat1Text, source: t.homeStat1Source, href: STAT_SOURCES.recognition },
+              { value: t.homeStat2Value, text: t.homeStat2Text, source: t.homeStat2Source, href: STAT_SOURCES.silence },
+            ].map((stat, i) => (
+              <div className="home-stat" key={stat.href}>
+                <Reveal className="home-stat-n" variant="fade" duration={1000} delay={i * 120}>
+                  <CountUp value={stat.value} />
+                </Reveal>
+                <Reveal as="p" delay={140 + i * 120}>{stat.text}</Reveal>
+                <Reveal variant="fade" delay={260 + i * 120}>
+                  <a className="home-source" href={stat.href} target="_blank" rel="noopener noreferrer">
+                    {stat.source}
+                  </a>
+                </Reveal>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* 3. Mindre administration */}
+      {/* 3. Mindre administration: texten tonar in, skissen glider in från höger */}
       <section className="home-section" style={{ background: 'var(--home-mist)' }}>
         <div className="home-wrap home-split">
           <div>
-            <h2 className="home-big">{t.homeAdminHeadline}</h2>
-            <p className="home-lede" style={{ marginTop: '24px' }}>{t.homeAdminBody}</p>
+            <Reveal as="h2" className="home-big" variant="fade" duration={900}>{t.homeAdminHeadline}</Reveal>
+            <Reveal as="p" className="home-lede" variant="fade" duration={900} delay={140} style={{ marginTop: '24px' }}>
+              {t.homeAdminBody}
+            </Reveal>
           </div>
-          <div className="home-shot" role="img" aria-label={t.homeMockLabel}>
+          <Reveal className="home-shot" variant="right" duration={1100} delay={120} role="img" aria-label={t.homeMockLabel}>
             <div className="home-ui" aria-hidden="true">
               <h4>
                 {t.homeMockGreeting}
@@ -105,15 +168,15 @@ export default function HomeSections() {
                 </span>
               </div>
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 
-      {/* 4. Läget över hela organisationen */}
+      {/* 4. Läget över hela organisationen: en våg av nyanser genom rutnätet */}
       <section className="home-section">
         <div className="home-wrap">
-          <h2 className="home-big" style={{ maxWidth: '820px' }}>{t.homeMapHeadline}</h2>
-          <div className="home-map">
+          <Reveal as="h2" className="home-big" style={{ maxWidth: '820px' }}>{t.homeMapHeadline}</Reveal>
+          <Reveal className="home-map" variant="none" threshold={0.5}>
             <strong className="home-map-title">{t.homeMapTitle}</strong>
             <div className="home-scroll-x" data-lenis-prevent-horizontal>
               <div className="home-heat" role="img" aria-label={t.homeMapLabel}>
@@ -121,22 +184,35 @@ export default function HomeSections() {
                 {heatmapAreas[lang].map((area) => (
                   <div key={area} className="home-heat-h">{area}</div>
                 ))}
-                {heatmapDepartments.map((dep) => [
+                {heatmapDepartments.map((dep, row) => [
                   <div key={dep.sv} className="home-heat-d">{dep[lang]}</div>,
-                  ...dep.values.map((v, i) => (
-                    <div key={`${dep.sv}-${i}`} className="home-heat-x" style={{ background: cellColor(v) }} />
-                  )),
+                  ...dep.values.map((v, col) => {
+                    const alpha = cellAlpha(v)
+                    return (
+                      <div
+                        key={`${dep.sv}-${col}`}
+                        className="home-heat-x"
+                        style={
+                          {
+                            '--heat-final': sky(alpha),
+                            '--heat-peak': sky(alpha + 0.18),
+                            '--heat-d': `${(rows - 1 - row) * WAVE_ROW_MS + col * WAVE_COL_MS}ms`,
+                          } as React.CSSProperties
+                        }
+                      />
+                    )
+                  }),
                 ])}
               </div>
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 
-      {/* 5. Forskning */}
+      {/* 5. Forskning: bilden glider in från vänster, texten tonar in */}
       <section className="home-section" style={{ paddingTop: 0 }}>
         <div className="home-wrap home-research">
-          <div className="home-photo">
+          <Reveal className="home-photo" variant="left" duration={1100}>
             <Image
               src="/hskolan.jpg"
               alt={t.homeResearchImageAlt}
@@ -144,24 +220,26 @@ export default function HomeSections() {
               sizes="(max-width: 900px) calc(100vw - 2 * clamp(16px, 5vw, 72px)), min(665px, 46vw)"
               style={{ objectFit: 'cover' }}
             />
-          </div>
+          </Reveal>
           <div>
-            <h2 className="home-big">{t.homeResearchHeadline}</h2>
-            <p className="home-lede" style={{ marginTop: '24px' }}>{t.homeResearchBody}</p>
+            <Reveal as="h2" className="home-big" variant="fade" duration={900} delay={120}>{t.homeResearchHeadline}</Reveal>
+            <Reveal as="p" className="home-lede" variant="fade" duration={900} delay={260} style={{ marginTop: '24px' }}>
+              {t.homeResearchBody}
+            </Reveal>
           </div>
         </div>
       </section>
 
-      {/* 6. Integritet */}
-      <section className="home-section home-trust">
+      {/* 6. Integritet: raderna tonar in en i taget */}
+      <section className="home-section">
         <div className="home-wrap">
-          <h2 className="home-big" style={{ maxWidth: '900px' }}>{t.homeTrustHeadline}</h2>
+          <Reveal as="h2" className="home-big" style={{ maxWidth: '900px' }}>{t.homeTrustHeadline}</Reveal>
           <ul className="home-facts">
-            {facts.map(([title, text]) => (
-              <li key={title}>
+            {facts.map(([title, text], i) => (
+              <Reveal as="li" key={title} variant="fade" duration={700} delay={i * 110}>
                 <b>{title}</b>
                 <span>{text}</span>
-              </li>
+              </Reveal>
             ))}
           </ul>
         </div>
@@ -170,11 +248,13 @@ export default function HomeSections() {
       {/* 7. Avslutande uppmaning */}
       <section className="home-section home-cta" style={{ paddingTop: 0 }}>
         <div className="home-wrap">
-          <h2 className="home-big">{t.homeCtaHeadline}</h2>
-          <p className="home-lede">{t.homeCtaBody}</p>
-          <a href="/book-intro" className="hero-cta">
-            {t.bookIntro}
-          </a>
+          <Reveal as="h2" className="home-big">{t.homeCtaHeadline}</Reveal>
+          <Reveal as="p" className="home-lede" delay={140}>{t.homeCtaBody}</Reveal>
+          <Reveal delay={240}>
+            <a href="/book-intro" className="hero-cta">
+              {t.bookIntro}
+            </a>
+          </Reveal>
         </div>
       </section>
     </div>

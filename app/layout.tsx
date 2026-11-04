@@ -22,6 +22,8 @@ const interTight = Inter_Tight({
 });
 
 export const metadata: Metadata = {
+  // Bas för relativa adresser i metadata, t.ex. delningsbilden /og-image.png.
+  metadataBase: new URL("https://screndo.com"),
   title: "Screndo | Intelligent medarbetarfeedback och pulsmätning",
   description:
     "Löpande pulsmätning grundad i organisationspsykologi. Screndo visar läget, föreslår åtgärder och följer upp att de fungerar.",

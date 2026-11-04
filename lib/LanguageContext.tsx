@@ -47,8 +47,8 @@ const translations = {
     menuLabel: 'Meny',
     // Hero
     headline1: 'Feedback som drivkraft',
-    metaTitle: 'Screndo | Intelligent medarbetarfeedback och pulsmätning',
-    metaDescription: 'Löpande pulsmätning grundad i organisationspsykologi. Screndo visar läget, föreslår åtgärder och följer upp att de fungerar.',
+    metaTitle: 'Screndo · Feedback som drivkraft',
+    metaDescription: 'Screndo fångar upp feedback från era medarbetare autonomt och ger en aktuell överblick över er organisation.',
     subline: 'Fånga upp feedback autonomt och få en aktuell överblick över er organisation.',
     seeHow: 'Se hur det fungerar',
     videoHeadline: 'Se hur Screndo fungerar',
@@ -253,8 +253,8 @@ const translations = {
     // Hero
     headline1: 'Feedback as a driving force',
     subline: 'Capture feedback autonomously and get an up-to-date overview of your organisation.',
-    metaTitle: 'Screndo | Intelligent employee feedback and pulse surveys',
-    metaDescription: 'Continuous pulse surveys grounded in organisational psychology. Screndo shows where you stand, suggests actions and follows up that they work.',
+    metaTitle: 'Screndo · Feedback as a driving force',
+    metaDescription: 'Screndo captures feedback from your employees autonomously and gives an up-to-date overview of your organisation.',
     seeHow: 'See how it works',
     videoHeadline: 'See how Screndo works',
     // Home page below the hero

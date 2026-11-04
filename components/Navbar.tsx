@@ -29,7 +29,6 @@ export default function Navbar() {
         zIndex: 50,
         height: "64px",
         background: "#fff",
-        borderBottom: "1px solid #ECECEC",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",

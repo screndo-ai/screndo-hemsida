@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import { useLanguage } from '@/lib/LanguageContext'
+import Reveal from '@/components/Reveal'
 
 const LINKEDIN_URL = 'https://www.linkedin.com/company/screndo'
 
@@ -14,9 +15,9 @@ export default function HomeFooter() {
 
   return (
     <footer className="home home-footer">
-      <div className="home-wordmark">
+      <Reveal className="home-wordmark" variant="fade" duration={1200} threshold={0.4}>
         <Image src="/logo2.png" alt="Screndo" width={3000} height={1000} sizes="110vw" />
-      </div>
+      </Reveal>
       <div className="home-footer-row">
         <div>
           <a href="/privacy">{t.privacy}</a>
