@@ -9,13 +9,14 @@ import { useRef, useEffect, useState, ReactNode, CSSProperties, ElementType, HTM
 // globals.css). variant "none" rör inte elementet självt, bara is-in.
 type Variant = 'up' | 'left' | 'right' | 'scale' | 'fade' | 'none'
 
-const OFFSETS: Record<Variant, string> = {
-  up: 'translateY(24px)',
-  left: 'translateX(-48px)',
-  right: 'translateX(48px)',
-  scale: 'scale(0.95)',
-  fade: 'none',
-  none: 'none',
+// Standardsträcka per variant; distance (px) skriver över den.
+const OFFSETS: Record<Variant, (d?: number) => string> = {
+  up: (d = 24) => `translateY(${d}px)`,
+  left: (d = 48) => `translateX(-${d}px)`,
+  right: (d = 48) => `translateX(${d}px)`,
+  scale: () => 'scale(0.95)',
+  fade: () => 'none',
+  none: () => 'none',
 }
 
 const EASE = 'cubic-bezier(0.22, 1, 0.36, 1)'
@@ -27,6 +28,8 @@ export default function Reveal({
   delay = 0,
   duration = 800,
   threshold = 0.2,
+  distance,
+  easing = EASE,
   className,
   style,
   ...rest
@@ -37,6 +40,8 @@ export default function Reveal({
   delay?: number
   duration?: number
   threshold?: number
+  distance?: number
+  easing?: string
   className?: string
   style?: CSSProperties
 } & Omit<HTMLAttributes<HTMLElement>, 'className' | 'style' | 'children'>) {
@@ -69,8 +74,8 @@ export default function Reveal({
         ...style,
         ...(animated && {
           opacity: visible ? 1 : 0,
-          transform: visible ? 'none' : OFFSETS[variant],
-          transition: `opacity ${duration}ms ${EASE} ${delay}ms, transform ${duration}ms ${EASE} ${delay}ms`,
+          transform: visible ? 'none' : OFFSETS[variant](distance),
+          transition: `opacity ${duration}ms ${easing} ${delay}ms, transform ${duration}ms ${easing} ${delay}ms`,
         }),
       }}
       {...rest}

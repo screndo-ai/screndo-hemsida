@@ -97,13 +97,23 @@ export default function HomeSections() {
         />
       </noscript>
 
-      {/* 1. Viktig feedback går förlorad */}
+      {/* 1. Viktig feedback går förlorad: rubrik och text i vänster spalt,
+          kvadratisk bild till höger, linjerade upptill */}
       <section className="home-section home-statement-section">
         <div className="home-wrap home-statement">
-          <Reveal as="h2" className="home-big">{t.homeLossHeadline}</Reveal>
           <div>
+            <Reveal as="h2" className="home-big">{t.homeLossHeadline}</Reveal>
             <Reveal as="p" className="home-lede" delay={140}>{t.homeLossPara1}</Reveal>
             <Reveal as="p" className="home-lede" delay={220}>{t.homeLossPara2}</Reveal>
+          </div>
+          <div className="home-statement-photo">
+            <Image
+              src="/brandim1.jpg"
+              alt={t.homeLossImageAlt}
+              fill
+              sizes="(max-width: 900px) calc(100vw - 2 * clamp(16px, 5vw, 72px)), 40vw"
+              style={{ objectFit: 'cover' }}
+            />
           </div>
         </div>
       </section>
@@ -137,7 +147,7 @@ export default function HomeSections() {
         </div>
       </section>
 
-      {/* 3. Mindre administration: texten tonar in, skissen glider in från höger */}
+      {/* 3. Mindre administration: texten tonar in, laptopen glider in från höger */}
       <section className="home-section" style={{ background: 'var(--home-mist)' }}>
         <div className="home-wrap home-split">
           <div>
@@ -147,25 +157,39 @@ export default function HomeSections() {
             </Reveal>
           </div>
           <Reveal className="home-shot" variant="right" duration={1100} delay={120} role="img" aria-label={t.homeMockLabel}>
-            <div className="home-ui" aria-hidden="true">
-              <h4>
-                {t.homeMockGreeting}
-                <span>{t.homeMockQuestion}</span>
-              </h4>
-              <div className="home-ui-cards">
-                <div className="home-ui-c home-ui-c1">{t.homeMockCard1}<strong>50</strong></div>
-                <div className="home-ui-c home-ui-c2">{t.homeMockCard2}<strong>79</strong></div>
-                <div className="home-ui-c home-ui-c3">{t.homeMockCard3}<strong>+32</strong></div>
-              </div>
-              <div className="home-ui-ask">
-                {t.homeMockAsk}
-                {/* Samma uppåtpil som skickaknappen i plattformens chattfält
-                    (app/dashboard/layout.tsx), vit på svart rund knapp. */}
-                <span className="home-ui-send">
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                    <path d="M6 10V2M6 2L2.5 5.5M6 2L9.5 5.5" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </span>
+            {/* Laptopen, beskuren till sina egna pixlar, med Hem inlagt på
+                skärmytan (positionen uppmätt i bilden, se .home-screen). */}
+            <div className="home-laptop">
+              <Image
+                src="/laptop_realistic.jpg"
+                alt=""
+                width={8000}
+                height={8000}
+                sizes="(max-width: 900px) 110vw, 52vw"
+                className="home-laptop-img"
+              />
+              <div className="home-screen">
+                <div className="home-ui" aria-hidden="true">
+                  <h4>
+                    {t.homeMockGreeting}
+                    <span>{t.homeMockQuestion}</span>
+                  </h4>
+                  <div className="home-ui-cards">
+                    <div className="home-ui-c home-ui-c1">{t.homeMockCard1}<strong>50</strong></div>
+                    <div className="home-ui-c home-ui-c2">{t.homeMockCard2}<strong>79</strong></div>
+                    <div className="home-ui-c home-ui-c3">{t.homeMockCard3}<strong>+32</strong></div>
+                  </div>
+                  <div className="home-ui-ask">
+                    {t.homeMockAsk}
+                    {/* Samma uppåtpil som skickaknappen i plattformens chattfält
+                        (app/dashboard/layout.tsx), vit på svart rund knapp. */}
+                    <span className="home-ui-send">
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                        <path d="M6 10V2M6 2L2.5 5.5M6 2L9.5 5.5" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           </Reveal>
@@ -212,7 +236,8 @@ export default function HomeSections() {
       {/* 5. Forskning: bilden glider in från vänster, texten tonar in */}
       <section className="home-section" style={{ paddingTop: 0 }}>
         <div className="home-wrap home-research">
-          <Reveal className="home-photo" variant="left" duration={1100}>
+          {/* Lugn rörelse: kort sträcka, 1,3 s, mjuk utgång (ease-out cubic) */}
+          <Reveal className="home-photo" variant="left" distance={24} duration={1300} easing="cubic-bezier(0.33, 1, 0.68, 1)">
             <Image
               src="/hskolan.jpg"
               alt={t.homeResearchImageAlt}

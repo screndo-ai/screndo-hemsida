@@ -28,6 +28,7 @@ export default function HeroCarousel() {
   const posRef = useRef(N) // index (i hela listan) för kortet längst till vänster
   const animRef = useRef<number | null>(null)
   const settleRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const touchingRef = useRef(false)
 
   const [active, setActive] = useState(0) // kortnummer 0..N-1
   const [hovered, setHovered] = useState<number | null>(null)
@@ -172,12 +173,20 @@ export default function HeroCarousel() {
     if (trackRef.current) trackRef.current.style.scrollSnapType = ''
   }
 
-  // Manuell scroll (svep, trackpad): uppdatera aktivt kort och normalisera
-  // när scrollen har stannat.
+  // Manuell scroll (svep, trackpad): när scrollen har stannat (och fingret
+  // har släppt) läggs närmaste kort på plats — mjukt om raden stannade
+  // mellan två kort — och positionen normaliseras.
   const onScroll = () => {
     if (animRef.current) return
     if (settleRef.current) clearTimeout(settleRef.current)
-    settleRef.current = setTimeout(normalize, 140)
+    settleRef.current = setTimeout(() => {
+      const el = trackRef.current
+      const st = step()
+      if (!el || !st || touchingRef.current) return
+      const nearest = Math.round(el.scrollLeft / st)
+      if (Math.abs(el.scrollLeft - nearest * st) > 1) slideTo(nearest, !reducedMotion)
+      else normalize()
+    }, 140)
   }
 
   const onKeyDown = (e: React.KeyboardEvent) => {
@@ -201,7 +210,7 @@ export default function HeroCarousel() {
       className="hero-cards-track"
       data-lenis-prevent-horizontal
       role="group"
-      aria-roledescription="karusell"
+      aria-roledescription={lang === 'sv' ? 'karusell' : 'carousel'}
       aria-label={lang === 'sv' ? 'Medarbetarperspektiv' : 'Employee perspectives'}
       onScroll={onScroll}
       onKeyDown={onKeyDown}
@@ -215,10 +224,19 @@ export default function HeroCarousel() {
       }}
       onTouchStart={() => {
         cancelSlide()
+        touchingRef.current = true
         setTouching(true)
       }}
-      onTouchEnd={() => setTouching(false)}
-      onTouchCancel={() => setTouching(false)}
+      onTouchEnd={() => {
+        touchingRef.current = false
+        setTouching(false)
+        onScroll()
+      }}
+      onTouchCancel={() => {
+        touchingRef.current = false
+        setTouching(false)
+        onScroll()
+      }}
     >
       {SLOTS.map((slot) => {
         const n = slot % N
@@ -251,7 +269,7 @@ export default function HeroCarousel() {
               src={card.src}
               alt={isClone ? '' : text.alt}
               fill
-              sizes="(max-width: 640px) 64vw, (max-width: 1024px) 40vw, 24vw"
+              sizes="(max-width: 640px) calc(100vw - 32px), (max-width: 1024px) 40vw, 24vw"
               preload={slot < 4}
               loading={n < 4 ? 'eager' : 'lazy'}
               className="hero-card-img"

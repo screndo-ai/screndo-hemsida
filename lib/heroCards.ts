@@ -1,4 +1,5 @@
-// Korten i bildraden under heron på startsidan, i visningsordning.
+// Korten i bildraden under heron på startsidan, i visningsordning
+// (flytta ett helt objekt för att byta plats på ett kort).
 // Ändra texterna här: role visas i fetstil, perspective på raden under.
 // alt beskriver personen på bilden för skärmläsare.
 
@@ -72,21 +73,6 @@ export const heroCards: HeroCard[] = [
     },
   },
   {
-    src: '/brandi5.jpg',
-    width: 1105,
-    height: 1423,
-    sv: {
-      role: 'Säljare',
-      perspective: 'Fick sitt senaste beröm för ett halvår sedan.',
-      alt: 'Man med mörkt, lockigt hår i svart tröja mot ljusblå bakgrund.',
-    },
-    en: {
-      role: 'Sales representative',
-      perspective: 'Last received praise six months ago.',
-      alt: 'Man with dark, wavy hair in a black sweater against a light blue background.',
-    },
-  },
-  {
     src: '/brandi6.jpg',
     width: 1105,
     height: 1423,
@@ -102,21 +88,6 @@ export const heroCards: HeroCard[] = [
     },
   },
   {
-    src: '/brandi7.jpg',
-    width: 1105,
-    height: 1423,
-    sv: {
-      role: 'Produktionstekniker',
-      perspective: 'Funderar på att sluta. Ingen har märkt det.',
-      alt: 'Kvinna med uppsatt blont hår i mörk skjorta mot mörkblå bakgrund.',
-    },
-    en: {
-      role: 'Production engineer',
-      perspective: 'Is thinking about quitting. Nobody has noticed.',
-      alt: 'Woman with blonde hair tied up, in a dark shirt against a dark blue background.',
-    },
-  },
-  {
     src: '/brandi8.jpg',
     width: 1105,
     height: 1423,
@@ -129,6 +100,36 @@ export const heroCards: HeroCard[] = [
       role: 'Manager of twelve people',
       perspective: 'Wants to know how the team is doing, but only hears that things are calm.',
       alt: 'Woman with brown hair tied up, in a blue work jacket against a blue background.',
+    },
+  },
+  {
+    src: '/brandi5.jpg',
+    width: 1105,
+    height: 1423,
+    sv: {
+      role: 'Säljare',
+      perspective: 'Fick sitt senaste beröm för ett halvår sedan.',
+      alt: 'Man med mörkt, lockigt hår i svart tröja mot ljusblå bakgrund.',
+    },
+    en: {
+      role: 'Sales representative',
+      perspective: 'Last received praise six months ago.',
+      alt: 'Man with dark, wavy hair in a black sweater against a light blue background.',
+    },
+  },
+  {
+    src: '/brandi7.jpg',
+    width: 1105,
+    height: 1423,
+    sv: {
+      role: 'Produktionstekniker',
+      perspective: 'Funderar på att sluta. Ingen har märkt det.',
+      alt: 'Kvinna med uppsatt blont hår i mörk skjorta mot mörkblå bakgrund.',
+    },
+    en: {
+      role: 'Production engineer',
+      perspective: 'Is thinking about quitting. Nobody has noticed.',
+      alt: 'Woman with blonde hair tied up, in a dark shirt against a dark blue background.',
     },
   },
 ]

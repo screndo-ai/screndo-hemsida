@@ -56,6 +56,7 @@ const translations = {
     homeLossHeadline: 'Viktig feedback går förlorad om den inte fångas upp.',
     homeLossPara1: 'Är organisationen utspridd i tid och rum, blir ni fler eller är det svårt att prata med alla? Att ställa rätt frågor, i rätt tid, är svårare än det låter.',
     homeLossPara2: 'Screndo fångar upp feedback autonomt och bygger en kontext över tid, med pulsmätning, problemrapportering och en aktuell bild av läget i organisationen.',
+    homeLossImageAlt: 'Medarbetare på en arbetsplats',
     homeCostHeadline1: 'Rekrytering är dyrt.',
     homeCostHeadline2: 'Omotiverade anställda är dyrare.',
     homeStat1Value: '45\u00a0%',
@@ -261,8 +262,9 @@ const translations = {
     homeLossHeadline: "Important feedback is lost if it isn't captured.",
     homeLossPara1: 'Is your organisation spread out in time and place, are you growing, or is it hard to talk to everyone? Asking the right questions at the right time is harder than it sounds.',
     homeLossPara2: 'Screndo captures feedback autonomously and builds context over time, with pulse surveys, issue reporting and an up-to-date picture of where your organisation stands.',
+    homeLossImageAlt: 'Employees at a workplace',
     homeCostHeadline1: 'Recruiting is expensive.',
-    homeCostHeadline2: 'Unmotivated employees are more expensive.',
+    homeCostHeadline2: 'Unmotivated employees cost more.',
     homeStat1Value: '45%',
     homeStat1Text: 'Employees who received high-quality recognition were 45 percent less likely to have left two years later.',
     homeStat1Source: 'Gallup and Workhuman, 2024',
@@ -292,7 +294,7 @@ const translations = {
     homeTrust3Title: 'Data within the EU',
     homeTrust3Text: 'Answers and personal data are stored in a database within the EU.',
     homeTrust4Title: 'No assessment of individuals',
-    homeTrust4Text: 'Screndo shows the situation for groups. No decisions are made about individuals.',
+    homeTrust4Text: 'Screndo shows how groups are doing. No decisions are made about individuals.',
     homeCtaHeadline: 'We take on a few companies at a time.',
     homeCtaBody: "Tell us briefly about your organisation and we'll get in touch about a first call.",
     footerContact: 'Contact',
@@ -439,12 +441,20 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     document.documentElement.lang = lang
-    // Titel och description följer språkvalet. Den statiska metadatan i
-    // layout.tsx är svenska (det som crawlers och delningskort ser).
-    document.title = translations[lang].metaTitle
-    document
-      .querySelector('meta[name="description"]')
-      ?.setAttribute('content', translations[lang].metaDescription)
+    // Titel och description följer språkvalet. Den statiska metadatan
+    // (layout.tsx, page.tsx) är svenska (det som crawlers och delningskort
+    // ser). Next kan skriva in sin <title> efter den här effekten, så en
+    // observatör på <head> lägger tillbaka rätt titel om den skrivs över.
+    const { metaTitle, metaDescription } = translations[lang]
+    const apply = () => {
+      if (document.title !== metaTitle) document.title = metaTitle
+      const desc = document.querySelector('meta[name="description"]')
+      if (desc && desc.getAttribute('content') !== metaDescription) desc.setAttribute('content', metaDescription)
+    }
+    apply()
+    const observer = new MutationObserver(apply)
+    observer.observe(document.head, { childList: true, subtree: true, characterData: true, attributes: true })
+    return () => observer.disconnect()
   }, [lang])
 
   function setLanguage(l: Lang) {
