@@ -14,7 +14,7 @@ import Reveal from '@/components/Reveal'
 
 const STAT_SOURCES = {
   recognition: 'https://www.gallup.com/workplace/650174/employee-recognition-quality-drives-retention.aspx',
-  silence: 'https://explore.psychsafety.com/n/milliken-morrison-hewlin-2003/',
+  engagement: 'https://www.gallup.com/workplace/321725/gallup-q12-meta-analysis-2024.aspx',
 }
 
 // Ljusare ruta = högre värde. Skalan spänner över exempeldatans hela
@@ -176,7 +176,7 @@ export default function HomeSections() {
           <div className="home-stats">
             {[
               { value: t.homeStat1Value, text: t.homeStat1Text, source: t.homeStat1Source, href: STAT_SOURCES.recognition },
-              { value: t.homeStat2Value, text: t.homeStat2Text, source: t.homeStat2Source, href: STAT_SOURCES.silence },
+              { value: t.homeStat2Value, text: t.homeStat2Text, source: t.homeStat2Source, href: STAT_SOURCES.engagement },
             ].map((stat, i) => (
               <div className="home-stat" key={stat.href}>
                 <Reveal className="home-stat-n" variant="fade" duration={1000} delay={i * 120}>
