@@ -17,6 +17,12 @@ const STAT_SOURCES = {
   engagement: 'https://www.gallup.com/workplace/321725/gallup-q12-meta-analysis-2024.aspx',
 }
 
+// Arbetsmiljöverkets sida om AFS 2023:1 (systematiskt arbetsmiljöarbete)
+const AFS_URL = 'https://www.av.se/arbetsmiljoarbete-och-inspektioner/publikationer/foreskrifter/afs-20231/'
+
+// Punkterna längs linjen tänds en i taget med så här lång fördröjning.
+const SAM_STEP_MS = 260
+
 // Ljusare ruta = högre värde. Skalan spänner över exempeldatans hela
 // omfång (inte en fast 45–85 som i skissen), så skillnaden mellan ljusa
 // och mörka rutor blir tydligare. Bara skissens ljusblå mot den mörkblå
@@ -129,6 +135,13 @@ export default function HomeSections() {
     [t.homeTrust2Title, t.homeTrust2Text],
     [t.homeTrust3Title, t.homeTrust3Text],
     [t.homeTrust4Title, t.homeTrust4Text],
+    [t.homeTrust5Title, t.homeTrust5Text],
+  ]
+  const samSteps = [
+    [t.homeSam1Title, t.homeSam1Text],
+    [t.homeSam2Title, t.homeSam2Text],
+    [t.homeSam3Title, t.homeSam3Text],
+    [t.homeSam4Title, t.homeSam4Text],
   ]
   const rows = heatmapDepartments.length
 
@@ -139,7 +152,7 @@ export default function HomeSections() {
         <style
           dangerouslySetInnerHTML={{
             __html:
-              '[data-reveal]{opacity:1!important;transform:none!important}.home-heat-x{animation:none!important;background-color:var(--heat-final)!important}',
+              '[data-reveal]{opacity:1!important;transform:none!important}.home-heat-x{animation:none!important;background-color:var(--heat-final)!important}.home-sam-steps li>*{opacity:1!important;transform:none!important}.home-sam-dot{background:#13284B!important;border-color:#13284B!important}',
           }}
         />
       </noscript>
@@ -162,6 +175,30 @@ export default function HomeSections() {
               style={{ objectFit: 'cover' }}
             />
           </div>
+        </div>
+      </section>
+
+      {/* Systematiskt arbetsmiljöarbete: de fyra delarna längs en tunn linje
+          (lodrät på mobil). Punkterna tänds en i taget när listan kommer in
+          i bild. */}
+      <section className="home-section">
+        <div className="home-wrap">
+          <Reveal as="h2" className="home-big" style={{ maxWidth: '900px' }}>{t.homeSamHeadline}</Reveal>
+          <Reveal as="p" className="home-lede" delay={140} style={{ marginTop: '24px' }}>{t.homeSamBody}</Reveal>
+          <Reveal as="ol" className="home-sam-steps" variant="none" threshold={0.35}>
+            {samSteps.map(([title, text], i) => (
+              <li key={title} style={{ '--sam-d': `${i * SAM_STEP_MS}ms` } as React.CSSProperties}>
+                <span className="home-sam-dot" aria-hidden="true" />
+                <b>{title}</b>
+                <span className="home-sam-text">{text}</span>
+              </li>
+            ))}
+          </Reveal>
+          <Reveal variant="fade" delay={300}>
+            <a className="home-source home-sam-source" href={AFS_URL} target="_blank" rel="noopener noreferrer">
+              {t.homeSamSource}
+            </a>
+          </Reveal>
         </div>
       </section>
 

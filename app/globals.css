@@ -357,6 +357,92 @@ html.lenis.lenis-scrolling iframe {
   background: var(--home-mist);
 }
 
+/* Systematiskt arbetsmiljöarbete: fyra delar längs en enda tunn linje,
+   en liten punkt per del. Linjen ritas som delsträckor från varje punkt
+   till nästa, så att den börjar och slutar i en punkt. På dator vågrät,
+   på mobil lodrät (se 700px-brytpunkten). Punkterna tänds en i taget
+   (--sam-d per rad) när listan får is-in från Reveal. */
+.home-sam-steps {
+  --sam-gap: clamp(20px, 3vw, 40px);
+  --sam-dot: 11px;
+  --sam-line: rgba(11, 15, 25, 0.16);
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--sam-gap);
+  list-style: none;
+  margin: clamp(48px, 6vw, 80px) 0 0;
+  padding: 0;
+}
+.home-sam-steps li {
+  position: relative;
+  padding-top: 32px;
+}
+.home-sam-steps li:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: calc(var(--sam-dot) / 2);
+  left: calc(var(--sam-dot) / 2);
+  width: calc(100% + var(--sam-gap));
+  height: 1px;
+  background: var(--sam-line);
+}
+.home-sam-dot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  box-sizing: border-box;
+  width: var(--sam-dot);
+  height: var(--sam-dot);
+  border-radius: 50%;
+  border: 1px solid rgba(11, 15, 25, 0.28);
+  background: #fff;
+  transition: background-color 0.5s ease var(--sam-d), border-color 0.5s ease var(--sam-d), transform 0.5s ease var(--sam-d);
+}
+.home-sam-steps.is-in .home-sam-dot {
+  background: var(--home-navy);
+  border-color: var(--home-navy);
+  transform: scale(1.15);
+}
+.home-sam-steps li > b,
+.home-sam-text {
+  display: block;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1) var(--sam-d), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1) var(--sam-d);
+}
+.home-sam-steps.is-in li > b,
+.home-sam-steps.is-in .home-sam-text {
+  opacity: 1;
+  transform: none;
+}
+.home-sam-steps li > b {
+  font-weight: 600;
+}
+.home-sam-text {
+  margin-top: 6px;
+  max-width: 280px;
+  color: var(--home-muted);
+}
+/* Dubbel klass: .home-source längre ner sätter annars margin-top: 12px */
+.home-source.home-sam-source {
+  margin-top: clamp(32px, 4vw, 48px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .home-sam-dot {
+    background: var(--home-navy);
+    border-color: var(--home-navy);
+    transition: none;
+  }
+  .home-sam-steps li > b,
+  .home-sam-text {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
 /* 2. Kostnad: grå andra rad, två siffror med hårfina linjer */
 /* Andra raden i sidans mörkblå, nära marinblått men skild från den
    svarta första raden */
@@ -700,6 +786,23 @@ html.lenis.lenis-scrolling iframe {
 }
 
 @media (max-width: 700px) {
+  /* De fyra delarna under varandra längs en lodrät linje */
+  .home-sam-steps {
+    --sam-gap: 28px;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .home-sam-steps li {
+    padding-top: 0;
+    padding-left: 30px;
+  }
+  .home-sam-dot {
+    top: 8px;
+  }
+  .home-sam-steps li:not(:last-child)::after {
+    top: calc(8px + var(--sam-dot) / 2);
+    width: 1px;
+    height: calc(100% + var(--sam-gap));
+  }
   .home-stats {
     grid-template-columns: 1fr;
   }
