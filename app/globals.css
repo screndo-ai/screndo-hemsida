@@ -311,14 +311,6 @@ html.lenis.lenis-scrolling iframe {
   padding: clamp(96px, 13vw, 180px) 0;
 }
 
-/* Första sektionen: samma avstånd mot bildraden ovanför och mot
-   "Rekrytering är dyrt" under som mellan "Byggt på forskning" och "Ett
-   litet bolag" (två sektionsmarginaler, 360px på dator). Nedåt delas det
-   med kostnadssektionens egen marginal, inne i dess ljusblå bakgrund. */
-.home-statement-section {
-  padding: calc(2 * clamp(96px, 13vw, 180px)) 0 clamp(96px, 13vw, 180px);
-}
-
 .home-big {
   font-family: var(--home-display);
   font-weight: 600;
@@ -335,112 +327,128 @@ html.lenis.lenis-scrolling iframe {
   margin: 0;
 }
 
-/* 1. Rubrik och de två styckena i vänster spalt, kvadratisk bild till
-   höger. Rubriken och bilden linjerar upptill. */
-.home-statement {
-  display: grid;
-  grid-template-columns: 1.25fr 1fr;
-  gap: clamp(32px, 6vw, 96px);
-  align-items: start;
+/* 2. Problemet: tät efter heron men med vit luft emellan, så att
+   bildraden inte går rakt in i den ljusblå ytan. Texten i en smal spalt. */
+.home-problem {
+  margin-top: clamp(96px, 13vw, 180px);
 }
-.home-statement .home-big + .home-lede {
-  margin-top: 24px;
+.home-problem-text {
+  max-width: 620px;
+  margin-top: clamp(24px, 2.4vw, 32px);
 }
-.home-statement .home-lede + .home-lede {
-  margin-top: 18px;
-}
-.home-statement-photo {
-  position: relative;
-  aspect-ratio: 1 / 1;
-  overflow: hidden;
-  border-radius: 0;
-  background: var(--home-mist);
+.home-problem-text .home-lede + .home-lede {
+  margin-top: 14px;
 }
 
-/* Systematiskt arbetsmiljöarbete: fyra delar längs en enda tunn linje,
-   en liten punkt per del. Linjen ritas som delsträckor från varje punkt
-   till nästa, så att den börjar och slutar i en punkt. På dator vågrät,
-   på mobil lodrät (se 700px-brytpunkten). Punkterna tänds en i taget
-   (--sam-d per rad) när listan får is-in från Reveal. */
-.home-sam-steps {
-  --sam-gap: clamp(20px, 3vw, 40px);
-  --sam-dot: 11px;
-  --sam-line: rgba(11, 15, 25, 0.16);
-  position: relative;
+/* 3. Övergång: stor, luftig rubrik i mitten, lite text, ingen bild */
+.home-transition {
+  padding: clamp(144px, 19.5vw, 270px) 0;
+  text-align: center;
+}
+.home-transition-title.home-big {
+  max-width: 1100px;
+  margin: 0 auto;
+  font-size: clamp(40px, 6.4vw, 100px);
+  line-height: 1.02;
+}
+.home-transition .home-lede {
+  max-width: 560px;
+  margin: clamp(24px, 2.6vw, 36px) auto 0;
+}
+
+/* 4. Vad Screndo gör: bento-rutnät med kort i olika storlekar (6 spalter
+   på dator). Stora kort (lg) tar 4 spalter, små (sm) 2 och mellanstora
+   (md) 3. Raderna växlar så att stora kort hamnar omväxlande till vänster
+   och höger. Alla kort har samma rundade hörn. */
+.home-bento {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: var(--sam-gap);
-  list-style: none;
-  margin: clamp(48px, 6vw, 80px) 0 0;
-  padding: 0;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: clamp(12px, 1.4vw, 20px);
+  margin-top: clamp(40px, 5vw, 64px);
 }
-.home-sam-steps li {
-  position: relative;
-  padding-top: 32px;
+.home-card {
+  display: flex;
+  flex-direction: column;
+  min-height: clamp(380px, 34vw, 500px);
+  border-radius: 20px;
+  overflow: hidden;
+  background: var(--home-mist);
 }
-.home-sam-steps li:not(:last-child)::after {
-  content: '';
-  position: absolute;
-  top: calc(var(--sam-dot) / 2);
-  left: calc(var(--sam-dot) / 2);
-  width: calc(100% + var(--sam-gap));
-  height: 1px;
-  background: var(--sam-line);
+.home-card--lg { grid-column: span 4; }
+.home-card--sm { grid-column: span 2; }
+.home-card--md { grid-column: span 3; min-height: clamp(320px, 28vw, 420px); }
+/* Bildytan: Screndos blå i en mjuk, långsam gradient med ett svagt ljus,
+   tills riktiga bilder finns. Varje kort har förskjuten fas. */
+.home-card-media {
+  flex: 1 1 auto;
+  min-height: 150px;
+  background:
+    radial-gradient(120% 90% at 18% 12%, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0) 55%),
+    linear-gradient(120deg, #1D4ED8 0%, #2563EB 38%, #3B82F6 62%, #2563EB 100%);
+  background-size: 100% 100%, 240% 240%;
+  animation: home-card-glow 22s ease-in-out infinite alternate;
+  animation-delay: var(--glow-delay, 0s);
 }
-.home-sam-dot {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 1;
-  box-sizing: border-box;
-  width: var(--sam-dot);
-  height: var(--sam-dot);
-  border-radius: 50%;
-  border: 1px solid rgba(11, 15, 25, 0.28);
-  background: #fff;
-  transition: background-color 0.5s ease var(--sam-d), border-color 0.5s ease var(--sam-d), transform 0.5s ease var(--sam-d);
+@keyframes home-card-glow {
+  from { background-position: 0 0, 0% 50%; }
+  to { background-position: 0 0, 100% 50%; }
 }
-.home-sam-steps.is-in .home-sam-dot {
-  background: var(--home-navy);
-  border-color: var(--home-navy);
-  transform: scale(1.15);
+.home-card-body {
+  padding: clamp(20px, 2.2vw, 32px);
 }
-.home-sam-steps li > b,
-.home-sam-text {
-  display: block;
-  opacity: 0;
-  transform: translateY(8px);
-  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1) var(--sam-d), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1) var(--sam-d);
-}
-.home-sam-steps.is-in li > b,
-.home-sam-steps.is-in .home-sam-text {
-  opacity: 1;
-  transform: none;
-}
-.home-sam-steps li > b {
+.home-card-body h3 {
+  margin: 0;
+  font-family: var(--home-display);
   font-weight: 600;
+  font-size: clamp(20px, 1.8vw, 26px);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
 }
-.home-sam-text {
-  margin-top: 6px;
-  max-width: 280px;
+.home-card-body p {
+  margin: 8px 0 0;
+  max-width: 46ch;
   color: var(--home-muted);
 }
-/* Dubbel klass: .home-source längre ner sätter annars margin-top: 12px */
-.home-source.home-sam-source {
-  margin-top: clamp(32px, 4vw, 48px);
-}
 @media (prefers-reduced-motion: reduce) {
-  .home-sam-dot {
-    background: var(--home-navy);
-    border-color: var(--home-navy);
-    transition: none;
+  .home-card-media {
+    animation: none;
   }
-  .home-sam-steps li > b,
-  .home-sam-text {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
+}
+
+/* 6. Frågekanaler: tre kanaler i rad, enkla linjeikoner */
+.home-channels {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(24px, 4vw, 56px);
+  list-style: none;
+  margin: clamp(40px, 5vw, 64px) 0 0;
+  padding: 0;
+}
+.home-channel-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--home-blue);
+}
+.home-channel-icon svg {
+  width: 22px;
+  height: 22px;
+}
+.home-channels h3 {
+  margin: 18px 0 0;
+  font-family: var(--home-display);
+  font-weight: 600;
+  font-size: clamp(20px, 1.6vw, 24px);
+  letter-spacing: -0.02em;
+}
+.home-channels p {
+  margin: 6px 0 0;
+  max-width: 34ch;
+  color: var(--home-muted);
 }
 
 /* 2. Kostnad: grå andra rad, två siffror med hårfina linjer */
@@ -616,68 +624,6 @@ html.lenis.lenis-scrolling iframe {
   height: calc(var(--u) * 10);
 }
 
-/* 4. Värmekartan: bara färger, ingen siffra */
-.home-map {
-  margin-top: clamp(40px, 5vw, 64px);
-  padding: clamp(24px, 4vw, 56px);
-  border-radius: 0;
-  background: var(--home-navy);
-  color: #fff;
-  overflow: hidden;
-}
-.home-map-title {
-  display: block;
-  font-family: var(--home-display);
-  font-size: 22px;
-  font-weight: 600;
-}
-.home-scroll-x {
-  overflow-x: auto;
-}
-.home-heat {
-  display: grid;
-  grid-template-columns: 150px repeat(6, 1fr);
-  gap: 8px;
-  min-width: 640px;
-  margin-top: 32px;
-  font-size: 13px;
-}
-.home-heat-h {
-  padding-bottom: 6px;
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.6);
-}
-.home-heat-d {
-  align-self: center;
-  color: rgba(255, 255, 255, 0.85);
-}
-.home-heat-x {
-  height: 44px;
-  border-radius: 8px;
-  background-color: var(--heat-start);
-  --heat-start: rgba(185, 209, 236, 0.06);
-}
-/* Vågen: när kartan kommer in i bild (is-in från Reveal) tänds rutorna
-   rad för rad nerifrån och upp (fördröjningen --heat-d sätts per ruta),
-   passerar en något ljusare nyans och landar i sin slutliga färg. */
-.home-map.is-in .home-heat-x {
-  background-color: var(--heat-final);
-  animation: home-heat-wave 750ms cubic-bezier(0.22, 1, 0.36, 1) var(--heat-d, 0ms) both;
-}
-@keyframes home-heat-wave {
-  from { background-color: var(--heat-start); }
-  55% { background-color: var(--heat-peak); }
-  to { background-color: var(--heat-final); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .home-heat-x {
-    background-color: var(--heat-final);
-  }
-  .home-map.is-in .home-heat-x {
-    animation: none;
-  }
-}
-
 /* 5. Bild till vänster, text till höger */
 .home-research {
   display: grid;
@@ -774,7 +720,23 @@ html.lenis.lenis-scrolling iframe {
 }
 
 @media (max-width: 900px) {
-  .home-statement,
+  /* Bento-korten i en kolumn, i samma ordning */
+  .home-bento {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .home-card--lg,
+  .home-card--sm,
+  .home-card--md {
+    grid-column: auto;
+    min-height: 0;
+  }
+  .home-card-media {
+    min-height: clamp(160px, 44vw, 240px);
+  }
+  .home-channels {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+  }
   .home-split,
   .home-research {
     grid-template-columns: 1fr;
@@ -786,23 +748,6 @@ html.lenis.lenis-scrolling iframe {
 }
 
 @media (max-width: 700px) {
-  /* De fyra delarna under varandra längs en lodrät linje */
-  .home-sam-steps {
-    --sam-gap: 28px;
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .home-sam-steps li {
-    padding-top: 0;
-    padding-left: 30px;
-  }
-  .home-sam-dot {
-    top: 8px;
-  }
-  .home-sam-steps li:not(:last-child)::after {
-    top: calc(8px + var(--sam-dot) / 2);
-    width: 1px;
-    height: calc(100% + var(--sam-gap));
-  }
   .home-stats {
     grid-template-columns: 1fr;
   }

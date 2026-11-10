@@ -132,29 +132,33 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
-  useEffect(() => {
-    if (messages.length === 1) {
-      setMessages([{ role: 'ai', text: getInitialMessage(pathname) }])
-    }
-  }, [pathname])
+  // Så länge bara välkomstmeddelandet finns följer det sidan man står på.
+  const initialMessage: Message = { role: 'ai', text: getInitialMessage(pathname) }
+  const shownMessages = messages.length === 1 ? [initialMessage] : messages
 
+  function addExchange(text: string) {
+    setMessages((prev) => [...(prev.length === 1 ? [initialMessage] : prev), { role: 'user', text }])
+    setTimeout(() => {
+      setMessages((prev) => [...prev, { role: 'ai', text: getPlaceholderResponse(text, pathname) }])
+    }, 600)
+  }
+
+  // Ett meddelande som skickats från en annan del av dashboarden.
   useEffect(() => {
     if (!pendingMessage) return
-    setMessages((prev) => [...prev, { role: 'user', text: pendingMessage }])
-    setTimeout(() => {
-      setMessages((prev) => [...prev, { role: 'ai', text: getPlaceholderResponse(pendingMessage, pathname) }])
-    }, 600)
-    setPendingMessage('')
+    const id = setTimeout(() => {
+      setPendingMessage('')
+      addExchange(pendingMessage)
+    }, 0)
+    return () => clearTimeout(id)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pendingMessage])
 
   function sendMessage(override?: string) {
     const text = (override ?? inputValue).trim()
     if (!text) return
     setInputValue('')
-    setMessages((prev) => [...prev, { role: 'user', text }])
-    setTimeout(() => {
-      setMessages((prev) => [...prev, { role: 'ai', text: getPlaceholderResponse(text, pathname) }])
-    }, 600)
+    addExchange(text)
   }
 
   function navStyle(href: string): React.CSSProperties {
@@ -378,7 +382,7 @@ function DashboardLayoutInner({ children }: { children: React.ReactNode }) {
 
         {/* Chat area */}
         <div style={{ flex: 1, overflowY: 'auto', padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          {messages.map((m, i) => (
+          {shownMessages.map((m, i) => (
             <div
               key={i}
               style={m.role === 'user' ? {

@@ -3,41 +3,57 @@
 import Image from 'next/image'
 import { useEffect, useRef } from 'react'
 import { useLanguage } from '@/lib/LanguageContext'
-import { heatmapAreas, heatmapDepartments } from '@/lib/homeHeatmap'
 import Reveal from '@/components/Reveal'
 
-// Startsidan under heron, enligt skissen Screndo_hemsida_skiss.html.
-// Mått, färger och avstånd ligger i globals.css under "Startsidan under
-// heron" (klasserna home-*). Texterna ligger i LanguageContext (home*).
-// Scrollanimationerna går via Reveal (en gång per element, när det kommer
-// in i bild); rubriken först, brödtexten strax efter.
+// Startsidan under heron. Ordningen berättar vad Screndo gör: problemet,
+// en övergång, funktionerna (bento-korten), översikten i laptopen, hur
+// frågorna når alla, och sist forskningen, integriteten och uppmaningen.
+// Mått, färger och avstånd ligger i globals.css (klasserna home-*). Texterna
+// ligger i LanguageContext (home*). Scrollanimationerna går via Reveal (en
+// gång per element, när det kommer in i bild).
 
 const STAT_SOURCES = {
   recognition: 'https://www.gallup.com/workplace/650174/employee-recognition-quality-drives-retention.aspx',
   engagement: 'https://www.gallup.com/workplace/321725/gallup-q12-meta-analysis-2024.aspx',
 }
 
-// Arbetsmiljöverkets sida om AFS 2023:1 (systematiskt arbetsmiljöarbete)
-const AFS_URL = 'https://www.av.se/arbetsmiljoarbete-och-inspektioner/publikationer/foreskrifter/afs-20231/'
+// Funktionskorten i visningsordning. size styr storleken i bento-rutnätet
+// (se .home-card--* i globals.css); på mobil står de i en kolumn i samma
+// ordning.
+const FEATURES = [
+  { key: 'A', size: 'lg' },
+  { key: 'B', size: 'sm' },
+  { key: 'C', size: 'sm' },
+  { key: 'D', size: 'lg' },
+  { key: 'F', size: 'lg' },
+  { key: 'E', size: 'sm' },
+  { key: 'G', size: 'md' },
+  { key: 'H', size: 'md' },
+] as const
 
-// Punkterna längs linjen tänds en i taget med så här lång fördröjning.
-const SAM_STEP_MS = 260
-
-// Ljusare ruta = högre värde. Skalan spänner över exempeldatans hela
-// omfång (inte en fast 45–85 som i skissen), så skillnaden mellan ljusa
-// och mörka rutor blir tydligare. Bara skissens ljusblå mot den mörkblå
-// bakgrunden, inga andra kulörer.
-const allValues = heatmapDepartments.flatMap((d) => d.values)
-const minValue = Math.min(...allValues)
-const maxValue = Math.max(...allValues)
-const cellAlpha = (v: number) => 0.1 + ((v - minValue) / (maxValue - minValue)) * 0.9
-const sky = (alpha: number) => `rgba(185, 209, 236, ${Math.min(1, alpha).toFixed(2)})`
-
-// Vågen genom rutnätet: nedersta raden först, sedan rad för rad uppåt,
-// med en liten förskjutning per kolumn. Varje ruta passerar en något
-// ljusare nyans och landar i sin slutliga färg. Hela vågen ~1,5 s.
-const WAVE_ROW_MS = 150
-const WAVE_COL_MS = 25
+// Enkla linjeikoner för frågekanalerna (24x24, 1.5 px linje).
+const CHANNEL_ICONS = {
+  sms: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <rect x="6.5" y="2.75" width="11" height="18.5" rx="2.5" />
+      <path d="M10.5 18h3" />
+    </svg>
+  ),
+  mail: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <rect x="3" y="5.25" width="18" height="13.5" rx="2" />
+      <path d="M3.5 6.5l8.5 6.25 8.5-6.25" />
+    </svg>
+  ),
+  qr: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <rect x="3.5" y="3.5" width="6.5" height="6.5" rx="1" />
+      <rect x="14" y="3.5" width="6.5" height="6.5" rx="1" />
+      <rect x="3.5" y="14" width="6.5" height="6.5" rx="1" />
+      <path d="M14 14h2.5v2.5H14zM18.5 14h2M14 18.5h2M18 18v2.5h2.5" />
+    </svg>
+  ),
+}
 
 // Räknar lugnt upp från 0 till värdet när siffran kommer in i bild.
 // "45 %" blir 0 % → 45 %; allt efter siffran (mellanslag, %) står kvar.
@@ -128,7 +144,7 @@ function LaptopScreen({ children }: { children: React.ReactNode }) {
 }
 
 export default function HomeSections() {
-  const { t, lang } = useLanguage()
+  const { t } = useLanguage()
 
   const facts = [
     [t.homeTrust1Title, t.homeTrust1Text],
@@ -137,13 +153,11 @@ export default function HomeSections() {
     [t.homeTrust4Title, t.homeTrust4Text],
     [t.homeTrust5Title, t.homeTrust5Text],
   ]
-  const samSteps = [
-    [t.homeSam1Title, t.homeSam1Text],
-    [t.homeSam2Title, t.homeSam2Text],
-    [t.homeSam3Title, t.homeSam3Text],
-    [t.homeSam4Title, t.homeSam4Text],
-  ]
-  const rows = heatmapDepartments.length
+  const channels = [
+    { key: 'sms', head: t.homeChannelSmsHead, text: t.homeChannelSmsText },
+    { key: 'mail', head: t.homeChannelMailHead, text: t.homeChannelMailText },
+    { key: 'qr', head: t.homeChannelQrHead, text: t.homeChannelQrText },
+  ] as const
 
   return (
     <div className="home">
@@ -151,65 +165,23 @@ export default function HomeSections() {
       <noscript>
         <style
           dangerouslySetInnerHTML={{
-            __html:
-              '[data-reveal]{opacity:1!important;transform:none!important}.home-heat-x{animation:none!important;background-color:var(--heat-final)!important}.home-sam-steps li>*{opacity:1!important;transform:none!important}.home-sam-dot{background:#13284B!important;border-color:#13284B!important}',
+            __html: '[data-reveal]{opacity:1!important;transform:none!important}',
           }}
         />
       </noscript>
 
-      {/* 1. Viktig feedback går förlorad: rubrik och text i vänster spalt,
-          kvadratisk bild till höger, linjerade upptill */}
-      <section className="home-section home-statement-section">
-        <div className="home-wrap home-statement">
-          <div>
-            <Reveal as="h2" className="home-big">{t.homeLossHeadline}</Reveal>
-            <Reveal as="p" className="home-lede" delay={140}>{t.homeLossPara1}</Reveal>
-            <Reveal as="p" className="home-lede" delay={220}>{t.homeLossPara2}</Reveal>
-          </div>
-          <div className="home-statement-photo">
-            <Image
-              src="/brandim1.jpg"
-              alt={t.homeLossImageAlt}
-              fill
-              sizes="(max-width: 900px) calc(100vw - 2 * clamp(16px, 5vw, 72px)), 40vw"
-              style={{ objectFit: 'cover' }}
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Systematiskt arbetsmiljöarbete: de fyra delarna längs en tunn linje
-          (lodrät på mobil). Punkterna tänds en i taget när listan kommer in
-          i bild. */}
-      <section className="home-section">
-        <div className="home-wrap">
-          <Reveal as="h2" className="home-big" style={{ maxWidth: '900px' }}>{t.homeSamHeadline}</Reveal>
-          <Reveal as="p" className="home-lede" delay={140} style={{ marginTop: '24px' }}>{t.homeSamBody}</Reveal>
-          <Reveal as="ol" className="home-sam-steps" variant="none" threshold={0.35}>
-            {samSteps.map(([title, text], i) => (
-              <li key={title} style={{ '--sam-d': `${i * SAM_STEP_MS}ms` } as React.CSSProperties}>
-                <span className="home-sam-dot" aria-hidden="true" />
-                <b>{title}</b>
-                <span className="home-sam-text">{text}</span>
-              </li>
-            ))}
-          </Reveal>
-          <Reveal variant="fade" delay={300}>
-            <a className="home-source home-sam-source" href={AFS_URL} target="_blank" rel="noopener noreferrer">
-              {t.homeSamSource}
-            </a>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* 2. Rekrytering är dyrt */}
-      <section className="home-section home-cost" style={{ background: 'var(--home-mist)' }}>
+      {/* 2. Problemet: smal textsektion med Gallup-siffrorna, ljusblå */}
+      <section className="home-section home-cost home-problem" style={{ background: 'var(--home-mist)' }}>
         <div className="home-wrap">
           <Reveal as="h2" className="home-big">
-            {t.homeCostHeadline1}
+            {t.homeProblemHeadline1}
             <br />
-            <span>{t.homeCostHeadline2}</span>
+            <span>{t.homeProblemHeadline2}</span>
           </Reveal>
+          <div className="home-problem-text">
+            <Reveal as="p" className="home-lede" delay={140}>{t.homeProblemPara1}</Reveal>
+            <Reveal as="p" className="home-lede" delay={220}>{t.homeProblemPara2}</Reveal>
+          </div>
           <div className="home-stats">
             {[
               { value: t.homeStat1Value, text: t.homeStat1Text, source: t.homeStat1Source, href: STAT_SOURCES.recognition },
@@ -231,8 +203,42 @@ export default function HomeSections() {
         </div>
       </section>
 
-      {/* 3. Mindre administration: texten tonar in, laptopen glider in från höger.
-          Vit bakgrund, så att laptopen inte ser urklippt ut. */}
+      {/* 3. Övergång: stor, luftig rubrik och lite text, ingen bild */}
+      <section className="home-section home-transition">
+        <div className="home-wrap">
+          <Reveal as="h2" className="home-big home-transition-title" duration={1000}>{t.homeTransitionHeadline}</Reveal>
+          <Reveal as="p" className="home-lede" delay={180} duration={1000}>{t.homeTransitionBody}</Reveal>
+        </div>
+      </section>
+
+      {/* 4. Vad Screndo gör: bento-kort i olika storlekar. Bildytan fylls med
+          en långsam blå gradient tills riktiga bilder finns. */}
+      <section className="home-section home-features" style={{ paddingTop: 0 }}>
+        <div className="home-wrap">
+          <Reveal as="h2" className="home-big">{t.homeFeaturesHeadline}</Reveal>
+          <Reveal as="p" className="home-lede" delay={140} style={{ marginTop: '24px' }}>{t.homeFeaturesIntro}</Reveal>
+          <div className="home-bento">
+            {FEATURES.map(({ key, size }, i) => (
+              <Reveal
+                as="article"
+                key={key}
+                className={`home-card home-card--${size} home-card--${key.toLowerCase()}`}
+                delay={(i % 2) * 90}
+                duration={900}
+              >
+                <div className="home-card-media" aria-hidden="true" style={{ '--glow-delay': `${-i * 2.3}s` } as React.CSSProperties} />
+                <div className="home-card-body">
+                  <h3>{t[`homeFeat${key}Head`]}</h3>
+                  <p>{t[`homeFeat${key}Text`]}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 5. Se läget över hela er organisation: texten tonar in, laptopen glider
+          in från höger. Vit bakgrund, så att laptopen inte ser urklippt ut. */}
       <section className="home-section">
         <div className="home-wrap home-split">
           <div>
@@ -282,45 +288,26 @@ export default function HomeSections() {
         </div>
       </section>
 
-      {/* 4. Läget över hela organisationen: en våg av nyanser genom rutnätet */}
-      <section className="home-section">
+      {/* 6. Frågekanaler: tre kanaler i rad, enkla linjeikoner */}
+      <section className="home-section home-channels-section" style={{ background: 'var(--home-mist)' }}>
         <div className="home-wrap">
-          <Reveal as="h2" className="home-big" style={{ maxWidth: '820px' }}>{t.homeMapHeadline}</Reveal>
-          <Reveal className="home-map" variant="none" threshold={0.5}>
-            <strong className="home-map-title">{t.homeMapTitle}</strong>
-            <div className="home-scroll-x" data-lenis-prevent-horizontal>
-              <div className="home-heat" role="img" aria-label={t.homeMapLabel}>
-                <div />
-                {heatmapAreas[lang].map((area) => (
-                  <div key={area} className="home-heat-h">{area}</div>
-                ))}
-                {heatmapDepartments.map((dep, row) => [
-                  <div key={dep.sv} className="home-heat-d">{dep[lang]}</div>,
-                  ...dep.values.map((v, col) => {
-                    const alpha = cellAlpha(v)
-                    return (
-                      <div
-                        key={`${dep.sv}-${col}`}
-                        className="home-heat-x"
-                        style={
-                          {
-                            '--heat-final': sky(alpha),
-                            '--heat-peak': sky(alpha + 0.18),
-                            '--heat-d': `${(rows - 1 - row) * WAVE_ROW_MS + col * WAVE_COL_MS}ms`,
-                          } as React.CSSProperties
-                        }
-                      />
-                    )
-                  }),
-                ])}
-              </div>
-            </div>
-          </Reveal>
+          <Reveal as="h2" className="home-big" style={{ maxWidth: '900px' }}>{t.homeChannelsHeadline}</Reveal>
+          <Reveal as="p" className="home-lede" delay={140} style={{ marginTop: '24px' }}>{t.homeChannelsBody}</Reveal>
+          <ul className="home-channels">
+            {channels.map(({ key, head, text }, i) => (
+              <Reveal as="li" key={key} delay={i * 110} duration={800}>
+                <span className="home-channel-icon">{CHANNEL_ICONS[key]}</span>
+                <h3>{head}</h3>
+                <p>{text}</p>
+              </Reveal>
+            ))}
+          </ul>
         </div>
       </section>
 
-      {/* 5. Forskning: bilden glider in från vänster, texten tonar in */}
-      <section className="home-section" style={{ paddingTop: 0 }}>
+      {/* 7. Forskning: bilden glider in från vänster, texten tonar in. Full
+          marginal ovanför, eftersom den nu följer den ljusblå kanalsektionen. */}
+      <section className="home-section">
         <div className="home-wrap home-research">
           {/* Lugn rörelse: kort sträcka, 1,3 s, mjuk utgång (ease-out cubic) */}
           <Reveal className="home-photo" variant="left" distance={24} duration={1300} easing="cubic-bezier(0.33, 1, 0.68, 1)">
@@ -341,7 +328,7 @@ export default function HomeSections() {
         </div>
       </section>
 
-      {/* 6. Integritet: raderna tonar in en i taget */}
+      {/* 8. Integritet: raderna tonar in en i taget */}
       <section className="home-section">
         <div className="home-wrap">
           <Reveal as="h2" className="home-big" style={{ maxWidth: '900px' }}>{t.homeTrustHeadline}</Reveal>
@@ -356,7 +343,7 @@ export default function HomeSections() {
         </div>
       </section>
 
-      {/* 7. Avslutande uppmaning */}
+      {/* 9. Avslutande uppmaning */}
       <section className="home-section home-cta" style={{ paddingTop: 0 }}>
         <div className="home-wrap">
           <Reveal as="h2" className="home-big">{t.homeCtaHeadline}</Reveal>

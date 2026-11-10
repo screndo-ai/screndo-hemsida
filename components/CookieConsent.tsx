@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect, useSyncExternalStore } from 'react'
 import { useLanguage } from '@/lib/LanguageContext'
 
 function loadAnalytics() {
@@ -10,38 +10,62 @@ function loadAnalytics() {
   script.async = true
   document.head.appendChild(script)
   script.onload = () => {
-    ;(window as any).dataLayer = (window as any).dataLayer || []
-    function gtag(...args: any[]) { (window as any).dataLayer.push(args) }
+    const w = window as Window & { dataLayer?: unknown[] }
+    w.dataLayer = w.dataLayer || []
+    function gtag(...args: unknown[]) { w.dataLayer!.push(args) }
     gtag('js', new Date())
     gtag('config', 'G-DKZ8FQJKZ6')
   }
 }
 
+// Samtycket sparas i localStorage och läses som en extern källa
+// (useSyncExternalStore). På servern och i första renderingen visas ingen
+// banner ("pending"); sedan visas den om inget val finns.
+const CONSENT_KEY = 'cookie_consent'
+const CONSENT_EVENT = 'cookie-consent-change'
+
+function subscribeConsent(onChange: () => void) {
+  window.addEventListener('storage', onChange)
+  window.addEventListener(CONSENT_EVENT, onChange)
+  return () => {
+    window.removeEventListener('storage', onChange)
+    window.removeEventListener(CONSENT_EVENT, onChange)
+  }
+}
+
+function readConsent(): string {
+  try {
+    return localStorage.getItem(CONSENT_KEY) ?? 'none'
+  } catch {
+    return 'none'
+  }
+}
+
 export default function CookieConsent() {
   const { t } = useLanguage()
-  const [visible, setVisible] = useState(false)
+  const consent = useSyncExternalStore(subscribeConsent, readConsent, () => 'pending')
 
+  // Ladda statistiken först efter ett godkännande (även vid nästa besök).
   useEffect(() => {
-    const consent = localStorage.getItem('cookie_consent')
-    if (!consent) {
-      setVisible(true)
-    } else if (consent === 'accepted') {
-      loadAnalytics()
-    }
-  }, [])
+    if (consent === 'accepted') loadAnalytics()
+  }, [consent])
+
+  function choose(value: 'accepted' | 'declined') {
+    try {
+      localStorage.setItem(CONSENT_KEY, value)
+    } catch {}
+    window.dispatchEvent(new Event(CONSENT_EVENT))
+  }
 
   function accept() {
-    localStorage.setItem('cookie_consent', 'accepted')
-    setVisible(false)
-    loadAnalytics()
+    choose('accepted')
   }
 
   function decline() {
-    localStorage.setItem('cookie_consent', 'declined')
-    setVisible(false)
+    choose('declined')
   }
 
-  if (!visible) return null
+  if (consent !== 'none') return null
 
   return (
     <div

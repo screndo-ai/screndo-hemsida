@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useSyncExternalStore } from 'react'
 import { usePathname } from 'next/navigation'
 
 type Lang = 'sv' | 'en'
@@ -47,40 +47,55 @@ const translations = {
     produkterDropdown: 'Produkter',
     menuLabel: 'Meny',
     // Hero
-    headline1: 'Kultur som drivkraft',
-    metaTitle: 'Screndo · Kultur som drivkraft',
+    headline1: 'Från insikt till handling',
+    metaTitle: 'Screndo · Från insikt till handling',
     privacyMetaTitle: 'Screndo · Integritet',
     bookIntroMetaTitle: 'Screndo · Boka intro',
-    metaDescription: 'Screndo samlar in feedback från era medarbetare, ger en aktuell bild av organisationen och stödjer ert systematiska arbetsmiljöarbete, löpande.',
-    subline: 'Screndo samlar in feedback från era medarbetare, ger en aktuell bild av organisationen och stödjer ert systematiska arbetsmiljöarbete, löpande.',
+    metaDescription: 'Screndo samlar in feedback från era medarbetare löpande och ger en aktuell bild av organisationen. Sedan hjälper vi er att agera på den, med stöd i forskning.',
+    subline: 'Screndo samlar in feedback från era medarbetare löpande och ger en aktuell bild av organisationen. Sedan hjälper vi er att agera på den, med stöd i forskning.',
     seeHow: 'Se hur det fungerar',
     videoHeadline: 'Se hur Screndo fungerar',
     // Startsidan under heron
-    homeLossHeadline: 'Viktig feedback går förlorad om den inte fångas upp.',
-    homeLossPara1: 'Är organisationen utspridd i tid och rum, blir ni fler eller är det svårt att prata med alla? Att ställa rätt frågor, i rätt tid, är svårare än det låter.',
-    homeLossPara2: 'Screndo fångar upp feedback autonomt och bygger en kontext över tid, med pulsmätning, problemrapportering och en aktuell bild av läget i organisationen.',
-    homeLossImageAlt: 'Medarbetare på en arbetsplats',
-    homeSamHeadline: 'Ett stöd i det systematiska arbetsmiljöarbetet.',
-    homeSamBody: 'Alla arbetsgivare ska löpande undersöka arbetsmiljön, bedöma riskerna, åtgärda det som behöver förbättras och följa upp att det fungerar. Screndo gör det till en naturlig del av vardagen.',
-    homeSam1Title: 'Undersöka',
-    homeSam1Text: 'Screndo ställer frågorna till medarbetarna.',
-    homeSam2Title: 'Bedöma',
-    homeSam2Text: 'Ni ser läget per avdelning och område.',
-    homeSam3Title: 'Åtgärda',
-    homeSam3Text: 'Screndo föreslår åtgärder, och ni väljer ett fokus.',
-    homeSam4Title: 'Följa upp',
-    homeSam4Text: 'Kommande mätningar visar om det blev bättre.',
-    homeSamSource: 'Arbetsmiljöverkets föreskrifter om systematiskt arbetsmiljöarbete, AFS 2023:1',
-    homeCostHeadline1: 'Rekrytering är dyrt.',
-    homeCostHeadline2: 'Omotiverade anställda är dyrare.',
+    homeProblemHeadline1: 'Era medarbetare är er viktigaste resurs.',
+    homeProblemHeadline2: 'Vet ni vad de tycker just nu?',
+    homeProblemPara1: 'De flesta organisationer mäter en gång om året. När resultaten kommer är svaren redan gamla, och viktig feedback har gått förlorad på vägen.',
+    homeProblemPara2: 'Rekrytering är dyrt. Omotiverade medarbetare är dyrare.',
+    homeTransitionHeadline: 'Lägg tiden på människorna, inte på att mäta dem.',
+    homeTransitionBody: 'Screndo visar läget och vad som behöver göras, och finns som stöd när ni behöver det. Det mänskliga arbetet gör ni bäst själva.',
+    homeFeaturesHeadline: 'Det här gör Screndo.',
+    homeFeaturesIntro: 'Från frågorna till medarbetarna till det ni gör med svaren.',
+    homeFeatAHead: 'Pulsmätning som sköter sig själv',
+    homeFeatAText: 'Korta frågor går ut löpande, och svaren kommer in utan att någon behöver jaga dem.',
+    homeFeatBHead: 'Läget i hela organisationen',
+    homeFeatBText: 'En värmekarta per avdelning och område visar var det fungerar och var något behöver uppmärksamhet.',
+    homeFeatCHead: 'eNPS och lojalitet',
+    homeFeatCText: 'Se hur gärna medarbetarna rekommenderar er som arbetsplats, och hur det förändras över tid.',
+    homeFeatDHead: 'Fråga om er data',
+    homeFeatDText: 'Ställ en fråga på vanlig svenska och få ett svar som bygger på era resultat och på forskning.',
+    homeFeatEHead: 'Frågor som blir bättre över tid',
+    homeFeatEText: 'Screndo föreslår nya frågor där ni behöver förstå mer, som permanenta frågor eller engångsfrågor.',
+    homeFeatFHead: 'Från resultat till åtgärd',
+    homeFeatFText: 'Konkreta förslag på vad som är värt att göra, och uppföljning av det ni har bestämt er för.',
+    homeFeatGHead: 'Utveckling över tid',
+    homeFeatGText: 'Se om det blir bättre efter en förändring, i stället för att vänta på nästa årsenkät.',
+    homeFeatHHead: 'Anonymt på riktigt',
+    homeFeatHText: 'Ingen kan se vem som har svarat vad. Resultat visas först när minst fem har svarat.',
+    homeChannelsHeadline: 'Alla kan svara, även utan jobbmejl.',
+    homeChannelsBody: 'Frågorna skickas via sms, mejl och QR\u2011kod. Då kan alla svara, även de som inte har jobbtelefon eller jobbmejl.',
+    homeChannelSmsHead: 'Sms',
+    homeChannelSmsText: 'Frågan kommer direkt till mobilen. Det räcker med en vanlig telefon.',
+    homeChannelMailHead: 'Mejl',
+    homeChannelMailText: 'För den som hellre svarar från datorn.',
+    homeChannelQrHead: 'QR-kod',
+    homeChannelQrText: 'Sätt upp koden vid kaffemaskinen eller entrén, så kan alla svara på plats.',
     homeStat1Value: '45\u00a0%',
     homeStat1Text: 'Anställda som fick erkännande av hög kvalitet var 45 procent mindre benägna att ha slutat två år senare.',
     homeStat1Source: 'Gallup, 2024',
     homeStat2Value: '23\u00a0%',
     homeStat2Text: 'Arbetsgrupper med högst engagemang har 23 procent högre lönsamhet än de med lägst.',
     homeStat2Source: 'Gallup, 2024',
-    homeAdminHeadline: 'Lägg tiden på att förbättra, inte på att administrera.',
-    homeAdminBody: 'Screndo ställer frågorna, samlar in svaren och finns där när du vill fråga hur det står till.',
+    homeAdminHeadline: 'Se läget över hela er organisation.',
+    homeAdminBody: 'Allt samlas på ett ställe. Ni ser läget, vad som har förändrats och vad som är värt att göra härnäst. Det stödjer också ert systematiska arbetsmiljöarbete.',
     homeMockLabel: 'Skiss av Screndos startsida',
     homeMockGreeting: 'Hej Anna,',
     homeMockQuestion: 'Hur kan jag hjälpa dig idag?',
@@ -88,9 +103,6 @@ const translations = {
     homeMockCard2: 'Mätning 12',
     homeMockCard3: 'eNPS',
     homeMockAsk: 'Fråga Screndo vad som helst',
-    homeMapHeadline: 'Se läget över hela organisationen.',
-    homeMapTitle: 'Läget per avdelning',
-    homeMapLabel: 'Exempel på värmekarta: ljusare ruta betyder bättre läge för avdelningen inom området.',
     homeResearchHeadline: 'Byggt på forskning om hur feedback blir drivkraft.',
     homeResearchBody: 'Frågorna bygger på etablerad forskning om arbetsmiljö. Screndo startade på HighFive Innovationsarena vid Högskolan i Halmstad och har nära band till forskningen där.',
     homeResearchImageAlt: 'Högskolan i Halmstad',
@@ -268,40 +280,55 @@ const translations = {
     produkterDropdown: 'Products',
     menuLabel: 'Menu',
     // Hero
-    headline1: 'Culture as the driving force',
-    subline: 'Screndo gathers feedback from your employees, gives you a current picture of the organisation and supports your systematic work environment management, continuously.',
-    metaTitle: 'Screndo · Culture as the driving force',
+    headline1: 'From insight to action',
+    subline: 'Screndo continuously gathers feedback from your employees and gives you a current picture of the organisation. Then we help you act on it, backed by research.',
+    metaTitle: 'Screndo · From insight to action',
     privacyMetaTitle: 'Screndo · Privacy',
     bookIntroMetaTitle: 'Screndo · Book an intro',
-    metaDescription: 'Screndo gathers feedback from your employees, gives you a current picture of the organisation and supports your systematic work environment management, continuously.',
+    metaDescription: 'Screndo continuously gathers feedback from your employees and gives you a current picture of the organisation. Then we help you act on it, backed by research.',
     seeHow: 'See how it works',
     videoHeadline: 'See how Screndo works',
     // Home page below the hero
-    homeLossHeadline: "Important feedback is lost if it isn't captured.",
-    homeLossPara1: 'Is your organisation spread out in time and place, are you growing, or is it hard to talk to everyone? Asking the right questions at the right time is harder than it sounds.',
-    homeLossPara2: 'Screndo captures feedback autonomously and builds context over time, with pulse surveys, issue reporting and an up-to-date picture of where your organisation stands.',
-    homeLossImageAlt: 'Employees at a workplace',
-    homeSamHeadline: 'Support for systematic work environment management.',
-    homeSamBody: 'All employers must continuously examine the work environment, assess the risks, fix what needs improving and follow up that it works. Screndo makes it a natural part of everyday work.',
-    homeSam1Title: 'Examine',
-    homeSam1Text: 'Screndo asks your employees the questions.',
-    homeSam2Title: 'Assess',
-    homeSam2Text: 'You see the situation by department and area.',
-    homeSam3Title: 'Act',
-    homeSam3Text: 'Screndo suggests actions, and you choose a focus.',
-    homeSam4Title: 'Follow up',
-    homeSam4Text: 'Upcoming surveys show whether things got better.',
-    homeSamSource: 'The Swedish Work Environment Authority’s provisions on systematic work environment management, AFS 2023:1',
-    homeCostHeadline1: 'Recruiting is expensive.',
-    homeCostHeadline2: 'Unmotivated employees cost more.',
+    homeProblemHeadline1: 'Your employees are your most important resource.',
+    homeProblemHeadline2: 'Do you know what they think right now?',
+    homeProblemPara1: 'Most organisations measure once a year. By the time the results arrive, the answers are already old, and important feedback has been lost along the way.',
+    homeProblemPara2: 'Recruiting is expensive. Unmotivated employees cost more.',
+    homeTransitionHeadline: 'Spend your time on people, not on measuring them.',
+    homeTransitionBody: 'Screndo shows where you stand and what needs to be done, and is there to support you when you need it. The human work is something you do best yourselves.',
+    homeFeaturesHeadline: 'What Screndo does.',
+    homeFeaturesIntro: 'From the questions to your employees to what you do with the answers.',
+    homeFeatAHead: 'Pulse surveys that run themselves',
+    homeFeatAText: 'Short questions go out continuously, and the answers come in without anyone having to chase them.',
+    homeFeatBHead: 'The whole organisation at a glance',
+    homeFeatBText: 'A heat map by department and area shows where things work and where something needs attention.',
+    homeFeatCHead: 'eNPS and loyalty',
+    homeFeatCText: 'See how likely your employees are to recommend you as a workplace, and how that changes over time.',
+    homeFeatDHead: 'Ask about your data',
+    homeFeatDText: 'Ask a question in plain language and get an answer based on your results and on research.',
+    homeFeatEHead: 'Questions that get better over time',
+    homeFeatEText: 'Screndo suggests new questions where you need to understand more, either permanent or one-off.',
+    homeFeatFHead: 'From results to action',
+    homeFeatFText: 'Concrete suggestions on what is worth doing, and follow-up on what you have decided to do.',
+    homeFeatGHead: 'Progress over time',
+    homeFeatGText: "See whether things improve after a change, instead of waiting for next year's survey.",
+    homeFeatHHead: 'Truly anonymous',
+    homeFeatHText: 'No one can see who answered what. Results are only shown once at least five people have answered.',
+    homeChannelsHeadline: 'Everyone can answer, even without a work email.',
+    homeChannelsBody: "Questions are sent by text message, email and QR code. That way everyone can answer, including those who don't have a work phone or work email.",
+    homeChannelSmsHead: 'Text message',
+    homeChannelSmsText: 'The question goes straight to their phone. Any ordinary phone will do.',
+    homeChannelMailHead: 'Email',
+    homeChannelMailText: 'For those who would rather answer from a computer.',
+    homeChannelQrHead: 'QR code',
+    homeChannelQrText: 'Put the code up by the coffee machine or the entrance, so everyone can answer on the spot.',
     homeStat1Value: '45%',
     homeStat1Text: 'Employees who received high-quality recognition were 45 percent less likely to have left two years later.',
     homeStat1Source: 'Gallup, 2024',
     homeStat2Value: '23%',
     homeStat2Text: 'Work groups with the highest engagement are 23 percent more profitable than those with the lowest.',
     homeStat2Source: 'Gallup, 2024',
-    homeAdminHeadline: 'Spend your time improving, not administering.',
-    homeAdminBody: 'Screndo asks the questions, collects the answers and is there when you want to ask how things are going.',
+    homeAdminHeadline: 'See where your whole organisation stands.',
+    homeAdminBody: "Everything is gathered in one place. You see where you stand, what has changed and what is worth doing next. It also supports your systematic work environment management.",
     homeMockLabel: "Sketch of Screndo's home screen",
     homeMockGreeting: 'Hi Anna,',
     homeMockQuestion: 'How can I help you today?',
@@ -309,9 +336,6 @@ const translations = {
     homeMockCard2: 'Survey 12',
     homeMockCard3: 'eNPS',
     homeMockAsk: 'Ask Screndo anything',
-    homeMapHeadline: 'See where the whole organisation stands.',
-    homeMapTitle: 'Status by department',
-    homeMapLabel: 'Example heat map: a lighter cell means a better situation for the department in that area.',
     homeResearchHeadline: 'Built on research into how feedback becomes a driving force.',
     homeResearchBody: 'The questions are based on established research on the work environment. Screndo started at HighFive Innovation Arena at Halmstad University and has close ties to the research there.',
     homeResearchImageAlt: 'Halmstad University',
@@ -381,7 +405,7 @@ const translations = {
     finalCtaSubline: "Thirty minutes, no prep. We'll look at how you handle employee feedback today and show you how Screndo would work for you.",
     // Hero two-column section
     heroFeatureHeadline: 'Find out what is bothering your employees before it becomes a problem.',
-    heroFeatureParagraph: 'Screndo continuously prepares short, anonymous pulse questions for your employees — you decide how often they go out. Questions are selected from a research-based library in organizational psychology and tailored to what actually needs to be explored in your organization; you approve each question before it is sent. Answers are analyzed instantly — you never have to interpret raw data or read through hundreds of free-text responses. Instead, you get concrete actions to take, grounded in what employees are actually saying, before it becomes a problem that is hard to reverse. Chat directly with Screndo to discuss how you can easily put the insights into practice.',
+    heroFeatureParagraph: 'Screndo continuously prepares short, anonymous pulse questions for your employees, and you decide how often they go out. Questions are selected from a research-based library in organizational psychology and tailored to what actually needs to be explored in your organization; you approve each question before it is sent. Answers are analyzed instantly, so you never have to interpret raw data or read through hundreds of free-text responses. Instead, you get concrete actions to take, grounded in what employees are actually saying, before it becomes a problem that is hard to reverse. Chat directly with Screndo to discuss how you can easily put the insights into practice.',
     // Feature section (home page)
     featureHeadline1: 'One question a week',
     featureHeadline2: 'Answered in a minute.',
@@ -462,14 +486,32 @@ const LanguageContext = createContext<{
   setLanguage: () => {},
 })
 
-export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLang] = useState<Lang>('sv')
-  const pathname = usePathname()
+// Språkvalet sparas i localStorage och läses som en extern källa
+// (useSyncExternalStore): servern och den första renderingen är svenska,
+// sedan byts språket direkt om besökaren har valt engelska tidigare.
+const LANG_KEY = 'screndo-lang'
+const LANG_EVENT = 'screndo-lang-change'
 
-  useEffect(() => {
-    const saved = localStorage.getItem('screndo-lang') as Lang | null
-    if (saved === 'sv' || saved === 'en') setLang(saved)
-  }, [])
+function subscribeLang(onChange: () => void) {
+  window.addEventListener('storage', onChange)
+  window.addEventListener(LANG_EVENT, onChange)
+  return () => {
+    window.removeEventListener('storage', onChange)
+    window.removeEventListener(LANG_EVENT, onChange)
+  }
+}
+
+function readLang(): Lang {
+  try {
+    return localStorage.getItem(LANG_KEY) === 'en' ? 'en' : 'sv'
+  } catch {
+    return 'sv'
+  }
+}
+
+export function LanguageProvider({ children }: { children: React.ReactNode }) {
+  const lang = useSyncExternalStore(subscribeLang, readLang, (): Lang => 'sv')
+  const pathname = usePathname()
 
   useEffect(() => {
     document.documentElement.lang = lang
@@ -497,8 +539,10 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   }, [lang, pathname])
 
   function setLanguage(l: Lang) {
-    setLang(l)
-    localStorage.setItem('screndo-lang', l)
+    try {
+      localStorage.setItem(LANG_KEY, l)
+    } catch {}
+    window.dispatchEvent(new Event(LANG_EVENT))
   }
 
   return (

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import Link from 'next/link'
 import { useLanguage } from '@/lib/LanguageContext'
 
 export default function Navbar() {
@@ -36,7 +37,7 @@ export default function Navbar() {
     >
       {/* Left: logo + nav */}
       <div style={{ display: "flex", alignItems: "center", gap: "32px" }}>
-        <a href="/"><img src="/logo2.png" alt="Screndo" className="navbar-logo" style={{ height: "46px", width: "auto" }} /></a>
+        <Link href="/"><img src="/logo2.png" alt="Screndo" className="navbar-logo" style={{ height: "46px", width: "auto" }} /></Link>
 
       </div>
 
