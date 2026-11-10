@@ -11,9 +11,9 @@ type Variant = 'up' | 'left' | 'right' | 'scale' | 'fade' | 'none'
 
 // Standardsträcka per variant; distance (px) skriver över den.
 const OFFSETS: Record<Variant, (d?: number) => string> = {
-  up: (d = 24) => `translateY(${d}px)`,
-  left: (d = 48) => `translateX(-${d}px)`,
-  right: (d = 48) => `translateX(${d}px)`,
+  up: (d = 12) => `translateY(${d}px)`,
+  left: (d = 20) => `translateX(-${d}px)`,
+  right: (d = 20) => `translateX(${d}px)`,
   scale: () => 'scale(0.95)',
   fade: () => 'none',
   none: () => 'none',
@@ -26,7 +26,7 @@ export default function Reveal({
   as: Tag = 'div',
   variant = 'up',
   delay = 0,
-  duration = 800,
+  duration = 700,
   threshold = 0.2,
   distance,
   easing = EASE,

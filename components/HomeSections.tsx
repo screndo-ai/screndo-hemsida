@@ -1,9 +1,10 @@
 'use client'
 
 import Image from 'next/image'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { useLanguage } from '@/lib/LanguageContext'
 import Reveal from '@/components/Reveal'
+import FeatureArt, { type FeatureArtKey } from '@/components/FeatureArt'
 
 // Startsidan under heron. Ordningen berättar vad Screndo gör: problemet,
 // en övergång, funktionerna (de nio korten), hur frågorna når alla, och
@@ -17,9 +18,13 @@ const STAT_SOURCES = {
   engagement: 'https://www.gallup.com/workplace/321725/gallup-q12-meta-analysis-2024.aspx',
 }
 
-// Funktionskorten i visningsordning (nio lika stora, kvadratiska kort).
-const FEATURES = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'] as const
-type FeatureKey = (typeof FEATURES)[number]
+// Funktionskorten i visningsordning, efter flödet: samla in, se, förstå,
+// agera, bli bättre, lita på. Ytornas färg följer ett mönster som upprepas
+// var fjärde kort (blå, ljus, mörkblå, turkos), så att inget kort har samma
+// färg som kortet bredvid eller ovanför, oavsett om rutnätet har 3, 2 eller
+// 1 kort per rad.
+const FEATURES: FeatureArtKey[] = ['A', 'I', 'B', 'C', 'D', 'F', 'G', 'E', 'H']
+const FEATURE_TONES = ['blue', 'light', 'navy', 'teal'] as const
 
 // Enkla linjeikoner för frågekanalerna (24x24, 1.5 px linje).
 const CHANNEL_ICONS = {
@@ -85,100 +90,24 @@ function CountUp({ value }: { value: string }) {
   return <span ref={ref} key={value}>{value}</span>
 }
 
-// Kvadratiska funktionskort. I vila visas bildytan och rubriken; när kortet
-// öppnas (hover, tangentbordsfokus eller tryck på pekskärm) växer det till
-// ungefär två kort brett och visar hela texten. Det växer åt det håll där
-// det finns plats: kortet längst till höger växer åt vänster, och ett kort
-// i nedersta raden växer uppåt om det behöver bli högre. Kortet ligger över
-// grannkorten, så rutnätet flyttar sig inte.
+// Kvadratiska funktionskort utan animation: färgad yta med illustration
+// överst, rubrik och en kort undertext under, alltid synliga.
 function FeatureGrid() {
   const { t } = useLanguage()
-  const gridRef = useRef<HTMLDivElement>(null)
-  const [open, setOpen] = useState<FeatureKey | null>(null)
-  const [dir, setDir] = useState<{ x: 'left' | 'right'; y: 'up' | 'down' }>({ x: 'right', y: 'down' })
-
-  const canHover = () => window.matchMedia('(hover: hover) and (pointer: fine)').matches
-  const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
-
-  function openCard(key: FeatureKey, cell: HTMLElement) {
-    if (reduced()) return
-    const grid = gridRef.current
-    if (!grid) return
-    const gap = parseFloat(getComputedStyle(grid).columnGap) || 0
-    const w = cell.offsetWidth + gap
-    const h = cell.offsetHeight + gap
-    const cols = Math.max(1, Math.round((grid.clientWidth + gap) / w))
-    const col = Math.round(cell.offsetLeft / w)
-    const row = Math.round(cell.offsetTop / h)
-    const rows = Math.ceil(FEATURES.length / cols)
-    // Uppåt i nedersta raden, eller när det utfällda kortet inte får plats
-    // nedåt i fönstret men gör det uppåt. Texten har fast bredd, så dess
-    // höjd går att mäta redan innan kortet öppnas.
-    const text = cell.querySelector('.home-feat-more p') as HTMLElement | null
-    const openH = Math.max(cell.offsetHeight, text?.offsetHeight ?? 0)
-    const r = cell.getBoundingClientRect()
-    const fitsDown = r.top + openH <= window.innerHeight - 8
-    const fitsUp = r.bottom - openH >= 8
-    const up = rows > 1 && (row >= rows - 1 || (!fitsDown && fitsUp))
-    setDir({ x: col >= cols - 1 ? 'left' : 'right', y: up ? 'up' : 'down' })
-    setOpen(key)
-  }
-
-  // På pekskärm stängs ett öppet kort när man trycker utanför det.
-  useEffect(() => {
-    if (!open) return
-    const onDown = (e: PointerEvent) => {
-      if (!gridRef.current?.contains(e.target as Node)) setOpen(null)
-    }
-    document.addEventListener('pointerdown', onDown)
-    return () => document.removeEventListener('pointerdown', onDown)
-  }, [open])
-
   return (
-    <div className="home-feat-grid" ref={gridRef}>
-      {FEATURES.map((key, i) => {
-        const isOpen = open === key
-        return (
-          <Reveal key={key} className="home-feat-cell" delay={(i % 3) * 80} duration={800}>
-            <article
-              className={`home-feat${isOpen ? ' is-open' : ''}`}
-              data-x={isOpen ? dir.x : undefined}
-              data-y={isOpen ? dir.y : undefined}
-              tabIndex={0}
-              role="button"
-              aria-expanded={isOpen}
-              onMouseEnter={(e) => canHover() && openCard(key, e.currentTarget.parentElement as HTMLElement)}
-              onMouseLeave={() => canHover() && setOpen((k) => (k === key ? null : k))}
-              onFocus={(e) => {
-                if (e.currentTarget.matches(':focus-visible')) openCard(key, e.currentTarget.parentElement as HTMLElement)
-              }}
-              onBlur={() => setOpen((k) => (k === key ? null : k))}
-              onClick={(e) => {
-                if (canHover()) return
-                if (isOpen) setOpen(null)
-                else openCard(key, e.currentTarget.parentElement as HTMLElement)
-              }}
-              onKeyDown={(e) => {
-                if (e.key === 'Escape') setOpen(null)
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault()
-                  if (isOpen) setOpen(null)
-                  else openCard(key, e.currentTarget.parentElement as HTMLElement)
-                }
-              }}
-            >
-              <div className="home-feat-main">
-                <div className="home-feat-media" aria-hidden="true" style={{ '--glow-delay': `${-i * 2.3}s` } as React.CSSProperties} />
-                <h3>{t[`homeFeat${key}Head`]}</h3>
-              </div>
-              <div className="home-feat-more">
-                <p>{t[`homeFeat${key}Text`]}</p>
-              </div>
-            </article>
-          </Reveal>
-        )
-      })}
-    </div>
+    <ul className="home-feat-grid">
+      {FEATURES.map((key, i) => (
+        <li key={key} className={`home-feat home-feat--${FEATURE_TONES[i % FEATURE_TONES.length]}`}>
+          <div className="home-feat-art">
+            <FeatureArt k={key} />
+          </div>
+          <div className="home-feat-body">
+            <h3>{t[`homeFeat${key}Head`]}</h3>
+            <p>{t[`homeFeat${key}Text`]}</p>
+          </div>
+        </li>
+      ))}
+    </ul>
   )
 }
 
@@ -262,9 +191,8 @@ export default function HomeSections() {
         </div>
       </section>
 
-      {/* 4. Vad Screndo gör: nio kvadratiska kort som växer ut och visar hela
-          texten. Bildytan fylls med en långsam blå gradient tills riktiga
-          bilder finns. */}
+      {/* 4. Vad Screndo gör: nio kvadratiska kort med illustration, rubrik
+          och undertext. Ingen animation på korten. */}
       <section className="home-section home-features" style={{ paddingTop: 0 }}>
         <div className="home-wrap">
           <Reveal as="h2" className="home-big">{t.homeFeaturesHeadline}</Reveal>
@@ -294,8 +222,8 @@ export default function HomeSections() {
           marginal ovanför, eftersom den nu följer den ljusblå kanalsektionen. */}
       <section className="home-section">
         <div className="home-wrap home-research">
-          {/* Lugn rörelse: kort sträcka, 1,3 s, mjuk utgång (ease-out cubic) */}
-          <Reveal className="home-photo" variant="left" distance={24} duration={1300} easing="cubic-bezier(0.33, 1, 0.68, 1)">
+          {/* Lugn rörelse: kort sträcka, mjuk utgång (ease-out cubic) */}
+          <Reveal className="home-photo" variant="left" distance={16} duration={1100} easing="cubic-bezier(0.33, 1, 0.68, 1)">
             <Image
               src="/hskolan.jpg"
               alt={t.homeResearchImageAlt}
