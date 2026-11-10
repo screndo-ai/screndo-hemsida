@@ -48,10 +48,10 @@ const translations = {
     menuLabel: 'Meny',
     // Hero
     headline1: 'Från insikt till handling',
-    metaTitle: 'Screndo · Från insikt till handling',
+    metaTitle: 'Screndo | Från insikt till handling',
     privacyMetaTitle: 'Screndo · Integritet',
     bookIntroMetaTitle: 'Screndo · Boka intro',
-    metaDescription: 'Screndo samlar in feedback från era medarbetare löpande och ger en aktuell bild av organisationen. Sedan hjälper vi er att agera på den, med stöd i forskning.',
+    metaDescription: 'Screndo ger en aktuell bild av hur era medarbetare har det, och hjälper er att göra något åt det. Löpande, inte en gång om året.',
     subline: 'Screndo samlar in feedback från era medarbetare löpande och ger en aktuell bild av organisationen. Sedan hjälper vi er att agera på den, med stöd i forskning.',
     seeHow: 'Se hur det fungerar',
     videoHeadline: 'Se hur Screndo fungerar',
@@ -276,10 +276,10 @@ const translations = {
     // Hero
     headline1: 'From insight to action',
     subline: 'Screndo continuously gathers feedback from your employees and gives you a current picture of the organisation. Then we help you act on it, backed by research.',
-    metaTitle: 'Screndo · From insight to action',
+    metaTitle: 'Screndo | From insight to action',
     privacyMetaTitle: 'Screndo · Privacy',
     bookIntroMetaTitle: 'Screndo · Book an intro',
-    metaDescription: 'Screndo continuously gathers feedback from your employees and gives you a current picture of the organisation. Then we help you act on it, backed by research.',
+    metaDescription: 'Screndo gives you a current picture of how your employees are doing, and helps you act on it. Continuously, not once a year.',
     seeHow: 'See how it works',
     videoHeadline: 'See how Screndo works',
     // Home page below the hero

@@ -103,10 +103,11 @@ const ART: Record<FeatureArtKey, React.ReactNode> = {
     <>
       <path {...S} d="M18 94H146" opacity="0.35" />
       <path {...S} d="M20 88C62 86 96 76 136 24" />
-      <circle cx="44" cy="86" r="4" fill="currentColor" />
-      <circle cx="78" cy="80" r="4" fill="currentColor" />
-      <circle cx="108" cy="62" r="4" fill="currentColor" />
-      <circle cx="132" cy="30" r="4" fill="currentColor" />
+      {/* Punkterna ligger exakt på kurvan (t = 0,2 / 0,45 / 0,7 / 0,92) */}
+      <circle cx="44.4" cy="85.6" r="4" fill="currentColor" />
+      <circle cx="73.1" cy="77.3" r="4" fill="currentColor" />
+      <circle cx="101.2" cy="60.4" r="4" fill="currentColor" />
+      <circle cx="126.5" cy="35.7" r="4" fill="currentColor" />
     </>
   ),
   // Frågor som blir bättre: tre frågebubblor som växer och fylls, som en trappa

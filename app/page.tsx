@@ -4,9 +4,9 @@ import HomeSections from "@/components/HomeSections";
 import HomeFooter from "@/components/HomeFooter";
 import type { Metadata } from "next";
 
-const title = "Screndo · Från insikt till handling";
+const title = "Screndo | Från insikt till handling";
 const description =
-  "Screndo samlar in feedback från era medarbetare löpande och ger en aktuell bild av organisationen. Sedan hjälper vi er att agera på den, med stöd i forskning.";
+  "Screndo ger en aktuell bild av hur era medarbetare har det, och hjälper er att göra något åt det. Löpande, inte en gång om året.";
 
 // Startsidans titel och beskrivning, samma för Open Graph och Twitter så
 // att länken ser bra ut när den delas (t.ex. på LinkedIn). Delningsbilden
