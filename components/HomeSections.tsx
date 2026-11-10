@@ -1,13 +1,13 @@
 'use client'
 
 import Image from 'next/image'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useLanguage } from '@/lib/LanguageContext'
 import Reveal from '@/components/Reveal'
 
 // Startsidan under heron. Ordningen berättar vad Screndo gör: problemet,
-// en övergång, funktionerna (bento-korten), översikten i laptopen, hur
-// frågorna når alla, och sist forskningen, integriteten och uppmaningen.
+// en övergång, funktionerna (de nio korten), hur frågorna når alla, och
+// sist forskningen, integriteten och uppmaningen.
 // Mått, färger och avstånd ligger i globals.css (klasserna home-*). Texterna
 // ligger i LanguageContext (home*). Scrollanimationerna går via Reveal (en
 // gång per element, när det kommer in i bild).
@@ -17,19 +17,9 @@ const STAT_SOURCES = {
   engagement: 'https://www.gallup.com/workplace/321725/gallup-q12-meta-analysis-2024.aspx',
 }
 
-// Funktionskorten i visningsordning. size styr storleken i bento-rutnätet
-// (se .home-card--* i globals.css); på mobil står de i en kolumn i samma
-// ordning.
-const FEATURES = [
-  { key: 'A', size: 'lg' },
-  { key: 'B', size: 'sm' },
-  { key: 'C', size: 'sm' },
-  { key: 'D', size: 'lg' },
-  { key: 'F', size: 'lg' },
-  { key: 'E', size: 'sm' },
-  { key: 'G', size: 'md' },
-  { key: 'H', size: 'md' },
-] as const
+// Funktionskorten i visningsordning (nio lika stora, kvadratiska kort).
+const FEATURES = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'] as const
+type FeatureKey = (typeof FEATURES)[number]
 
 // Enkla linjeikoner för frågekanalerna (24x24, 1.5 px linje).
 const CHANNEL_ICONS = {
@@ -95,50 +85,99 @@ function CountUp({ value }: { value: string }) {
   return <span ref={ref} key={value}>{value}</span>
 }
 
-// Skärmen i macci1.png är en lätt trapets: bredare nedtill. Hörnen,
-// uppmätta i bilden, som andel av .home-screen (skärmens omslutande ruta):
-// övre vänster, övre höger, nedre höger, nedre vänster.
-const SCREEN_QUAD: [number, number][] = [
-  [0.00625, 0],
-  [0.99282, 0],
-  [1, 1],
-  [0, 1],
-]
+// Kvadratiska funktionskort. I vila visas bildytan och rubriken; när kortet
+// öppnas (hover, tangentbordsfokus eller tryck på pekskärm) växer det till
+// ungefär två kort brett och visar hela texten. Det växer åt det håll där
+// det finns plats: kortet längst till höger växer åt vänster, och ett kort
+// i nedersta raden växer uppåt om det behöver bli högre. Kortet ligger över
+// grannkorten, så rutnätet flyttar sig inte.
+function FeatureGrid() {
+  const { t } = useLanguage()
+  const gridRef = useRef<HTMLDivElement>(null)
+  const [open, setOpen] = useState<FeatureKey | null>(null)
+  const [dir, setDir] = useState<{ x: 'left' | 'right'; y: 'up' | 'down' }>({ x: 'right', y: 'down' })
 
-// Perspektivtransform (homografi) som lägger en rektangel w x h på
-// fyrhörningen ovan. matrix3d är i pixlar och beror därför på storleken;
-// den räknas om när skärmen ändrar storlek.
-function quadMatrix3d(w: number, h: number) {
-  const [[x0, y0], [x1, y1], [x2, y2], [x3, y3]] = SCREEN_QUAD.map(([u, v]) => [u * w, v * h])
-  const dx1 = x1 - x2, dx2 = x3 - x2, dx3 = x0 - x1 + x2 - x3
-  const dy1 = y1 - y2, dy2 = y3 - y2, dy3 = y0 - y1 + y2 - y3
-  const den = dx1 * dy2 - dx2 * dy1
-  const g = (dx3 * dy2 - dx2 * dy3) / den
-  const k = (dx1 * dy3 - dx3 * dy1) / den
-  const a = x1 - x0 + g * x1, b = x3 - x0 + k * x3, c = x0
-  const d = y1 - y0 + g * y1, e = y3 - y0 + k * y3, f = y0
-  // Från enhetskvadrat till pixlar i elementet: dela kolumnerna med w och h.
-  const m = [a / w, d / w, 0, g / w, b / h, e / h, 0, k / h, 0, 0, 1, 0, c, f, 0, 1]
-  return `matrix3d(${m.map((n) => +n.toFixed(8)).join(',')})`
-}
+  const canHover = () => window.matchMedia('(hover: hover) and (pointer: fine)').matches
+  const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-function LaptopScreen({ children }: { children: React.ReactNode }) {
-  const ref = useRef<HTMLDivElement>(null)
+  function openCard(key: FeatureKey, cell: HTMLElement) {
+    if (reduced()) return
+    const grid = gridRef.current
+    if (!grid) return
+    const gap = parseFloat(getComputedStyle(grid).columnGap) || 0
+    const w = cell.offsetWidth + gap
+    const h = cell.offsetHeight + gap
+    const cols = Math.max(1, Math.round((grid.clientWidth + gap) / w))
+    const col = Math.round(cell.offsetLeft / w)
+    const row = Math.round(cell.offsetTop / h)
+    const rows = Math.ceil(FEATURES.length / cols)
+    // Uppåt i nedersta raden, eller när det utfällda kortet inte får plats
+    // nedåt i fönstret men gör det uppåt. Texten har fast bredd, så dess
+    // höjd går att mäta redan innan kortet öppnas.
+    const text = cell.querySelector('.home-feat-more p') as HTMLElement | null
+    const openH = Math.max(cell.offsetHeight, text?.offsetHeight ?? 0)
+    const r = cell.getBoundingClientRect()
+    const fitsDown = r.top + openH <= window.innerHeight - 8
+    const fitsUp = r.bottom - openH >= 8
+    const up = rows > 1 && (row >= rows - 1 || (!fitsDown && fitsUp))
+    setDir({ x: col >= cols - 1 ? 'left' : 'right', y: up ? 'up' : 'down' })
+    setOpen(key)
+  }
+
+  // På pekskärm stängs ett öppet kort när man trycker utanför det.
   useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const apply = () => {
-      const w = el.offsetWidth, h = el.offsetHeight
-      if (w && h) el.style.transform = quadMatrix3d(w, h)
+    if (!open) return
+    const onDown = (e: PointerEvent) => {
+      if (!gridRef.current?.contains(e.target as Node)) setOpen(null)
     }
-    apply()
-    const ro = new ResizeObserver(apply)
-    ro.observe(el)
-    return () => ro.disconnect()
-  }, [])
+    document.addEventListener('pointerdown', onDown)
+    return () => document.removeEventListener('pointerdown', onDown)
+  }, [open])
+
   return (
-    <div className="home-screen" ref={ref}>
-      {children}
+    <div className="home-feat-grid" ref={gridRef}>
+      {FEATURES.map((key, i) => {
+        const isOpen = open === key
+        return (
+          <Reveal key={key} className="home-feat-cell" delay={(i % 3) * 80} duration={800}>
+            <article
+              className={`home-feat${isOpen ? ' is-open' : ''}`}
+              data-x={isOpen ? dir.x : undefined}
+              data-y={isOpen ? dir.y : undefined}
+              tabIndex={0}
+              role="button"
+              aria-expanded={isOpen}
+              onMouseEnter={(e) => canHover() && openCard(key, e.currentTarget.parentElement as HTMLElement)}
+              onMouseLeave={() => canHover() && setOpen((k) => (k === key ? null : k))}
+              onFocus={(e) => {
+                if (e.currentTarget.matches(':focus-visible')) openCard(key, e.currentTarget.parentElement as HTMLElement)
+              }}
+              onBlur={() => setOpen((k) => (k === key ? null : k))}
+              onClick={(e) => {
+                if (canHover()) return
+                if (isOpen) setOpen(null)
+                else openCard(key, e.currentTarget.parentElement as HTMLElement)
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') setOpen(null)
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault()
+                  if (isOpen) setOpen(null)
+                  else openCard(key, e.currentTarget.parentElement as HTMLElement)
+                }
+              }}
+            >
+              <div className="home-feat-main">
+                <div className="home-feat-media" aria-hidden="true" style={{ '--glow-delay': `${-i * 2.3}s` } as React.CSSProperties} />
+                <h3>{t[`homeFeat${key}Head`]}</h3>
+              </div>
+              <div className="home-feat-more">
+                <p>{t[`homeFeat${key}Text`]}</p>
+              </div>
+            </article>
+          </Reveal>
+        )
+      })}
     </div>
   )
 }
@@ -203,92 +242,38 @@ export default function HomeSections() {
         </div>
       </section>
 
-      {/* 3. Övergång: stor, luftig rubrik och lite text, ingen bild */}
+      {/* 3. Övergång: rubrik och text till vänster, bild till höger (på mobil
+          text först, bild under). */}
       <section className="home-section home-transition">
-        <div className="home-wrap">
-          <Reveal as="h2" className="home-big home-transition-title" duration={1000}>{t.homeTransitionHeadline}</Reveal>
-          <Reveal as="p" className="home-lede" delay={180} duration={1000}>{t.homeTransitionBody}</Reveal>
-        </div>
-      </section>
-
-      {/* 4. Vad Screndo gör: bento-kort i olika storlekar. Bildytan fylls med
-          en långsam blå gradient tills riktiga bilder finns. */}
-      <section className="home-section home-features" style={{ paddingTop: 0 }}>
-        <div className="home-wrap">
-          <Reveal as="h2" className="home-big">{t.homeFeaturesHeadline}</Reveal>
-          <Reveal as="p" className="home-lede" delay={140} style={{ marginTop: '24px' }}>{t.homeFeaturesIntro}</Reveal>
-          <div className="home-bento">
-            {FEATURES.map(({ key, size }, i) => (
-              <Reveal
-                as="article"
-                key={key}
-                className={`home-card home-card--${size} home-card--${key.toLowerCase()}`}
-                delay={(i % 2) * 90}
-                duration={900}
-              >
-                <div className="home-card-media" aria-hidden="true" style={{ '--glow-delay': `${-i * 2.3}s` } as React.CSSProperties} />
-                <div className="home-card-body">
-                  <h3>{t[`homeFeat${key}Head`]}</h3>
-                  <p>{t[`homeFeat${key}Text`]}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 5. Se läget över hela er organisation: texten tonar in, laptopen glider
-          in från höger. Vit bakgrund, så att laptopen inte ser urklippt ut. */}
-      <section className="home-section">
-        <div className="home-wrap home-split">
+        <div className="home-wrap home-transition-grid">
           <div>
-            <Reveal as="h2" className="home-big" variant="fade" duration={900}>{t.homeAdminHeadline}</Reveal>
-            <Reveal as="p" className="home-lede" variant="fade" duration={900} delay={140} style={{ marginTop: '24px' }}>
-              {t.homeAdminBody}
-            </Reveal>
+            <Reveal as="h2" className="home-big">{t.homeTransitionHeadline}</Reveal>
+            <Reveal as="p" className="home-lede" delay={140}>{t.homeTransitionBody}</Reveal>
           </div>
-          <Reveal className="home-shot" variant="right" duration={1100} delay={120} role="img" aria-label={t.homeMockLabel}>
-            {/* Laptopen, beskuren till sina egna pixlar, med Hem som HTML på
-                skärmytan (uppmätt i bilden, se .home-screen och SCREEN_QUAD).
-                Laptop och skärminnehåll glider in tillsammans. */}
-            <div className="home-laptop">
-              <Image
-                src="/macci1.png"
-                alt=""
-                width={1536}
-                height={1024}
-                sizes="(max-width: 900px) 140vw, 66vw"
-                className="home-laptop-img"
-              />
-              <LaptopScreen>
-                <div className="home-ui" aria-hidden="true">
-                  <h4>
-                    {t.homeMockGreeting}
-                    <span>{t.homeMockQuestion}</span>
-                  </h4>
-                  <div className="home-ui-cards">
-                    <div className="home-ui-c home-ui-c1">{t.homeMockCard1}<strong>50</strong></div>
-                    <div className="home-ui-c home-ui-c2">{t.homeMockCard2}<strong>79</strong></div>
-                    <div className="home-ui-c home-ui-c3">{t.homeMockCard3}<strong>+32</strong></div>
-                  </div>
-                  <div className="home-ui-ask">
-                    {t.homeMockAsk}
-                    {/* Samma uppåtpil som skickaknappen i plattformens chattfält
-                        (app/dashboard/layout.tsx), vit på svart rund knapp. */}
-                    <span className="home-ui-send">
-                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                        <path d="M6 10V2M6 2L2.5 5.5M6 2L9.5 5.5" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    </span>
-                  </div>
-                </div>
-              </LaptopScreen>
-            </div>
+          <Reveal className="home-transition-photo" variant="fade" duration={1100} delay={120}>
+            <Image
+              src="/wallpaperblur.jpg"
+              alt={t.homeTransitionImageAlt}
+              fill
+              sizes="(max-width: 900px) calc(100vw - 2 * clamp(16px, 5vw, 72px)), 46vw"
+              style={{ objectFit: 'cover', objectPosition: '50% 40%' }}
+            />
           </Reveal>
         </div>
       </section>
 
-      {/* 6. Frågekanaler: tre kanaler i rad, enkla linjeikoner */}
+      {/* 4. Vad Screndo gör: nio kvadratiska kort som växer ut och visar hela
+          texten. Bildytan fylls med en långsam blå gradient tills riktiga
+          bilder finns. */}
+      <section className="home-section home-features" style={{ paddingTop: 0 }}>
+        <div className="home-wrap">
+          <Reveal as="h2" className="home-big">{t.homeFeaturesHeadline}</Reveal>
+          <Reveal as="p" className="home-lede" delay={140} style={{ marginTop: '24px' }}>{t.homeFeaturesIntro}</Reveal>
+          <FeatureGrid />
+        </div>
+      </section>
+
+      {/* 5. Frågekanaler: tre kanaler i rad, enkla linjeikoner */}
       <section className="home-section home-channels-section" style={{ background: 'var(--home-mist)' }}>
         <div className="home-wrap">
           <Reveal as="h2" className="home-big" style={{ maxWidth: '900px' }}>{t.homeChannelsHeadline}</Reveal>
@@ -305,7 +290,7 @@ export default function HomeSections() {
         </div>
       </section>
 
-      {/* 7. Forskning: bilden glider in från vänster, texten tonar in. Full
+      {/* 6. Forskning: bilden glider in från vänster, texten tonar in. Full
           marginal ovanför, eftersom den nu följer den ljusblå kanalsektionen. */}
       <section className="home-section">
         <div className="home-wrap home-research">
@@ -328,7 +313,7 @@ export default function HomeSections() {
         </div>
       </section>
 
-      {/* 8. Integritet: raderna tonar in en i taget */}
+      {/* 7. Integritet: raderna tonar in en i taget */}
       <section className="home-section">
         <div className="home-wrap">
           <Reveal as="h2" className="home-big" style={{ maxWidth: '900px' }}>{t.homeTrustHeadline}</Reveal>
@@ -343,7 +328,7 @@ export default function HomeSections() {
         </div>
       </section>
 
-      {/* 9. Avslutande uppmaning */}
+      {/* 8. Avslutande uppmaning */}
       <section className="home-section home-cta" style={{ paddingTop: 0 }}>
         <div className="home-wrap">
           <Reveal as="h2" className="home-big">{t.homeCtaHeadline}</Reveal>
