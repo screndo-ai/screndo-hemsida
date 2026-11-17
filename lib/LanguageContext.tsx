@@ -82,7 +82,7 @@ const translations = {
     homeFeatHHead: 'Anonymt',
     homeFeatHText: 'Ingen ser vem som svarade. AI sammanfattar fritexten utan citat.',
     homeFeatIHead: 'Anonym rapportering',
-    homeFeatIText: 'Rapportera ett problem eller lämna feedback när som helst. Ingen ser vem som skrev. Bara den som ansvarar för arbetsmiljön läser.',
+    homeFeatIText: 'Rapportera ett problem eller lämna feedback när som helst. Ingen ser vem som skrev. Bara den som ansvarar för Screndo hos er läser, inte chefer.',
     homeChannelsHeadline: 'Alla kan svara, även utan jobbmejl.',
     homeChannelsBody: 'Frågor skickas och besvaras via sms, mejl eller QR\u2011kod. Välj det som passar er bäst.',
     homeChannelSmsHead: 'Sms',
@@ -102,7 +102,7 @@ const translations = {
     homeResearchImageAlt: 'Högskolan i Halmstad',
     homeTrustHeadline: 'Ett litet bolag från Halmstad. Höga krav på integritet.',
     homeTrust1Title: 'Anonymt: ingen ser vem som svarade',
-    homeTrust1Text: 'Kopplingen mellan svar och den som svarade raderas.',
+    homeTrust1Text: 'Kopplingen mellan svar och den som svarade raderas när mätningen stänger.',
     homeTrust2Title: 'Inga resultat från små grupper',
     homeTrust2Text: 'Resultat visas först när minst fem har svarat. Kommentarer först vid tio.',
     homeTrust3Title: 'Data inom EU',
@@ -210,7 +210,7 @@ const translations = {
     // App section
     appLabel: 'APPEN',
     appHeadline: 'Anonymt: ingen ser vem som svarade.',
-    appParagraph: 'Medarbetare kan svara på veckans fråga eller lämna en anonym rapport om något som inte fungerar. Ingen ser vem som skrev. Bara den som ansvarar för arbetsmiljön läser.',
+    appParagraph: 'Medarbetare kan svara på veckans fråga eller lämna en anonym rapport om något som inte fungerar. Ingen ser vem som skrev. Bara den som ansvarar för Screndo hos er läser, inte chefer.',
     // Product CTA
     productCtaHeadline: 'Redo att testa?',
     // Login page
@@ -309,7 +309,7 @@ const translations = {
     homeFeatHHead: 'Anonymous',
     homeFeatHText: 'No one sees who answered. AI summarises free text without quotes.',
     homeFeatIHead: 'Anonymous reporting',
-    homeFeatIText: 'Report a problem or give feedback at any time. No one sees who wrote it. Only the person responsible for the work environment reads it.',
+    homeFeatIText: 'Report a problem or give feedback at any time. No one sees who wrote it. Only the person responsible for Screndo at your organisation reads it, not managers.',
     homeChannelsHeadline: 'Everyone can answer, even without a work email.',
     homeChannelsBody: 'Questions are sent and answered by text message, email or QR code. Choose what suits you best.',
     homeChannelSmsHead: 'Text message',
@@ -329,7 +329,7 @@ const translations = {
     homeResearchImageAlt: 'Halmstad University',
     homeTrustHeadline: 'A small company from Halmstad. High standards for privacy.',
     homeTrust1Title: 'Anonymous: no one sees who answered',
-    homeTrust1Text: 'The link between an answer and the person who gave it is deleted.',
+    homeTrust1Text: 'The link between an answer and the person who gave it is deleted when the survey closes.',
     homeTrust2Title: 'No results from small groups',
     homeTrust2Text: 'Results are shown only once at least five people have answered. Comments only at ten.',
     homeTrust3Title: 'Data within the EU',
@@ -437,7 +437,7 @@ const translations = {
     // App section
     appLabel: 'THE APP',
     appHeadline: 'Anonymous: no one sees who answered.',
-    appParagraph: 'People can answer the weekly question or leave an anonymous report about something that is not working. No one sees who wrote it. Only the person responsible for the work environment reads it.',
+    appParagraph: 'People can answer the weekly question or leave an anonymous report about something that is not working. No one sees who wrote it. Only the person responsible for Screndo at your organisation reads it, not managers.',
     // Product CTA
     productCtaHeadline: 'Ready to try it?',
     // Login page
